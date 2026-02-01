@@ -1,6 +1,6 @@
 # C++ Intermediate Concepts 📗
 
-[← Previous: Basics](01_basics.md) | [Back to Index](README.md) | [Next: Advanced →](03_advanced.md)
+[← Previous: Basics](01_basics.md) | [Back to Index](00_Intro.md) | [Next: Advanced →](03_advanced.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="60"/>
@@ -297,4 +297,4 @@ int main() {
 
 ---
 
-[← Previous: Basics](01_basics.md) | [Back to Index](README.md) | [Next: Advanced →](03_advanced.md)
+[← Previous: Basics](01_basics.md) | [Back to Index](00_Intro.md) | [Next: Advanced →](03_advanced.md)

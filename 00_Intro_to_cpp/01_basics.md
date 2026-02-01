@@ -5,7 +5,7 @@
 </p>
 
 
-[← Back to Index](README.md) | [Next: Intermediate →](02_intermediate.md)
+[← Back to Index](00_Intro.md) | [Next: Intermediate →](02_intermediate.md)
 
 
 
@@ -406,5 +406,5 @@ int main() {
 
 ---
 
-[← Back to Index](README.md) | [Next: Intermediate →](02_intermediate.md)
+[← Back to Index](00_Intro.md) | [Next: Intermediate →](02_intermediate.md)
 

@@ -1,6 +1,6 @@
 # C++ Advanced Concepts 📕
 
-[← Previous: Intermediate](02_intermediate.md) | [Back to Index](README.md)
+[← Previous: Intermediate](02_intermediate.md) | [Back to Index](00_Intro.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="60"/>
@@ -254,4 +254,4 @@ delete[] arr;  // Use delete[] for arrays
 
 ---
 
-[← Previous: Intermediate](02_intermediate.md) | [Back to Index](README.md)
+[← Previous: Intermediate](02_intermediate.md) | [Back to Index](00_Intro.md)
