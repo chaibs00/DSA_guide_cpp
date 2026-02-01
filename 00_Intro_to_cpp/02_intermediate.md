@@ -6,7 +6,7 @@
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="60"/>
 </p>
 
----
+
 
 ## Table of Contents
 1. [Strings and Character Handling](#strings-and-character-handling)
@@ -15,7 +15,7 @@
 4. [Classes](#classes-in-c)
 5. [Structs](#structs-in-c)
 
----
+
 
 ## Strings and Character Handling
 
@@ -109,7 +109,8 @@ if (s1 == s2)
 | `s.size()/s.length()` | Get string length | `"Hello".size()` → 5 |
 | `s.substr(start, length)` | Extract substring | `"Hello World".substr(6,5)` → `"World"` |
 
----
+
+--- 
 
 ### Character Handling (`<cctype>`)
 
@@ -138,7 +139,6 @@ char lower = std::tolower(ch);  // 'b'
 
 </details>
 
----
 
 ## Namespaces
 
@@ -170,7 +170,6 @@ int main() {
 }
 ```
 
----
 
 ### Using the Standard Namespace
 
@@ -190,7 +189,7 @@ int main() {
 
 </details>
 
----
+
 
 ## Typedef & Type Alias
 
@@ -217,7 +216,7 @@ int main() {
 
 </details>
 
----
+
 
 ## Classes in C++
 
@@ -262,7 +261,7 @@ int main() {
 
 </details>
 
----
+
 
 ## Structs in C++
 
