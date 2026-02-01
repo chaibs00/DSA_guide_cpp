@@ -38,3 +38,25 @@ This repository is a learning project and may contain imperfections. **It’s sh
 REPO/
     |
 ```
+
+
+## Contributing : 
+
+- add **CONTRIBUTING.md**
+
+# Contributing to DSA-Cpp-Repo
+
+Hi! Thanks for wanting to contribute. 😊  
+
+**How to contribute:**
+1. Fork the repo.
+2. Create a new branch: `git checkout -b my-feature`
+3. Make your changes.
+4. Commit: `git commit -m "Add new algorithm"`
+5. Push: `git push origin my-feature`
+6. Create a Pull Request.
+
+**Guidelines:**
+- Keep code clean and commented.
+- Follow the existing file/folder structure.
+- Include problem explanation if adding new solutions.
