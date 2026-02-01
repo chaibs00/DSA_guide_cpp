@@ -1,41 +1,49 @@
+# C++ Intermediate Concepts 📗
 
-# C++ Intermediate Concepts : 
+[← Previous: Basics](01_basics.md) | [Back to Index](README.md) | [Next: Advanced →](03_advanced.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="60"/>
 </p>
 
+---
 
+## Table of Contents
+1. [Strings and Character Handling](#strings-and-character-handling)
+2. [Namespaces](#namespaces)
+3. [Typedef & Type Alias](#typedef--type-alias)
+4. [Classes](#classes-in-c)
+5. [Structs](#structs-in-c)
 
-## Strings and Character Handling : 
+---
 
-- C++ provides the `std::string` class to work with text. 
-- Strings are **mutable**, meaning you can modify them after creation.
+## Strings and Character Handling
+
+C++ provides the `std::string` class to work with text. Strings are **mutable**, meaning you can modify them after creation.
 
 <details>
-
---- 
+<summary>Click to expand</summary>
 
 ### Declaring Strings
 
-- **Double quotes** are used for strings.
+**Double quotes** are used for strings:
 ```cpp
 #include <string>
 
 std::string str1 = "This is a string";  
 ```
 
-- **single quotes** are for single characters (`char` type).
+**Single quotes** are for single characters (`char` type):
 ```cpp
 char letter = 'A';   
 char digit = '7';    
 ```
 
---- 
+---
 
-### Converting Numbers and Strings : 
+### Converting Numbers and Strings
 
-#### Number -> String
+#### Number → String
 
 ```cpp
 double num = 23.43;
@@ -43,17 +51,16 @@ std::string str = std::to_string(num);
 std::cout << str;  
 ```
 
-#### String -> Number 
+#### String → Number
 
-| Function         | Converts To |
-| ---------------- | ----------- |
-| `std::stoi(str)` | int         |
-| `std::stol(str)` | long        |
-| `std::stof(str)` | float       |
-| `std::stod(str)` | double      |
+| Function | Converts To |
+|------------------|-------------|
+| `std::stoi(str)` | int |
+| `std::stol(str)` | long |
+| `std::stof(str)` | float |
+| `std::stod(str)` | double |
 
 **Example:**
-
 ```cpp
 std::string s = "42";
 int x = std::stoi(s);  // x = 42
@@ -62,9 +69,6 @@ int x = std::stoi(s);  // x = 42
 ---
 
 ### Looping Through a String
-
-- **Index-based loop:** Access each character via its position.
-- **Range-based loop:** Simplifies iteration over all characters.
 
 ```cpp
 std::string S = "Hello";
@@ -77,7 +81,6 @@ for (size_t i = 0; i < S.size(); i++)
 for (char ch : S)
     std::cout << ch;
 ```
-
 
 ---
 
@@ -96,33 +99,32 @@ if (s1 == s2)
 
 ### Common String Methods
 
-| Function                  | Description                  | Example                                         |
-| ------------------------- | ---------------------------- | ----------------------------------------------- |
-| `s.append(str)`           | Add `str` to the end         | `"Hello".append(" World")` → `"Hello World"`    |
-| `s.compare(str)`          | Compare strings (`-1, 0, 1`) | `"apple".compare("banana")` → -1                |
-| `s.erase(index, length)`  | Remove characters            | `"Hello World".erase(5, 6)` → `"Hello"`         |
-| `s.find(str)`             | Find substring               | `"Hello World".find("World")` → 6               |
-| `s.insert(index, str)`    | Insert string                | `"Hello".insert(5, " World")` → `"Hello World"` |
-| `s.size()/s.length()`     | Get string length            | `"Hello".size()` → 5                            |
-| `s.substr(start, length)` | Extract substring            | `"Hello World".substr(6,5)` → `"World"`         |
+| Function | Description | Example |
+|---------------------------|------------------------------|-----------------------------------------------|
+| `s.append(str)` | Add `str` to the end | `"Hello".append(" World")` → `"Hello World"` |
+| `s.compare(str)` | Compare strings (`-1, 0, 1`) | `"apple".compare("banana")` → -1 |
+| `s.erase(index, length)` | Remove characters | `"Hello World".erase(5, 6)` → `"Hello"` |
+| `s.find(str)` | Find substring | `"Hello World".find("World")` → 6 |
+| `s.insert(index, str)` | Insert string | `"Hello".insert(5, " World")` → `"Hello World"` |
+| `s.size()/s.length()` | Get string length | `"Hello".size()` → 5 |
+| `s.substr(start, length)` | Extract substring | `"Hello World".substr(6,5)` → `"World"` |
 
 ---
 
 ### Character Handling (`<cctype>`)
 
-| Function           | Description          | Example              | Result |
-| ------------------ | -------------------- | -------------------- | ------ |
-| `isalnum(ch)`      | Alphanumeric?        | `isalnum('A')`       | true   |
-| `isalpha(ch)`      | Alphabetic?          | `isalpha('z')`       | true   |
-| `islower(ch)`      | Lowercase?           | `islower('a')`       | true   |
-| `isupper(ch)`      | Uppercase?           | `isupper('A')`       | true   |
-| `isdigit(ch)`      | Numeric?             | `isdigit('4')`       | true   |
-| `isspace(ch)`      | Whitespace?          | `isspace(' ')`       | true   |
-| `std::tolower(ch)` | Convert to lowercase | `tolower('A')` → 'a' |        |
-| `std::toupper(ch)` | Convert to uppercase | `toupper('a')` → 'A' |        |
+| Function | Description | Example | Result |
+|--------------------|----------------------|----------------------|--------|
+| `isalnum(ch)` | Alphanumeric? | `isalnum('A')` | true |
+| `isalpha(ch)` | Alphabetic? | `isalpha('z')` | true |
+| `islower(ch)` | Lowercase? | `islower('a')` | true |
+| `isupper(ch)` | Uppercase? | `isupper('A')` | true |
+| `isdigit(ch)` | Numeric? | `isdigit('4')` | true |
+| `isspace(ch)` | Whitespace? | `isspace(' ')` | true |
+| `std::tolower(ch)` | Convert to lowercase | `tolower('A')` → 'a' | |
+| `std::toupper(ch)` | Convert to uppercase | `toupper('a')` → 'A' | |
 
 **Example:**
-
 ```cpp
 char ch = 'B';
 if (islower(ch)) {
@@ -136,16 +138,14 @@ char lower = std::tolower(ch);  // 'b'
 
 </details>
 
+---
 
+## Namespaces
 
-
-
-## Namespaces : 
-
-Namespaces in C++ help **prevent name conflicts** in large projects by grouping identifiers (variables, functions, classes) under a named scope.
+Namespaces in C++ help **prevent name conflicts** in large projects by grouping identifiers under a named scope.
 
 <details>
-
+<summary>Click to expand</summary>
 
 ### Example of Custom Namespaces
 
@@ -153,115 +153,91 @@ Namespaces in C++ help **prevent name conflicts** in large projects by grouping 
 #include <iostream>
 
 namespace First {
-  int x = 1;
+    int x = 1;
 }
 
 namespace Second {
-  int x = 2;
+    int x = 2;
 }
 
 int main() {
-  int x = 0;
-  // Local variable x
-  std::cout << x << std::endl;
-
-  // Access x from First namespace
-  std::cout << First::x << std::endl;  
-  
-  // Access x from Second namespace
-  std::cout << Second::x << std::endl; 
-  
-  return 0;
+    int x = 0;
+    std::cout << x << std::endl;          // 0
+    std::cout << First::x << std::endl;   // 1
+    std::cout << Second::x << std::endl;  // 2
+    
+    return 0;
 }
 ```
-
-```bash
-0
-1
-2
-```
-
 
 ---
 
 ### Using the Standard Namespace
 
-- The `std` namespace contains standard library components like `cout`, `cin`, `endl`, `vector`, `string`, etc.
-
+The `std` namespace contains standard library components like `cout`, `cin`, `endl`, `vector`, `string`, etc.
 
 ```cpp
 #include <iostream>
 
 using namespace std;
 
-int main(){
-  cout << "hellow world !" ;
+int main() {
+    cout << "Hello world!";
 }
 ```
 
-> **Notice:** By using `namespace std;`, we can write `cout`, `cin`, `endl`..., without the `std::` prefix.
+> **Notice:** By using `namespace std;`, we can write `cout`, `cin`, `endl` without the `std::` prefix.
 
 </details>
 
+---
 
+## Typedef & Type Alias
 
-
-## Typedef & Type Alias :
-
-- C++ allows you to create **aliases** for existing data types.  
-
-- An **alias** is simply an alternative name for a data type. 
+C++ allows you to create **aliases** for existing data types.
 
 <details>
+<summary>Click to expand</summary>
 
-- In case of very long data types, using alias is a good practice. 
+An **alias** is simply an alternative name for a data type. This is especially useful for long or complex type names.
 
 ```cpp
 #include <vector>
 
 // `table_t` is an alias for `std::vector<int>`
-typedef std::vector<int> table_t ;
-using  table_t = std::vector<int> ;
+typedef std::vector<int> table_t;
+using table_t = std::vector<int>;  // Modern syntax
 
 int main() {
-  // Equivalent to std::vector<int> mytable;
-  table_t mytable;  
+    table_t mytable;  // Equivalent to std::vector<int> mytable;
 }
-```                 
+```
 
-> - `using` syntax is often preferred over `typedef` for readability, especially with complex types.
+> **Note:** The `using` syntax is often preferred over `typedef` for readability, especially with complex types.
 
 </details>
 
+---
 
-
-
-## Classes in C++ : 
+## Classes in C++
 
 A **class** is a blueprint for creating objects. It can contain **attributes** (data members) and **methods** (functions).
 
+<details>
+<summary>Click to expand</summary>
 
-### Creating a Class :
-
-* `class Human` defines a class named `Human`.
-  * `name`, `occupation`, and `age` are **attributes** (data members).
-  * `nameFunc()` is a **method** that prints the name.
-* `human1` is an **object** of the `Human` class.
-* Public members can be accessed and modified directly from the object.
+### Creating a Class
 
 ```cpp
 #include <iostream>
 #include <string>
 
 class Human {
-    // Access specifiers: private, public, or protected
-    // Public members are accessible from outside the class
 public:
-    std::string name;        // Attribute
-    std::string occupation;  // Attribute
-    int age;                 // Attribute
+    std::string name;
+    std::string occupation;
+    int age;
 
-    // Method
     void nameFunc() {
         std::cout << "Name: " << name << std::endl;
     }
@@ -273,26 +249,29 @@ int main() {
     human1.occupation = "Nothing";
     human1.age = 89;
 
-    // Calling the method
     human1.nameFunc();  // Output: Name: Alex
 }
 ```
 
+**Explanation:**
+- `class Human` defines a class named `Human`
+- `name`, `occupation`, and `age` are **attributes** (data members)
+- `nameFunc()` is a **method** that prints the name
+- `human1` is an **object** of the `Human` class
+- Public members can be accessed and modified directly from the object
 
-
-
-
-
-## Structs in C++ :
-
-A **struct** (structure) is a way to group related variables under one name. Unlike arrays, structs can store variables of **different data types**. Each variable inside a struct is called a **member**.
-
-> **Note:**  
-> - Structs are usually **passed by value**, meaning when you pass a struct to a function, a copy is created. Changes inside the function do **not** affect the original struct.
+</details>
 
 ---
 
-## Creating a Struct
+## Structs in C++
+
+A **struct** (structure) is a way to group related variables under one name. Unlike arrays, structs can store variables of **different data types**.
+
+<details>
+<summary>Click to expand</summary>
+
+### Creating a Struct
 
 ```cpp
 #include <iostream>
@@ -302,12 +281,20 @@ struct Point {
     int x;
     int y;
 };
+
+int main() {
+    Point p1;
+    p1.x = 10;
+    p1.y = 20;
+    
+    std::cout << "Point: (" << p1.x << ", " << p1.y << ")";
+}
 ```
 
+> **Note:** Structs are usually **passed by value**, meaning when you pass a struct to a function, a copy is created. Changes inside the function do **not** affect the original struct unless you pass by reference or pointer.
 
+</details>
 
+---
 
-
-
-
-
+[← Previous: Basics](01_basics.md) | [Back to Index](README.md) | [Next: Advanced →](03_advanced.md)
