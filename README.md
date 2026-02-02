@@ -34,10 +34,20 @@ This repository is a learning project and may contain imperfections. **It’s sh
 
 ## Repository structure : 
 
+
 ```bash
-REPO/
-    |
+DSA_guide/
+  ├── 00_Intro_to_cpp/              # Introduction to cpp concepts :  
+  ├── 01_collections/
+  ├── 02_  
+  │   ├── 
+  │   │   
+  │   │   
+  │   └── 
+  └── 
 ```
+
+
 
 
 ## Contributing : 
