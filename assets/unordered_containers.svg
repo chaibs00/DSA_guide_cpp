@@ -1,0 +1,52 @@
+<svg width="600" height="240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="240" fill="#f8f9fa" rx="8"/>
+  
+  <!-- Title -->
+  <text x="300" y="25" font-family="Arial, sans-serif" font-size="16" fill="#2d3748" text-anchor="middle" font-weight="bold">Unordered Containers (Hash Table, No Guaranteed Order)</text>
+  
+  <!-- Hash buckets -->
+  <g id="bucket0">
+    <rect x="60" y="55" width="100" height="45" fill="#FF9800" stroke="#F57C00" stroke-width="2" rx="4"/>
+    <text x="110" y="83" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">Bucket 0</text>
+  </g>
+  
+  <g id="bucket1">
+    <rect x="180" y="55" width="100" height="45" fill="#FF9800" stroke="#F57C00" stroke-width="2" rx="4"/>
+    <text x="230" y="83" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">Bucket 1</text>
+  </g>
+  
+  <g id="bucket2">
+    <rect x="300" y="55" width="100" height="45" fill="#FF9800" stroke="#F57C00" stroke-width="2" rx="4"/>
+    <text x="350" y="83" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">Bucket 2</text>
+  </g>
+  
+  <g id="bucket3">
+    <rect x="420" y="55" width="100" height="45" fill="#FF9800" stroke="#F57C00" stroke-width="2" rx="4"/>
+    <text x="470" y="83" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold">Bucket 3</text>
+  </g>
+  
+  <!-- Elements in buckets -->
+  <rect x="65" y="110" width="90" height="35" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  <text x="110" y="132" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">"A": 10</text>
+  
+  <rect x="185" y="110" width="90" height="35" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  <text x="230" y="132" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">"B": 25</text>
+  
+  <rect x="185" y="150" width="90" height="35" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  <text x="230" y="172" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">"F": 42</text>
+  
+  <rect x="425" y="110" width="90" height="35" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  <text x="470" y="132" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">"C": 7</text>
+  
+  <!-- Arrows from buckets to elements -->
+  <line x1="110" y1="100" x2="110" y2="110" stroke="#666" stroke-width="1.5"/>
+  <line x1="230" y1="100" x2="230" y2="110" stroke="#666" stroke-width="1.5"/>
+  <line x1="230" y1="145" x2="230" y2="150" stroke="#666" stroke-width="1.5"/>
+  <line x1="470" y1="100" x2="470" y2="110" stroke="#666" stroke-width="1.5"/>
+  
+  <!-- Hash function explanation -->
+  <rect x="120" y="195" width="360" height="35" fill="#FFECB3" stroke="#FF9800" stroke-width="2" rx="5"/>
+  <text x="300" y="215" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">Hash Function: hash(key) % 4 → bucket index</text>
+  <text x="300" y="226" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle" font-style="italic">O(1) average lookup — much faster than sorted containers!</text>
+</svg>
