@@ -74,7 +74,7 @@ int x = std::stoi(s);  // x = 42
 std::string S = "Hello";
 
 // Index-based loop
-for (size_t i = 0; i < S.size(); i++)
+for (int i = 0; i < S.size(); i++)
     std::cout << S[i];
 
 // Range-based loop

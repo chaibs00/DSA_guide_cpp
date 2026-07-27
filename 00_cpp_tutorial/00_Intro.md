@@ -8,15 +8,28 @@ C++ is a **compiled, high-performance** programming language widely used for sys
 
 
 
+
+
 ## ⚙️ Requirements (C++ Compiler) :
 
-C++ is a **mid-level, compiled** programming language, so you need a **compiler** to translate the code into machine instructions.
+- C++ is a **compiled** programming language, so you need a **compiler** to run the code. 
+- A **compiler** translates your code into **machine instructions (binary)** that the computer can directly execute.
+
+
 
 ### Option 1: Local Compiler
+
+#### For widowns OS: 
 - [**Installing MinGW to build C++ Code on Windows**](https://www.youtube.com/watch?v=oC69vlWofJQ&t=144s)
+
+#### For Mac OS: 
+- [**Set Up C++ Development With Visual Studio Code on Mac**](https://www.youtube.com/watch?v=v2_Pth8MrKA)
+
 
 ### Option 2: Online Compiler
 - [**Programiz Online C++ Compiler**](https://www.programiz.com/cpp-programming/online-compiler/)
+
+
 
 
 ## 📚 Tutorial Structure :

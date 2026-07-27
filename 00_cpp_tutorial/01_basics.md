@@ -1,11 +1,12 @@
 # C++ Basics 📘
 
+[← Back to Index](00_Intro.md) | [Next: Intermediate →](02_intermediate.md)
+
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="80"/>
 </p>
 
-
-[← Back to Index](00_Intro.md) | [Next: Intermediate →](02_intermediate.md)
 
 
 
@@ -42,7 +43,8 @@ int main(){
 
 ## 1. Getting User Input
 
-Let's read simple input from the user. In C++, variables and their types must be defined before use.
+Let's read simple input from the user. 
+- In C++, variables and their types must be defined before use.
 
 <details>
 <summary>Click to expand</summary>
