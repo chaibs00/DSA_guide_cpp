@@ -1,4 +1,4 @@
-# ${\textbf{ \color{red}(Static) \space Array \space Data \space Structure }}$
+# ${\color{Red}Static \space Arrays \space data \space Structure }$ 
 
 An array is a fundamental and **linear** data structure that stores items at contiguous memory locations. It stores multiple **elements of the same type**.
 - **linear**: The elements are stored one after another in a single sequence.
