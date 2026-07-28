@@ -1,0 +1,1 @@
+# $${\textbf{ \color{red}(Dynamic) \space Array \space Data \space Structure }}$$ 
