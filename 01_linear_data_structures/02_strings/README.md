@@ -1,0 +1,1 @@
+At the data structure level, a string is often implemented using an array (or dynamic array), but a string is considered its own data structure/ADT (Abstract Data Type) because it has extra rules and operations.
