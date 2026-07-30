@@ -1,10 +1,10 @@
-# $$\color{Red}{\textrm{Arrays\space Data\space Structure}}$$
+# $$\color{Red}{\textrm{Arrays\ Data\ Structure}}$$
 
 An array is a fundamental and **linear** data structure that stores items at contiguous memory locations. It stores multiple **elements of the same type**.
 - **linear**: The elements are stored one after another in a single sequence.
 - **contiguous**: The elements are stored next to each other in memory, with no gaps between them.
 
-### $\color{Yellow}{\textrm{Adavantages\space \&\space donwsides }}$
+### $\color{Yellow}{\textrm{ Adavantages\ and\ donwsides }}$
 
 
 | ✅ Advantages | ❌ Downsides |
@@ -15,7 +15,7 @@ An array is a fundamental and **linear** data structure that stores items at con
 | **Low memory overhead**<br>No extra pointers are required. | **Same data type**<br>All elements must have the same type. |
 
 
-### $\color{Yellow}{\textrm{Dynamic\space VS\space Static\space Array}}$
+### $\color{Yellow}{\textrm{Dynamic\ VS\ Static\ Array}}$
 
 - **Dynamic Arrays** are arrays whose size can grow or shrink at runtime, with memory allocated on the **heap**.
 

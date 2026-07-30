@@ -1,11 +1,11 @@
-# $$\color{Red}{\textrm{Static\space Arrays}}$$
+# $$\color{Red}{\textrm{Static\ Arrays}}$$
 
 **Static arrays** are arrays whose **size is fixed** at the time of declaration and **cannot be changed during runtime**.
 
 It Efficient and fast, But less flexible compared to dynamic arrays.
 
 
-## ${\color{yellow}Declaration \space of \space an \space Array }$ 
+## $\color{yellow}{\textrm{Declaration\ of\ an\ Array}}$ 
 
 
 - Syntaxe
@@ -27,8 +27,7 @@ char arr[10];
 string arr[12];
 ```
 
-
-## ${\color{yellow}Initializing \space of \space an \space Array }$ 
+## $\color{yellow}{\textrm{Initializing\ of\ an\ Array}}$ 
 
 Arrays can be initialized in several ways.
 
@@ -47,8 +46,7 @@ string arr[10] = { "hello", "world", "!"};
 int arr[5] = {}; 
 ```
 
-
-## ${\color{yellow}Accessing \space Elements}$ 
+## $\color{yellow}{\textrm{Accessing\ Elements}}$ 
 
 Each element is accessed using its **index**.
 
@@ -74,7 +72,7 @@ cout << arr[10]; // ❌ will return a random number
 > Notice that each address increases by **4 bytes** because an `int` usually occupies 4 bytes.
 
 
-## ${\color{yellow} \space Change \space Elements}$
+## $\color{yellow}{\textrm{Change\ Elements}}$ 
 
 Elements can be changed using their index.
 
@@ -90,8 +88,7 @@ arr[1] = 100;
 ```
 
 
-
-## ${\color{yellow}Traversing \space an \space Array}$
+## $\color{yellow}{\textrm{Traversing\ an\ Array}}$ 
 
 The most common way to traverse every element is with a **loop**.
 
@@ -122,13 +119,6 @@ for (int num : arr){
 ```
 
 
-
-
-
-
-
-
-https://www.geeksforgeeks.org/dsa/array-data-structure-guide/
 
 
 
