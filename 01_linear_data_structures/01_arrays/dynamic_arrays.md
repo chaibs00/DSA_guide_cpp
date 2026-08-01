@@ -17,7 +17,6 @@
 - [Traversal](#coloryellowtextrmtraversal)
 - [(Recap) Useful Functions](#coloryellowtextrmrecap-useful-functions)
 - [2-Dimentional Arrays](#coloryellowtextrm2-dimentional-arrays)
-  - [Declaration](#colortealtextrmdeclaration)
  
 
 
