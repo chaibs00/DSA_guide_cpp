@@ -1,7 +1,6 @@
 
 # $\color{Red}{\textrm{Dynamic\ Array\ Data\ Structure }}$
 
-
 **Dynamic arrays** are arrays whose **size can change during runtime**, with **memory allocated** on the **heap**.
 
 - **heap** : a region of memory used for **dynamic allocation**, where variables persist until they are manually freed or automatically managed.
@@ -9,6 +8,16 @@
 > In C++, dynamic arrays can be implemented using $\color{orange}{\texttt{std::vector}}$
 
 
+
+### Table of Contents
+- [Declaration](#coloryellowtextrmdeclaration)
+- [Acess an Element](#coloryellowtextrmacess-an-element)
+- [Adding an Element](#coloryellowtextrmadding-an-element)
+- [Removing Elements](#coloryellowtextrmremoving-elements)
+- [Traversal](#coloryellowtextrmtraversal)
+- [(Recap) Useful Functions](#coloryellowtextrmrecap-useful-functions)
+- [2-Dimentional Arrays](#coloryellowtextrm2-dimentional-arrays)
+  - [Declaration](#colortealtextrmdeclaration)
  
 
 
@@ -280,11 +289,17 @@ A collection of useful functions :
 - Until now, we've only dealt with **1-dimensional arrays**
 - Now we introduce **multi-dimensional arrays** (also called **matrices**)
 
-### $\color{teal}{\textrm{Declaration}}$
+--- 
+
+### $\color{orange}{\textrm{Declaration}}$
 
 ```cpp
 // matrix with 3 rows × 4 columns, all elements = 0
 vector<vector<int>> M(3, vector<int>(4, 0));
+
+// matrix with 3 rows × 4 columns
+// elme,t are intialised with default value (0).
+vector<vector<int>> M(3, vector<int>(4));
 ```
 
 <div align="center "> 
@@ -293,10 +308,92 @@ vector<vector<int>> M(3, vector<int>(4, 0));
 
 </div>
 
+- If the **matrix size is not known** in advance, you can **declare it first** and **resize it later**.
 
-vector<vector<int>> mat(3, vector<int>(4, 0));
-// 3 rows, 4 columns initialized to 0
+```cpp
+// declare first, then resize
+vector<vector<int>> M;
+M.resize(3, vector<int>(4, 0));
+```
 
-Access:
 
-mat[i][j];
+---
+
+### $\color{orange}{\textrm{Access an element}}$
+
+* To access an element in a 2D array, we use **`two indices`**, not just one :
+
+  * **First index `i`** → represents the **row**
+  * **Second index `j`** → represents the **column**
+  * Access pattern: **`[row][column]`**
+
+* Since it is a **2D array**, exactly **two indices** are required to locate any element
+
+
+```cpp
+vector<vector<int>> M(3, vector<int>(4));
+
+M[0][0] ;
+M[1][2] ;
+M[3][1] ;
+```
+
+<div align="center "> 
+
+![array](/assets/matrix_acess.png)
+
+</div>
+
+---
+
+### $\color{orange}{\textrm{Traversal}}$
+
+- A **`for loop`** can be used to iterate through an matrix
+    - `M.size()` → number of rows
+    - `M[i].size()` → number of columns in `row i`
+
+```cpp
+vector<vector<int>> M(3, vector<int>(4, 0));
+
+// get rows & cols :
+int rows = M.size();     // => 3
+int cols = M[0].size();  // => 4
+```
+
+
+#### **Index-based loop :**
+```cpp
+vector<vector<int>> M(3, vector<int>(4, 0));
+
+
+// Loop through the rows :
+for (int i=0 ; i < M.size() ; i++) {
+    // Loop through the columns :
+    for (int j=0 ; j< M[i].size() ; j++){
+        cout << M[i][j] ;
+    }
+}
+```
+
+#### **Range-based loop :**
+```cpp
+vector<vector<int>> M(3, vector<int>(4, 0));
+
+
+// Loop through the rows :
+for (auto &row : M) {
+    // lopp through the columns
+    for (auto &val : row) {
+        cout << val << " ";
+    }
+    cout << endl;
+}
+```
+
+
+
+--- 
+
+
+
+

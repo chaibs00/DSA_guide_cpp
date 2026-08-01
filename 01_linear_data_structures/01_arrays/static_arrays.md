@@ -4,6 +4,14 @@
 
 It Efficient and fast, But less flexible compared to dynamic arrays.
 
+### Table of Contents
+- [Declaration of an Array](#coloryellowtextrmdeclaration-of-an-array)
+- [Initializing of an Array](#coloryellowtextrminitializing-of-an-array)
+- [Accessing Elements](#coloryellowtextrmaccessing-elements)
+- [Change Elements](#coloryellowtextrmchange-elements)
+- [Traversing an Array](#coloryellowtextrmtraversing-an-array)
+
+
 
 ## $\color{yellow}{\textrm{Declaration\ of\ an\ Array}}$ 
 
