@@ -45,7 +45,13 @@ DSA_Guide/
 │   ├── 02_intermediate.md
 │   └── 03_advanced.md
 │
-│
+    00_foundations/
+      ├── complexity_analysis/   (Big-O, time & space)
+      ├── pointers/              (memory, addresses)
+      ├── references/ (optional)
+      ├── recursion/ (optional but useful early)
+      └── README.md
+
 ├── 01_linear_data_structures/
 │   ├── arrays/
 │   ├── vectors/
@@ -82,7 +88,6 @@ DSA_Guide/
 │   ├── graph_algorithms/
 │   ├── string_algorithms/
 │   └── README.md
-│
 │
 ├── 04_algorithm_analysis/
 │   ├── time_complexity/
