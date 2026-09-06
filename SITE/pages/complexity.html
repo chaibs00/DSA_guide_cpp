@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Complexity Analysis — DSA_guide</title>
+<meta name="description" content="How to reason about Big-O notation, time complexity, and space complexity before writing your first data structure." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="../assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>const BASE = "../";</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker">Core concepts</div>
+      <h1>Complexity analysis</h1>
+      <p class="doc-lede">Before you learn a single data structure, you need a way to compare them. Big-O notation is that yardstick — it describes how an algorithm's cost grows as its input grows, not how fast it runs on your machine today.</p>
+
+      <h2>Why complexity matters</h2>
+      <p>Two pieces of code can solve the same problem and both "work" on a small test case, yet behave completely differently once the input reaches real-world size. Complexity analysis tells you which one that will be, without having to run either.</p>
+      <p class="muted">It comes in two flavors, and you'll see both used throughout this guide:</p>
+      <ul>
+        <li><strong class="text-data">Time complexity</strong> — how the number of operations grows as input size (<code>n</code>) grows.</li>
+        <li><strong class="text-pointer">Space complexity</strong> — how much extra memory the algorithm needs as <code>n</code> grows.</li>
+      </ul>
+
+      <h2>Reading Big-O notation</h2>
+      <p>Big-O describes the <em>worst-case growth rate</em>, ignoring constants and lower-order terms. <code>O(2n + 5)</code> is just <code>O(n)</code> — as <code>n</code> gets large, the <code>+5</code> becomes irrelevant and the <code>2</code> doesn't change the shape of the curve.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 360 210" width="360" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="10" x2="30" y2="170" stroke="var(--border)" stroke-width="1.5"/>
+          <line x1="30" y1="170" x2="345" y2="170" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="34" y="8" font-family="IBM Plex Mono" font-size="10" fill="var(--text-faint)">operations</text>
+          <text x="300" y="188" font-family="IBM Plex Mono" font-size="10" fill="var(--text-faint)">input size (n)</text>
+
+          <polyline points="30,160 340,160" fill="none" stroke="#8991A0" stroke-width="2"/>
+          <polyline points="30,168 90,140 150,125 210,115 270,108 330,102" fill="none" stroke="var(--pointer)" stroke-width="2"/>
+          <polyline points="30,170 330,40" fill="none" stroke="var(--data)" stroke-width="2"/>
+          <polyline points="30,170 90,130 150,95 210,68 270,45 320,26" fill="none" stroke="#7BB3F0" stroke-width="2"/>
+          <path d="M30,170 C 120,168 210,120 260,20" fill="none" stroke="var(--danger)" stroke-width="2"/>
+
+          <g font-family="IBM Plex Mono" font-size="10.5">
+            <rect x="30" y="184" width="8" height="8" fill="#8991A0"/><text x="42" y="192" fill="var(--text-muted)">O(1)</text>
+            <rect x="90" y="184" width="8" height="8" fill="var(--pointer)"/><text x="102" y="192" fill="var(--text-muted)">O(log n)</text>
+            <rect x="165" y="184" width="8" height="8" fill="var(--data)"/><text x="177" y="192" fill="var(--text-muted)">O(n)</text>
+            <rect x="215" y="184" width="8" height="8" fill="#7BB3F0"/><text x="227" y="192" fill="var(--text-muted)">O(n log n)</text>
+            <rect x="300" y="184" width="8" height="8" fill="var(--danger)"/><text x="312" y="192" fill="var(--text-muted)">O(n²)</text>
+          </g>
+        </svg>
+      </div>
+      <p class="diagram-caption">Growth of common complexity classes as input size increases — shape matters, not the exact numbers.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Notation</th><th>Name</th><th>Typical example</th><th>Growth</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">O(1)</td><td>Constant</td><td>Accessing <code>arr[i]</code></td><td><span class="badge good">excellent</span></td></tr>
+            <tr><td class="mono">O(log n)</td><td>Logarithmic</td><td>Binary search</td><td><span class="badge good">excellent</span></td></tr>
+            <tr><td class="mono">O(n)</td><td>Linear</td><td>Scanning a vector once</td><td><span class="badge mid">okay</span></td></tr>
+            <tr><td class="mono">O(n log n)</td><td>Linearithmic</td><td>Merge sort, quick sort</td><td><span class="badge mid">okay</span></td></tr>
+            <tr><td class="mono">O(n²)</td><td>Quadratic</td><td>Bubble sort, nested loops</td><td><span class="badge bad">watch out</span></td></tr>
+            <tr><td class="mono">O(2ⁿ)</td><td>Exponential</td><td>Naive recursive Fibonacci</td><td><span class="badge bad">avoid</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Time complexity in code</h2>
+      <p>Here's the same idea across three loop shapes. Watch how the number of nested loops over <code>n</code> maps directly to the exponent in the notation.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">constant.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// O(1) — cost doesn't depend on the size of arr
+int getFirst(const std::vector&lt;int&gt;&amp; arr) {
+    return arr[0];
+}</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">linear.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// O(n) — one pass over every element
+int sum(const std::vector&lt;int&gt;&amp; arr) {
+    int total = 0;
+    for (int x : arr) {
+        total += x;
+    }
+    return total;
+}</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">quadratic.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// O(n^2) — a nested loop over the same input
+bool hasDuplicate(const std::vector&lt;int&gt;&amp; arr) {
+    for (size_t i = 0; i &lt; arr.size(); i++) {
+        for (size_t j = i + 1; j &lt; arr.size(); j++) {
+            if (arr[i] == arr[j]) return true;
+        }
+    }
+    return false;
+}</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-label">Tip</span>
+        <p>When you see nested loops that each scan the full input, that's a strong signal you're looking at <code>O(n²)</code> — and a strong hint to ask whether a hash set or sorting step could bring it down to <code>O(n)</code> or <code>O(n log n)</code>.</p>
+      </div>
+
+      <h2>Space complexity</h2>
+      <p>Space complexity follows the same logic, but counts memory instead of steps. <code>sum()</code> above uses <code>O(1)</code> extra space — one <code>int</code> accumulator, regardless of how big <code>arr</code> is. A function that builds a new vector the same size as its input uses <code>O(n)</code> space.</p>
+      <div class="callout note">
+        <span class="callout-label">Note</span>
+        <p>Time and space can trade off against each other. Later guides — starting with arrays — will point out exactly where that tradeoff shows up.</p>
+      </div>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="00_cpp-starter.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ starter</span></a>
+        <a class="pn-link next" href="pages/pointers.html"><span class="pn-dir">Next →</span><span class="pn-title">Pointers &amp; memory</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="../assets/js/layout-data.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/code.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!--
+  TEMPLATE — copy this file to create a new guide page.
+
+  Steps to add a new page:
+  1. Copy this file into /pages, rename it (e.g. pages/binary-trees.html).
+  2. Fill in <title>, the kicker/h1/lede, and the article content below.
+  3. Register it in /assets/js/layout-data.js — add an entry to NAV (so it
+     shows in the sidebar) and to SEARCH_INDEX (so it's searchable).
+  4. Update the prev/next links at the bottom to fit it into the sequence.
+  5. If the page has code, keep the highlight.js <link>/<script> tags in
+     <head> — they're what colors the C++ syntax.
+
+  Everything with an id of topbar-root / sidebar-root / toc-root is filled
+  in automatically by assets/js/layout.js — don't hand-write that markup.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PAGE TITLE — DSA_guide</title>
+<meta name="description" content="One-sentence summary of this page, shown in search engines." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="../assets/css/style.css" />
+<!-- Only needed if this page has code blocks: -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>const BASE = "../";</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <!-- Breadcrumb: link each ancestor hub, separated by a "/" span.
+           Omit this div entirely for a page with no hub ancestor. -->
+      <div class="doc-kicker"><a href="parent-hub.html">Parent hub</a><span class="sep">/</span><a href="grandparent-hub.html">Grandparent hub</a></div>
+      <h1>Page title</h1>
+      <p class="doc-lede">One or two sentences that frame what this page covers and why it matters.</p>
+
+      <h2>First section</h2>
+      <p>Body text goes here. Use <code>&lt;code&gt;</code> for inline code, and the classes
+        <code>.text-data</code> / <code>.text-pointer</code> to color a word teal or amber
+        when you want to call out a value vs. a reference/index.</p>
+
+      <!-- Diagram example:
+      <div class="diagram">...svg...</div>
+      <p class="diagram-caption">Caption explaining the diagram.</p>
+      -->
+
+      <!-- Code block example:
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">example.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// code here</code></pre>
+      </div>
+      -->
+
+      <!-- Callout example:
+      <div class="callout tip"><span class="callout-label">Tip</span><p>...</p></div>
+      Variants: .tip (teal), .note (amber), .warn (red)
+      -->
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="PREV.html"><span class="pn-dir">← Previous</span><span class="pn-title">Previous page title</span></a>
+        <a class="pn-link next" href="NEXT.html"><span class="pn-dir">Next →</span><span class="pn-title">Next page title</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="../assets/js/layout-data.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/code.js"></script>
+</body>
+</html>

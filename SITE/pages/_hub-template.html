@@ -1,0 +1,70 @@
+<!--
+  HUB TEMPLATE — copy this to create a new category page (one that just
+  shows a card grid linking to its children, e.g. like data-structures.html).
+
+  Steps:
+  1. Copy this file into /pages, rename it (e.g. pages/trees-hub.html).
+  2. Fill in <title>, breadcrumb (if it has a parent hub), h1, and lede.
+  3. Add one .topic-card per child inside .card-grid — copy an existing one
+     from data-structures.html or linear-structures.html for the pattern.
+     Add a <span class="soon-tag">soon</span> next to the title for any
+     child whose real page isn't written yet.
+  4. In /assets/js/layout-data.js: add this node to NAV with a `children`
+     array (this is what gives it a sidebar chevron), and add it to
+     SEARCH_INDEX.
+  5. Fix the prev/next links at the bottom.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HUB TITLE — DSA_guide</title>
+<meta name="description" content="One-sentence summary of this category." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="../assets/css/style.css" />
+<script>const BASE = "../";</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <!-- Omit this div if this hub has no parent hub (top-level category). -->
+      <div class="doc-kicker"><a href="parent-hub.html">Parent hub</a></div>
+      <h1>Hub title</h1>
+      <p class="doc-lede">One or two sentences framing what this category covers and how its children relate to each other.</p>
+
+      <div class="card-grid">
+        <a class="topic-card" href="child-one.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><!-- icon paths --></svg>
+          <div><h3>Child one</h3><p>Short description of this child page.</p></div>
+        </a>
+        <a class="topic-card" href="child-two.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><!-- icon paths --></svg>
+          <div><h3>Child two</h3><p>Short description of this child page.</p><span class="soon-tag">soon</span></div>
+        </a>
+      </div>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="PREV.html"><span class="pn-dir">← Previous</span><span class="pn-title">Previous page title</span></a>
+        <a class="pn-link next" href="NEXT.html"><span class="pn-dir">Next →</span><span class="pn-title">Next page title</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="../assets/js/layout-data.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/search.js"></script>
+</body>
+</html>

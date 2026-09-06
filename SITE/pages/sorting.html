@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sorting — Overview — DSA_guide</title>
+<meta name="description" content="Six core sorting algorithms, compared by how they work and how fast they run." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="../assets/css/style.css" />
+<script>const BASE = "../";</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a href="algorithms.html">Algorithms</a></div>
+      <h1>Sorting — overview</h1>
+      <p class="doc-lede">Sorting is a problem with many valid solutions. Every algorithm on this page produces the same correct, ordered output — what separates them is <em>how</em> they get there, and at what cost.</p>
+
+      <h2>Why so many sorting algorithms?</h2>
+      <p>If correctness were the only requirement, one algorithm would be enough. In practice, the right choice depends on input size, how the data starts out, memory constraints, and whether you need the sort to be <strong>stable</strong> (equal elements keep their relative order). Complexity — time and space — is the main lens this guide uses to tell them apart.</p>
+
+      <h2>The six core algorithms</h2>
+      <p>This series covers six algorithms in depth, each with its own dedicated walkthrough and C++ implementation. A handful of less common ones — Shell, Counting, Radix, Bucket, and Tim Sort — are deferred to a future advanced guide.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Algorithm</th><th>In short</th><th>Average time</th></tr></thead>
+          <tbody>
+            <tr><td>Bubble sort</td><td>Repeatedly swaps neighboring out-of-order pairs</td><td class="mono">O(n²)</td></tr>
+            <tr><td>Selection sort</td><td>Finds the minimum remaining element, places it</td><td class="mono">O(n²)</td></tr>
+            <tr><td>Insertion sort</td><td>Builds the sorted section one element at a time</td><td class="mono">O(n²)</td></tr>
+            <tr><td>Merge sort</td><td>Splits, sorts halves recursively, merges them</td><td class="mono">O(n log n)</td></tr>
+            <tr><td>Quick sort</td><td>Partitions around a pivot, recurses on each side</td><td class="mono">O(n log n)</td></tr>
+            <tr><td>Heap sort</td><td>Builds a heap, repeatedly extracts the max</td><td class="mono">O(n log n)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-label">Coming soon</span>
+        <p>Each algorithm above is getting its own page with a full walkthrough, step-by-step diagram, and C++ implementation. This overview will link out to them as they're published.</p>
+      </div>
+
+      <h2>Choosing one</h2>
+      <p>As a rule of thumb: the three <span class="text-pointer">O(n²)</span> algorithms are simple to write and reason about but don't scale — useful for learning, small inputs, or nearly-sorted data (insertion sort in particular). The three <span class="text-data">O(n log n)</span> algorithms are what you'd actually reach for on real workloads; which of them depends on whether you can afford merge sort's extra memory, need quick sort's typically-fast average case, or want heap sort's guaranteed worst case.</p>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="searching.html"><span class="pn-dir">← Previous</span><span class="pn-title">Search algorithms</span></a>
+        <a class="pn-link next" href="patterns.html"><span class="pn-dir">Next →</span><span class="pn-title">Common patterns</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="../assets/js/layout-data.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/search.js"></script>
+</body>
+</html>
