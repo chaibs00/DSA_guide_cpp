@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>C++ Intermediate — DSA_guide</title>
+<meta name="description" content="Strings and character handling, namespaces, type aliases, classes, and structs in C++." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="../assets/css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>const BASE = "../";</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a href="cpp-starter.html">C++ starter</a></div>
+      <h1>C++ intermediate</h1>
+      <p class="doc-lede">Strings, namespaces, type aliases, classes, and structs — the building blocks you'll lean on once code stops fitting in a single function.</p>
+
+
+
+      <h2 class="text-data">1. Strings and character handling</h2>
+      <p>C++ provides the <code>std::string</code> class to work with text. Strings are mutable — you can modify them after creation.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Declaring strings</h3>
+          <p>Double quotes create a <code>std::string</code>; single quotes create a single <code>char</code>.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">declaring.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;string&gt;
+
+std::string str1 = "This is a string";  // double quotes -&gt; std::string
+
+char letter = 'A';   // single quotes -&gt; char
+char digit = '7';</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Converting numbers and strings</h3>
+          <p><strong>Number → string</strong></p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">to-string.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">double num = 23.43;
+std::string str = std::to_string(num);
+std::cout &lt;&lt; str;</code></pre>
+          </div>
+
+          <p><strong>String → number</strong></p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Function</th><th>Converts to</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">std::stoi(str)</td><td>int</td></tr>
+                <tr><td class="mono">std::stol(str)</td><td>long</td></tr>
+                <tr><td class="mono">std::stof(str)</td><td>float</td></tr>
+                <tr><td class="mono">std::stod(str)</td><td>double</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">stoi.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">std::string s = "42";
+int x = std::stoi(s);  // x = 42</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Looping through a string</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">loop-string.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">std::string S = "Hello";
+
+// Index-based loop
+for (int i = 0; i &lt; S.size(); i++)
+    std::cout &lt;&lt; S[i];
+
+// Range-based loop
+for (char ch : S)
+    std::cout &lt;&lt; ch;</code></pre>
+          </div>
+
+          <h3 class="text-pointer">String operations</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">string-ops.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">std::string s1 = "Hello ";
+std::string s2 = s1 + "World!";  // concatenation
+s1 += "!";                        // append
+
+if (s1 == s2)
+    std::cout &lt;&lt; "Equal";        // comparison</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Common string methods</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Method</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">s.append(str)</td><td>Add str to the end</td><td class="mono">"Hello".append(" World") → "Hello World"</td></tr>
+                <tr><td class="mono">s.compare(str)</td><td>Compare strings (-1, 0, 1)</td><td class="mono">"apple".compare("banana") → -1</td></tr>
+                <tr><td class="mono">s.erase(index, length)</td><td>Remove characters</td><td class="mono">"Hello World".erase(5, 6) → "Hello"</td></tr>
+                <tr><td class="mono">s.find(str)</td><td>Find substring</td><td class="mono">"Hello World".find("World") → 6</td></tr>
+                <tr><td class="mono">s.insert(index, str)</td><td>Insert string</td><td class="mono">"Hello".insert(5, " World") → "Hello World"</td></tr>
+                <tr><td class="mono">s.size() / s.length()</td><td>Get string length</td><td class="mono">"Hello".size() → 5</td></tr>
+                <tr><td class="mono">s.substr(start, length)</td><td>Extract substring</td><td class="mono">"Hello World".substr(6,5) → "World"</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="text-pointer">Character handling — &lt;cctype&gt;</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Function</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">isalnum(ch)</td><td>Alphanumeric?</td><td class="mono">isalnum('A') → true</td></tr>
+                <tr><td class="mono">isalpha(ch)</td><td>Alphabetic?</td><td class="mono">isalpha('z') → true</td></tr>
+                <tr><td class="mono">islower(ch)</td><td>Lowercase?</td><td class="mono">islower('a') → true</td></tr>
+                <tr><td class="mono">isupper(ch)</td><td>Uppercase?</td><td class="mono">isupper('A') → true</td></tr>
+                <tr><td class="mono">isdigit(ch)</td><td>Numeric?</td><td class="mono">isdigit('4') → true</td></tr>
+                <tr><td class="mono">isspace(ch)</td><td>Whitespace?</td><td class="mono">isspace(' ') → true</td></tr>
+                <tr><td class="mono">std::tolower(ch)</td><td>Convert to lowercase</td><td class="mono">tolower('A') → 'a'</td></tr>
+                <tr><td class="mono">std::toupper(ch)</td><td>Convert to uppercase</td><td class="mono">toupper('a') → 'A'</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">cctype.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">char ch = 'B';
+if (islower(ch)) {
+    std::cout &lt;&lt; "Lowercase";
+} else {
+    std::cout &lt;&lt; "Uppercase";  // Output: Uppercase
+}
+
+char lower = std::tolower(ch);  // 'b'</code></pre>
+          </div>
+        </div>
+      </details>
+
+
+
+
+
+      <h2 class="text-data">2. Namespaces</h2>
+      <p>Namespaces help prevent name conflicts in large projects by grouping identifiers under a named scope.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Custom namespaces</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">namespaces.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+
+namespace First {
+    int x = 1;
+}
+
+namespace Second {
+    int x = 2;
+}
+
+int main() {
+    int x = 0;
+    std::cout &lt;&lt; x &lt;&lt; std::endl;          // 0
+    std::cout &lt;&lt; First::x &lt;&lt; std::endl;   // 1
+    std::cout &lt;&lt; Second::x &lt;&lt; std::endl;  // 2
+
+    return 0;
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Using the standard namespace</h3>
+          <p>The <code>std</code> namespace contains standard library components like <code>cout</code>, <code>cin</code>, <code>endl</code>, <code>vector</code>, <code>string</code>, and more.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">using-std.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello world!";
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>With <code>using namespace std;</code> in scope, you can write <code>cout</code>, <code>cin</code>, and <code>endl</code> without the <code>std::</code> prefix.</p>
+          </div>
+        </div>
+      </details>
+
+
+
+
+
+
+
+
+      <h2 class="text-data">3. Typedef and type alias</h2>
+      <p>C++ lets you create aliases for existing data types.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p>An alias is simply an alternative name for a data type — useful for long or complex type names.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">alias.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;vector&gt;
+
+// `table_t` is an alias for `std::vector&lt;int&gt;`
+typedef std::vector&lt;int&gt; table_t;
+using table_t = std::vector&lt;int&gt;;  // modern syntax
+
+int main() {
+    table_t mytable;  // equivalent to std::vector&lt;int&gt; mytable;
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>The <code>using</code> syntax is generally preferred over <code>typedef</code> for readability, especially with more complex types.</p>
+          </div>
+        </div>
+      </details>
+
+
+
+
+
+
+
+      <h2 class="text-data">4. Classes</h2>
+      <p>A class is a blueprint for creating objects — it can contain attributes (data members) and methods (functions).</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Creating a class</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">class.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+class Human {
+public:
+    std::string name;
+    std::string occupation;
+    int age;
+
+    void nameFunc() {
+        std::cout &lt;&lt; "Name: " &lt;&lt; name &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Human human1;
+    human1.name = "Alex";
+    human1.occupation = "Nothing";
+    human1.age = 89;
+
+    human1.nameFunc();  // Output: Name: Alex
+}</code></pre>
+          </div>
+          <ul>
+            <li><code>class Human</code> defines a class named <code>Human</code></li>
+            <li><code>name</code>, <code>occupation</code>, and <code>age</code> are <strong>attributes</strong> (data members)</li>
+            <li><code>nameFunc()</code> is a <strong>method</strong> that prints the name</li>
+            <li><code>human1</code> is an <strong>object</strong> of the <code>Human</code> class</li>
+            <li>Public members can be accessed and modified directly from the object</li>
+          </ul>
+        </div>
+      </details>
+
+
+
+
+
+
+
+
+      <h2 class="text-data">5. Structs</h2>
+      <p>A struct groups related variables under one name. Unlike arrays, a struct can store variables of different types.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Creating a struct</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">struct.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+struct Point {
+    int x;
+    int y;
+};
+
+int main() {
+    Point p1;
+    p1.x = 10;
+    p1.y = 20;
+
+    std::cout &lt;&lt; "Point: (" &lt;&lt; p1.x &lt;&lt; ", " &lt;&lt; p1.y &lt;&lt; ")";
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Structs are usually passed by value — passing one to a function creates a copy, so changes inside the function don't affect the original unless you pass by reference or pointer.</p>
+          </div>
+        </div>
+      </details>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="01_cpp_basic.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ basics</span></a>
+        <a class="pn-link next" href="03_cpp_advanced.html"><span class="pn-dir">Next →</span><span class="pn-title">C++ advanced</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="../assets/js/layout-data.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/search.js"></script>
+<script src="../assets/js/code.js"></script>
+</body>
+</html>

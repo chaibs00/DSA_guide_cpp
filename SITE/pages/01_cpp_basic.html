@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>C++ Learning Path — DSA guide</title>
-<meta name="description" content="A quick refresher on the C++ syntax you'll need before diving into data structures." />
+<title>C++ Basics — DSA_guide</title>
+<meta name="description" content="User input, data types, operators, conditionals, loops, functions, and function templates in C++." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
 <link rel="stylesheet" href="../assets/css/style.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
@@ -22,34 +22,399 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker">C++ Starter</div>
+      <div class="doc-kicker"><a href="cpp-starter.html">C++ starter</a></div>
+      <h1>C++ basics</h1>
+      <p class="doc-lede">The essential syntax before you touch a single data structure: reading input, core types, control flow, functions, and templates.</p>
 
 
-      <h1>C++ Basics</h1>
-
-     <div class="callout tip">
-        <span class="callout-label">Write your first Hello World !</span>
-      </div>
-
+      <div class="callout tip">
+    <span class="callout-label">Write your first Hello World</span>
       <div class="code-block">
-        <div class="code-block-head">
-            <button class="copy-btn">Copy</button>
-        </div>
-
+        <div class="code-block-head"><span class="code-block-file">hello.cpp</span><button class="copy-btn">Copy</button></div>
         <pre><code class="language-cpp">#include &lt;iostream&gt;
-int main() {       
+
+int main(){
     std::cout &lt;&lt; "Hello world!";
     return 0;
 }</code></pre>
+      </div>
+      <ul>
+        <li><code>#include &lt;iostream&gt;</code> — includes the standard input/output library</li>
+        <li><code>int main()</code> — the starting point of every C++ program</li>
+        <li><code>std::cout</code> — sends output to the console</li>
+        <li><code>&lt;&lt;</code> — the output operator, streams data to the output</li>
+        <li><code>return 0;</code> — indicates successful program execution</li>
+      </ul>
+      </div>
+      
+
+      <h2 class="text-data">1. Getting user input</h2>
+      <p>Let's read simple input from the user in C++, <strong>variables and their types must be declared before use.</strong></p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p><strong>Example using <code>std::cin</code></strong></p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">input.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::string name;
+    int age;
+
+    std::cout &lt;&lt; "Enter your name: ";
+    std::cin &gt;&gt; name;
+
+    std::cout &lt;&lt; "Enter your age: ";
+    std::cin &gt;&gt; age;
+
+    std::cout &lt;&lt; "Hello " &lt;&lt; name &lt;&lt; ", you are " &lt;&lt; age &lt;&lt; " years old.";
+    return 0;
+}</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">Enter your name: Alice
+Enter your age: 60
+Hello Alice, you are 60 years old.</code></pre>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p><code>std::cin</code> stops reading at the first whitespace. A name like "Alice John" only captures "Alice" — the next <code>std::cin &gt;&gt; age</code> then reads the leftover "John" instead of a number, silently producing <code>0</code>.</p>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">Enter your name: Alice John
+Enter your age:
+Hello Alice, you are 0 years old.</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Fix</span>
+            <p>Use <code>std::getline(std::cin, name);</code> instead of <code>std::cin &gt;&gt; name;</code> — it reads the whole line, spaces included.</p>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">Enter your name: Alice John
+Enter your age: 10
+Hello Alice John, you are 10 years old.</code></pre>
+          </div>
         </div>
+      </details>
 
-      
+      <h2 class="text-data">2. Data types</h2>
+      <p>C++ provides several <strong>built-in</strong> types to store different kinds of values.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Type</th><th>Description</th><th>Example</th><th>Typical size</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">int</td><td>Whole numbers</td><td class="mono">int age = 25;</td><td>4 bytes</td></tr>
+                <tr><td class="mono">float</td><td>Decimals, low precision</td><td class="mono">float price = 10.5f;</td><td>4 bytes</td></tr>
+                <tr><td class="mono">double</td><td>Decimals, high precision</td><td class="mono">double pi = 3.14159;</td><td>8 bytes</td></tr>
+                <tr><td class="mono">char</td><td>A single character</td><td class="mono">char grade = 'A';</td><td>1 byte</td></tr>
+                <tr><td class="mono">bool</td><td>True or false</td><td class="mono">bool isActive = true;</td><td>1 byte</td></tr>
+                <tr><td class="mono">std::string</td><td>Text (sequence of characters)</td><td class="mono">std::string name = "Ali";</td><td>varies</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted">Sizes can vary by system and compiler. <code>std::string</code> isn't a primitive type — it comes from the Standard Library's <code>&lt;string&gt;</code> header.</p>
+        </div>
+      </details>
 
-      
+
+
+      <!--  -->
+      <h2 class="text-data">3. Operators</h2>
+      <p>Operators are symbols used to perform operations on variables and values.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3>Arithmetic operators</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">+</td><td>Addition</td><td class="mono">a + b</td></tr>
+                <tr><td class="mono">-</td><td>Subtraction</td><td class="mono">a - b</td></tr>
+                <tr><td class="mono">*</td><td>Multiplication</td><td class="mono">a * b</td></tr>
+                <tr><td class="mono">/</td><td>Division</td><td class="mono">a / b</td></tr>
+                <tr><td class="mono">%</td><td>Modulus (remainder)</td><td class="mono">a % b</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Relational operators</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">==</td><td>Equal to</td><td class="mono">a == b</td></tr>
+                <tr><td class="mono">!=</td><td>Not equal to</td><td class="mono">a != b</td></tr>
+                <tr><td class="mono">&gt;</td><td>Greater than</td><td class="mono">a &gt; b</td></tr>
+                <tr><td class="mono">&lt;</td><td>Less than</td><td class="mono">a &lt; b</td></tr>
+                <tr><td class="mono">&gt;=</td><td>Greater or equal</td><td class="mono">a &gt;= b</td></tr>
+                <tr><td class="mono">&lt;=</td><td>Less or equal</td><td class="mono">a &lt;= b</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Logical operators</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">&amp;&amp;</td><td>Logical AND</td><td class="mono">a &amp;&amp; b</td></tr>
+                <tr><td class="mono">||</td><td>Logical OR</td><td class="mono">a || b</td></tr>
+                <tr><td class="mono">!</td><td>Logical NOT</td><td class="mono">!a</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Assignment operators</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">=</td><td>Assign</td><td class="mono">a = 5</td></tr>
+                <tr><td class="mono">+=</td><td>Add and assign</td><td class="mono">a += 2</td></tr>
+                <tr><td class="mono">-=</td><td>Subtract and assign</td><td class="mono">a -= 2</td></tr>
+                <tr><td class="mono">*=</td><td>Multiply and assign</td><td class="mono">a *= 2</td></tr>
+                <tr><td class="mono">/=</td><td>Divide and assign</td><td class="mono">a /= 2</td></tr>
+                <tr><td class="mono">%=</td><td>Modulus and assign</td><td class="mono">a %= 2</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Ternary operator</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operator</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">?:</td><td>Conditional</td><td class="mono">result = (a &gt; b) ? a : b;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A short form of <code>if-else</code>: if the condition (<code>a &gt; b</code>) is true, the expression evaluates to <code>a</code> — otherwise, to <code>b</code>.</p>
+        </div>
+      </details>
+
+
+
+      <h2 class="text-data">4. Conditional statements</h2>
+      <p>Conditional statements let your program make decisions based on a condition.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p><strong>if</strong> — runs a block of code when a condition is true.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">if.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int number;
+
+if (number &gt; 0) {
+    std::cout &lt;&lt; "The number is positive.";
+}</code></pre>
+          </div>
+
+          <p><strong>else if</strong> — adds additional conditions after an <code>if</code>.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">else-if.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int number;
+
+if (number &gt; 0) {
+    std::cout &lt;&lt; "Positive";
+} else if (number &lt; 0) {
+    std::cout &lt;&lt; "Negative";
+}</code></pre>
+          </div>
+
+          <p><strong>else</strong> — runs when every previous condition is false.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">else.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int number;
+
+if (number &gt; 0) {
+    std::cout &lt;&lt; "Positive";
+} else if (number &lt; 0) {
+    std::cout &lt;&lt; "Negative";
+} else {
+    std::cout &lt;&lt; "Zero";
+}</code></pre>
+          </div>
+
+          <p><strong>switch</strong> — selects one of many blocks based on a value.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">switch.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int day;
+
+switch (day) {
+    case 1:
+        std::cout &lt;&lt; "Monday";
+        break;
+    case 2:
+        std::cout &lt;&lt; "Tuesday";
+        break;
+    case 3:
+        std::cout &lt;&lt; "Wednesday";
+        break;
+    default:
+        std::cout &lt;&lt; "Other day";
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p><code>break</code> stops execution from "falling through" into the next case.</p>
+          </div>
+        </div>
+      </details>
+
+
+
+
+      <h2 class="text-data">5. Loops</h2>
+      <p>Loops let you run a block of code repeatedly until a condition is met.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p><strong>while</strong> — runs while a condition stays true.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">while.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int i = 1;
+while (i &lt;= 5) {
+    std::cout &lt;&lt; i &lt;&lt; " ";
+    i++;
+}
+// Output: 1 2 3 4 5</code></pre>
+          </div>
+
+          <p><strong>do-while</strong> — runs at least once, then repeats while a condition is true.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">do-while.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int i = 1;
+do {
+    std::cout &lt;&lt; i &lt;&lt; " ";
+    i++;
+} while (i &lt;= 5);
+// Output: 1 2 3 4 5</code></pre>
+          </div>
+
+          <p><strong>for</strong> — used when the number of iterations is known in advance.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">for.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">for (int i = 1; i &lt;= 5; i++) {
+    std::cout &lt;&lt; i &lt;&lt; " ";
+}
+// Output: 1 2 3 4 5</code></pre>
+          </div>
+
+          <p><strong>range-based for (for-each)</strong> — simplifies traversing arrays or other containers.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">range-for.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int arr[] = {1, 2, 3, 4, 5};
+for (auto element : arr) {
+    std::cout &lt;&lt; element &lt;&lt; " ";
+}
+// Output: 1 2 3 4 5</code></pre>
+          </div>
+        </div>
+      </details>
+
+
+
+
+      <h2 class="text-data">6. Functions</h2>
+      <p>Functions are blocks of code that perform a specific task — they can accept parameters and return a value.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">functions.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int add(int a, int b) {
+    return a + b;
+}
+
+float multiply(float x, float y) {
+    return x * y;
+}
+
+int main() {
+    int sum = add(3, 5);                 // sum = 8
+    float product = multiply(2.5, 4.0);  // product = 10.0
+
+    std::cout &lt;&lt; "Sum: " &lt;&lt; sum &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Product: " &lt;&lt; product &lt;&lt; std::endl;
+
+    return 0;
+}</code></pre>
+          </div>
+
+          <h3>Math-related functions</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Function</th><th>Example</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">std::max(a, b)</td><td class="mono">std::max(4, 7)</td><td>Returns the maximum of two numbers</td></tr>
+                <tr><td class="mono">std::min(a, b)</td><td class="mono">std::min(4, 7)</td><td>Returns the minimum of two numbers</td></tr>
+                <tr><td class="mono">pow(a, b)</td><td class="mono">pow(3, 2)</td><td>Computes a^b</td></tr>
+                <tr><td class="mono">sqrt(x)</td><td class="mono">sqrt(36)</td><td>Returns the square root of x</td></tr>
+                <tr><td class="mono">abs(x)</td><td class="mono">abs(-9)</td><td>Returns the absolute value of x</td></tr>
+                <tr><td class="mono">round(x)</td><td class="mono">round(4.3)</td><td>Rounds x to the nearest integer</td></tr>
+                <tr><td class="mono">ceil(x)</td><td class="mono">ceil(4.3)</td><td>Rounds x up to the nearest integer</td></tr>
+                <tr><td class="mono">floor(x)</td><td class="mono">floor(4.7)</td><td>Rounds x down to the nearest integer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+
+
+
+
+
+      <h2 class="text-data">7. Function templates</h2>
+      <p>A function template lets you write a single function that works across different data types.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p><strong>Single-type template</strong></p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">template.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">template &lt;typename T&gt;
+T max(T x, T y) {
+    return (x &gt; y) ? x : y;
+}
+
+int main() {
+    max(2, 1);          // int
+    max(2.987, 1.234);  // double
+    max('4', '7');      // char
+    max(true, false);   // bool
+}</code></pre>
+          </div>
+
+          <p><strong>Template with two different types</strong></p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">template-two-types.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">template &lt;typename T, typename U&gt;
+auto max(T x, U y) {
+    return (x &gt; y) ? x : y;
+}
+
+int main() {
+    max(true, 2);  // bool and int
+}</code></pre>
+          </div>
+        </div>
+      </details>
 
       <div class="doc-footer-nav">
-        <a class="pn-link next" href="00_cpp-starter.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ Starter</span></a>
-        <a class="pn-link next" href="02_cpp_inter.html"><span class="pn-dir">Next →</span><span class="pn-title">C++ Intermediate</span></a>
+        <a class="pn-link prev" href="00_cpp-starter.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ starter</span></a>
+        <a class="pn-link next" href="02_cpp_inter.html"><span class="pn-dir">Next →</span><span class="pn-title">C++ intermediate</span></a>
       </div>
     </article>
   </div>
