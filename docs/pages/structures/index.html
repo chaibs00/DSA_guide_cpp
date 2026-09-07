@@ -3,11 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Data Structures — DSA_guide</title>
-<meta name="description" content="Linear and non-linear data structures, explained with C++ code and memory diagrams." />
+<title>Data structures — DSA_guide</title>
+<meta name="description" content="The two families of data structures — linear and non-linear — with the structures that belong to each." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -20,22 +28,58 @@
   <div class="content-col">
     <article class="doc">
       <h1>Data structures</h1>
-      <p class="doc-lede">Every structure below falls into one of two families: <strong class="text-data">linear</strong>, where elements sit in a sequence, or <strong class="text-pointer">non-linear</strong>, where they branch or connect in more complex shapes. Pick a family to see what's inside.</p>
+      <p class="doc-lede">A data structure is a way of organising data in memory. Which one you reach for depends on how the elements need to relate to each other — sitting in a <strong class="text-data">line</strong>, or branching into a <strong class="text-pointer">network</strong>.</p>
 
-      <div class="card-grid">
-        <a class="topic-card" href="linear-structures.html">
-          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="9" width="5" height="6"/><rect x="9.5" y="9" width="5" height="6"/><rect x="17" y="9" width="5" height="6"/></svg>
-          <div><h3>Linear data structures</h3><p>Arrays, strings, linked lists, stacks, and queues.</p></div>
-        </a>
-        <a class="topic-card" href="non-linear-structures.html">
-          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="5" r="2.4"/><circle cx="5" cy="18" r="2.4"/><circle cx="19" cy="18" r="2.4"/><path d="M12 7.4L6.3 16M12 7.4l5.7 8.6"/></svg>
-          <div><h3>Non-linear data structures</h3><p>Trees, graphs, and structures that branch.</p></div>
-        </a>
+      
+
+
+      <h2 class="text-data">1. Linear data structures</h2>
+      <p>Elements sit in a single <span class="text-data">sequence</span>. Each one has at most one predecessor and one successor, so you can walk the whole structure from start to end without ever choosing a branch.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Structure</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-data">Array</td><td>A fixed-size block of same-type <span class="text-data">values</span>, reached directly by index.</td></tr>
+            <tr><td class="mono text-data">String</td><td>A sequence of characters — an array with text-specific tooling on top.</td></tr>
+            <tr><td class="mono text-data">Linked list</td><td>Nodes scattered across memory, each holding a <span class="text-pointer">pointer</span> to the next.</td></tr>
+            <tr><td class="mono text-data">Stack</td><td>Last in, first out — you add and remove at one end only.</td></tr>
+            <tr><td class="mono text-data">Queue</td><td>First in, first out — add at the back, remove from the front.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><a class="btn btn-secondary" data-href="pages/structures/linear/index.html">Explore linear structures →</a></p>
+
+
+      <h2 class="text-pointer">2. Non-linear data structures</h2>
+      <p>One element can connect to many others through its <span class="text-pointer">links</span>. The data branches or forms a network, so traversing it means deciding which path to follow at each step.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Structure</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td class="mono text-pointer">Tree</td><td>A hierarchy — one root at the top, every node <span class="text-pointer">pointing</span> to its children.</td></tr>
+            <tr><td class="mono text-pointer">Binary search tree</td><td>An ordered tree: smaller <span class="text-data">values</span> left, larger ones right.</td></tr>
+            <tr><td class="mono text-pointer">Heap</td><td>A tree where every parent beats its children — smallest or largest on top.</td></tr>
+            <tr><td class="mono text-pointer">Graph</td><td>Vertices joined by <span class="text-pointer">edges</span>, any node free to reach any other.</td></tr>
+            <tr><td class="mono text-pointer">Hash table</td><td><span class="text-data">Keys</span> mapped to slots by a hash function, giving near-instant lookup.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><a class="btn btn-secondary" data-href="pages/structures/non_linear/index.html">Explore non-linear structures →</a></p>
+
+
+      <h2 class="text-data">3. Choosing between them</h2>
+      <div class="callout tip">
+        <span class="callout-label">Quick guide</span>
+        <p>Go <strong class="text-data">linear</strong> when order matters and you process items in sequence. Go <strong class="text-pointer">non-linear</strong> when the data is hierarchical, when relationships between items are arbitrary rather than sequential, or when you just need to find a <span class="text-data">value</span> by its key as fast as possible.</p>
       </div>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="pointers.html"><span class="pn-dir">← Previous</span><span class="pn-title">Pointers &amp; memory</span></a>
-        <a class="pn-link next" href="linear-structures.html"><span class="pn-dir">Next →</span><span class="pn-title">Linear data structures</span></a>
+        <a class="pn-link prev" data-href="pages/pointers.html"><span class="pn-dir">← Previous</span><span class="pn-title">Pointers &amp; memory</span></a>
+        <a class="pn-link next" data-href="pages/structures/linear/index.html"><span class="pn-dir">Next →</span><span class="pn-title">Linear data structures</span></a>
       </div>
     </article>
   </div>
@@ -45,8 +89,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
