@@ -112,16 +112,34 @@ img, svg { max-width: 100%; display: block; }
 .topbar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 16px;
+  gap: 10px;
   text-decoration: none;
   color: var(--text);
   white-space: nowrap;
 }
-.topbar-brand .mark { color: var(--data); }
-.topbar-brand .mark2 { color: var(--pointer); }
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+.brand-mark svg { width: 17px; height: 17px; }
+.topbar-brand:hover .brand-mark { border-color: var(--data); }
+
+.brand-text {
+  font-family: var(--font-mono);
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.brand-dsa { font-weight: 700; color: var(--text); }
+.brand-sub { font-weight: 500; color: var(--pointer); }
 
 .menu-btn {
   display: none;
@@ -849,6 +867,7 @@ table.doc-table td.mono { font-family: var(--font-mono); font-size: 13px; }
 /* ---------- mobile ---------- */
 @media (max-width: 900px) {
   .menu-btn { display: flex; }
+  .brand-text { display: none; }
   .search-trigger { width: auto; padding: 8px; }
   .search-trigger .search-label, .search-trigger kbd { display: none; }
   .sidebar {

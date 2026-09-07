@@ -2,6 +2,17 @@
 
 A plain HTML/CSS/JS docs site, built to run on GitHub Pages with no build step.
 
+```bash
+pages/
+  cpp/          starter.html  basics.html  intermediate.html  advanced.html
+  concepts/     complexity.html  pointers.html
+  structures/   index.html  linear/  non-linear/
+                linear/index.html  arrays.html  strings.html  linked-lists.html  stack.html  queue.html
+                non-linear/index.html  trees.html  graphs.html
+  algorithms/   index.html  searching.html  sorting.html
+  patterns.html
+```
+
 ## The navigation model
 
 The sidebar is a tree, but the site is more than a sidebar: some categories are also **hub pages** — a page whose only job is to show a card grid linking to its children. Clicking a category's name in the sidebar goes to its hub page; clicking the little chevron next to it expands/collapses its children in the sidebar without navigating anywhere.

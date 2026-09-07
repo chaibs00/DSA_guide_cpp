@@ -19,72 +19,129 @@
 const SITE_NAME = "DSA guide";
 const FOOTER_NAME = "CBS";
 
+// const NAV = [
+//   {
+//     title: "Getting started",
+//     children: [
+//       { title: "C++ starter", 
+//         url: "pages/00_cpp-starter.html",
+//         children: [
+//           { title: "Basics", url: "pages/01_cpp_basic.html" },
+//           { title: "Intermediate", url: "pages/02_cpp_inter.html" },
+//           { title: "Advanced", url: "pages/03_cpp_advanced.html" },
+//         ],
+//       },
+//     ],
+//   },
+
+//   {
+//     title: "Core concepts",
+//     children: [
+//       { title: "Complexity analysis", url: "pages/complexity.html" },
+//       { title: "Pointers & memory", url: "pages/pointers.html" },
+//     ],
+//   },
+
+//   {
+//     title: "Explore the guide",
+//     children: [
+//       {
+//         title: "Data structures",
+//         url: "pages/data-structures.html",
+//         children: [
+//           {
+//             title: "Linear data structures",
+//             url: "pages/linear-structures.html",
+//             children: [
+//               { title: "Arrays", url: "pages/arrays.html" },
+//               { title: "Strings", url: "pages/strings.html" },
+//               { title: "Linked list", url: "pages/linked-lists.html" },
+//               { title: "Stack", url: "pages/stack.html" },
+//               { title: "Queue", url: "pages/queue.html" },
+//             ],
+//           },
+
+//           {
+//             title: "Non-linear data structures",
+//             url: "pages/non-linear-structures.html",
+//             children: [
+//               { title: "Trees", url: "pages/tree.html" },
+//               { title: "Graphs", url: "pages/graphs.html" },
+//             ],
+//           },
+//         ],
+//       },
+
+//       {
+//         title: "Algorithms",
+//         url: "pages/algorithms.html",
+//         children: [
+//           { title: "Search algorithms", url: "pages/searching.html" },
+//           { title: "Sorting", url: "pages/sorting.html" },
+//         ],
+//       },
+
+//       {
+//         title: "Common patterns",
+//         url: "pages/patterns.html",
+//       },
+//     ],
+//   },
+// ];
+
 const NAV = [
   {
     title: "Getting started",
     children: [
-      { title: "C++ starter", 
-        url: "pages/00_cpp-starter.html",
+      { title: "C++ starter", url: "pages/cpp/index.html",
         children: [
-          { title: "Basics", url: "pages/01_cpp_basic.html" },
-          { title: "Intermediate", url: "pages/02_cpp_inter.html" },
-          { title: "Advanced", url: "pages/03_cpp_advanced.html" },
+          { title: "Basics", url: "pages/cpp/basics.html" },
+          { title: "Intermediate", url: "pages/cpp/intermediate.html" },
+          { title: "Advanced", url: "pages/cpp/advanced.html" },
         ],
       },
     ],
   },
-
   {
     title: "Core concepts",
     children: [
-      { title: "Complexity analysis", url: "pages/complexity.html" },
-      { title: "Pointers & memory", url: "pages/pointers.html" },
+      { title: "Complexity analysis", url: "pages/concepts/complexity.html" },
+      { title: "Pointers & memory", url: "pages/concepts/pointers.html" },
     ],
   },
-
   {
     title: "Explore the guide",
     children: [
       {
-        title: "Data structures",
-        url: "pages/data-structures.html",
+        title: "Data structures", url: "pages/structures/index.html",
         children: [
           {
-            title: "Linear data structures",
-            url: "pages/linear-structures.html",
+            title: "Linear data structures", url: "pages/structures/linear/index.html",
             children: [
-              { title: "Arrays", url: "pages/arrays.html" },
-              { title: "Strings", url: "pages/strings.html" },
-              { title: "Linked list", url: "pages/linked-lists.html" },
-              { title: "Stack", url: "pages/stack.html" },
-              { title: "Queue", url: "pages/queue.html" },
+              { title: "Arrays", url: "pages/structures/linear/arrays.html" },
+              { title: "Strings", url: "pages/structures/linear/strings.html" },
+              { title: "Linked list", url: "pages/structures/linear/linked-lists.html" },
+              { title: "Stack", url: "pages/structures/linear/stack.html" },
+              { title: "Queue", url: "pages/structures/linear/queue.html" },
             ],
           },
-
           {
-            title: "Non-linear data structures",
-            url: "pages/non-linear-structures.html",
+            title: "Non-linear data structures", url: "pages/structures/non-linear/index.html",
             children: [
-              { title: "Trees", url: "pages/tree.html" },
-              { title: "Graphs", url: "pages/graphs.html" },
+              { title: "Trees", url: "pages/structures/non-linear/trees.html" },
+              { title: "Graphs", url: "pages/structures/non-linear/graphs.html" },
             ],
           },
         ],
       },
-
       {
-        title: "Algorithms",
-        url: "pages/algorithms.html",
+        title: "Algorithms", url: "pages/algorithms/index.html",
         children: [
-          { title: "Search algorithms", url: "pages/searching.html" },
-          { title: "Sorting", url: "pages/sorting.html" },
+          { title: "Search algorithms", url: "pages/algorithms/searching.html" },
+          { title: "Sorting", url: "pages/algorithms/sorting.html" },
         ],
       },
-
-      {
-        title: "Common patterns",
-        url: "pages/patterns.html",
-      },
+      { title: "Common patterns", url: "pages/patterns/index.html" },
     ],
   },
 ];

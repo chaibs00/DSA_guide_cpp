@@ -6,11 +6,19 @@
 <title>C++ Basics — DSA_guide</title>
 <meta name="description" content="User input, data types, operators, conditionals, loops, functions, and function templates in C++." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -22,7 +30,7 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="cpp-starter.html">C++ starter</a></div>
+      <div class="doc-kicker"><a data-href="pages/cpp/index.html">C++ starter</a></div>
       <h1>C++ basics</h1>
       <p class="doc-lede">The essential syntax before you touch a single data structure: reading input, core types, control flow, functions, and templates.</p>
 
@@ -413,8 +421,8 @@ int main() {
       </details>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="00_cpp-starter.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ starter</span></a>
-        <a class="pn-link next" href="02_cpp_inter.html"><span class="pn-dir">Next →</span><span class="pn-title">C++ intermediate</span></a>
+        <a class="pn-link prev" data-href="pages/cpp/index.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ starter</span></a>
+        <a class="pn-link next" data-href="pages/cpp/intermediate.html"><span class="pn-dir">Next →</span><span class="pn-title">C++ intermediate</span></a>
       </div>
     </article>
   </div>
@@ -424,9 +432,13 @@ int main() {
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
-<script src="../assets/js/code.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>

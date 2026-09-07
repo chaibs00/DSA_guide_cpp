@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Page not found — DSA_guide</title>
 <link rel="stylesheet" href="assets/css/style.css" />
-<script>const BASE = "";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 <div class="topbar" id="topbar-root"></div>

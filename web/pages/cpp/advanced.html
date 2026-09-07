@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>C++ Advanced — DSA_guide</title>
+<meta name="description" content="Memory addresses, pointers, pass by value/reference/address, and dynamic memory on the heap in C++." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a data-href="pages/cpp/index.html">C++ starter</a></div>
+      <h1>C++ advanced</h1>
+      <p class="doc-lede">Where variables stop being names and start being addresses: memory addresses, pointers, how arguments really travel into functions, and manual allocation on the heap.</p>
+
+      <div class="callout note">
+        <span class="callout-label">Why this matters for DSA</span>
+        <p>Linked lists, trees, and graphs are all built from nodes that point at other nodes. Everything on this page is the vocabulary those structures are written in.</p>
+      </div>
+
+
+      <h2 class="text-data">1. Memory addresses</h2>
+      <p>A <strong>memory address</strong> is a location in the computer's memory where data is stored. In C++ you can read the address of a variable with the <strong>address-of operator</strong> (<code>&amp;</code>).</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Display the address of a variable</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">address.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int a = 10;
+std::cout &lt;&lt; "The address of a is: " &lt;&lt; &amp;a;</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">The address of a is: 0x7ffe413feecc</code></pre>
+          </div>
+
+          <p>Memory addresses are usually printed in <strong>hexadecimal</strong> (base 16).</p>
+          <ul>
+            <li><code>0x7ffe413feecc</code> = <code>140729993129676</code> in decimal</li>
+          </ul>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>The exact address changes on every run — the operating system decides where your variables live.</p>
+          </div>
+        </div>
+      </details>
+
+
+      <h2 class="text-data">2. Pointers</h2>
+      <p>A <strong>pointer</strong> is a variable that stores the <strong>memory address</strong> of another variable, letting you manipulate data directly in memory.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Syntax</h3>
+          <ul>
+            <li><code>&amp;</code> — <span class="text-pointer">address-of</span> operator: gets the address of a variable</li>
+            <li><code>*</code> — <span class="text-pointer">dereference</span> operator: accesses the value stored at an address</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">pointer.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int x = 10;
+int *ptr = &amp;x;  // ptr holds the address of x
+
+std::cout &lt;&lt; "Address of x: " &lt;&lt; &amp;x &lt;&lt; std::endl;
+std::cout &lt;&lt; "Value stored at *ptr: " &lt;&lt; *ptr &lt;&lt; std::endl;</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">Address of x: 0x7fffb81dedd4
+Value stored at *ptr: 10</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Null pointers</h3>
+          <p>A <strong>null pointer</strong> points to nothing — it signals that the pointer is not currently pointing at a valid memory location.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">null-pointer.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int *ptr = nullptr;  // initialize the pointer as null
+
+if (ptr == nullptr) {
+    std::cout &lt;&lt; "The pointer was not assigned to an address yet";
+}</code></pre>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>Dereferencing a null pointer is <strong>unsafe</strong> and usually crashes the program. Always check for <code>nullptr</code> first.</p>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">unsafe.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int *ptr = nullptr;
+std::cout &lt;&lt; *ptr;  // unsafe — undefined behaviour</code></pre>
+          </div>
+        </div>
+      </details>
+
+
+      <h2 class="text-data">3. Pass by value, reference, and address</h2>
+      <p>Understanding how data travels into a function is essential for writing efficient C++ — and for knowing when a function can change your data.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Pass by value</h3>
+          <p>A <strong>copy</strong> of the original variable is created. Changes made inside the function do not affect the original.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">pass-by-value.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void swapByValue(int a, int b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int main() {
+    int x = 5, y = 10;
+    swapByValue(x, y);  // x = 5, y = 10 (unchanged)
+    return 0;
+}</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">x = 5
+y = 10</code></pre>
+          </div>
+          <p><strong>Result:</strong> <code>x</code> and <code>y</code> are unchanged — the <strong>copies</strong> were swapped, not the originals.</p>
+
+          <h3 class="text-pointer">Pass by reference</h3>
+          <p>The function receives a <strong>reference</strong> to the original variable and works directly on the original data.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">pass-by-reference.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void swapByReference(int &amp;a, int &amp;b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int main() {
+    int x = 5, y = 10;
+    swapByReference(x, y);  // x = 10, y = 5 (swapped)
+    return 0;
+}</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">x = 10
+y = 5</code></pre>
+          </div>
+          <p><strong>Result:</strong> <code>x</code> and <code>y</code> are swapped because the function reaches the <strong>original memory locations</strong>.</p>
+
+          <h3 class="text-pointer">Pass by address (pointers)</h3>
+          <p>You pass the <strong>memory address</strong> of the variable. References let you use the variable directly; pointers require the dereference operator (<code>*</code>) to reach the value.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">pass-by-address.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+void swapByAddress(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int x = 5, y = 10;
+    swapByAddress(&amp;x, &amp;y);  // x = 10, y = 5 (swapped)
+    return 0;
+}</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">output</span></div>
+            <pre><code class="language-plaintext">x = 10
+y = 5</code></pre>
+          </div>
+          <p><strong>Result:</strong> <code>x</code> and <code>y</code> are swapped because the function holds their <strong>addresses</strong>.</p>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Way of passing</th><th>Signature</th><th>Call</th><th>Changes original?</th></tr></thead>
+              <tbody>
+                <tr><td>By value</td><td class="mono">void f(int a)</td><td class="mono">f(x)</td><td><span class="badge bad">no</span></td></tr>
+                <tr><td>By reference</td><td class="mono">void f(int &amp;a)</td><td class="mono">f(x)</td><td><span class="badge good">yes</span></td></tr>
+                <tr><td>By address</td><td class="mono">void f(int *a)</td><td class="mono">f(&amp;x)</td><td><span class="badge good">yes</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+
+      <h2 class="text-data">4. Dynamic memory (heap)</h2>
+      <p><strong>Dynamic memory</strong> is memory allocated at <strong>runtime</strong>, while the program is running. It's what you use when you don't know how much memory you'll need in advance.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Heap vs stack</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Stack</th><th>Heap</th></tr></thead>
+              <tbody>
+                <tr><td>Allocated automatically when variables are declared</td><td>Allocated manually with <code>new</code></td></tr>
+                <tr><td>Freed automatically when the function returns</td><td>Must be freed manually with <code>delete</code></td></tr>
+                <tr><td>Limited size</td><td>Larger and more flexible</td></tr>
+                <tr><td>Faster access</td><td>Slower access</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="text-pointer">Allocating memory — <code>new</code></h3>
+          <p>The <code>new</code> operator allocates memory on the <strong>heap</strong> and returns its address.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">new.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">// dynamically allocate memory for an integer
+int* ptr = new int;
+
+// assign a value to the allocated memory
+*ptr = 10;</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Deallocating memory — <code>delete</code></h3>
+          <p>Once you're done with dynamic memory you must <strong>free it</strong>, or you leak it.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">delete.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">delete ptr;  // deallocate the memory ptr points to</code></pre>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-label">Memory leaks</span>
+            <p>A <strong>memory leak</strong> happens when allocated memory is never deallocated. The memory stays reserved but is no longer reachable, consuming resources for nothing.</p>
+          </div>
+
+          <p><strong>Proper memory management:</strong></p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">manage.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* ptr = new int;
+*ptr = 42;
+
+// use the pointer...
+
+delete ptr;    // free the memory
+ptr = nullptr; // good practice: null it out after deleting</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Dynamic arrays</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">dynamic-array.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* arr = new int[5];  // allocate an array of 5 integers
+
+// use the array...
+
+delete[] arr;  // use delete[] for arrays</code></pre>
+          </div>
+          <div class="callout tip">
+            <span class="callout-label">Rule of thumb</span>
+            <p>Match the pair: <code>new</code> goes with <code>delete</code>, and <code>new[]</code> goes with <code>delete[]</code>.</p>
+          </div>
+        </div>
+      </details>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" data-href="pages/cpp/intermediate.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ intermediate</span></a>
+       </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
+</body>
+</html>
