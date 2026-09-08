@@ -103,7 +103,12 @@
       const isOpen = activePath.includes(node);
       const indent = 10 + depth * 14;
 
-      if (node.soon && !node.url) {
+      // if (node.soon && !node.url) {
+      //   return `<div class="nav-row" style="padding-left:${indent}px">
+      //     <span class="nav-link soon">${node.title}<span class="soon-tag">soon</span></span>
+      //   </div>`;
+      // }
+      if (node.soon) {
         return `<div class="nav-row" style="padding-left:${indent}px">
           <span class="nav-link soon">${node.title}<span class="soon-tag">soon</span></span>
         </div>`;

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Singly linked lists — DSA_guide</title>
+<meta name="description" content="Head and tail, defining a node, traversal, size, insertion and deletion in a singly linked list in C++." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a href="index.html">Linear data structures</a><span class="sep">/</span><a href="linked-lists.html">Linked lists</a></div>
+      <h1>Singly linked lists</h1>
+      <p class="doc-lede">Each node carries a value and one <strong class="text-pointer">next</strong> pointer, so the chain runs in a single direction. Everything below is a variation on the same move: walk to the right node, then rewire a pointer.</p>
+
+      <div class="diagram">
+        <img src="../../../figures/linked_lists.png" alt="A singly linked list drawn as a chain of nodes" />
+      </div>
+
+      <h2 class="text-data">Head and tail</h2>
+      <p>Two pointers describe the ends of the list. <span class="text-pointer">Head</span> holds the address of the first node and is your entry point to everything else — if the list is empty it points to <code>nullptr</code>. <span class="text-pointer">Tail</span> holds the address of the last node.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="diagram">
+            <img src="../../../figures/singly_list.png" alt="A singly linked list with head and tail pointers marked" />
+          </div>
+          <p class="diagram-caption">Lose the head pointer and you lose the whole list — nothing else knows where it starts.</p>
+        </div>
+      </details>
+
+      <h2 class="text-data">Defining and building a node</h2>
+      <p>A node groups two different variables under one name, which is exactly what a <code>struct</code> is for: the data, and the pointer to the next node.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — struct, constructors and a first list</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">The struct</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">node.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">struct Node {
+    int data;      // stores a value
+    Node* next;    // pointer to the next node
+};</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Constructors</h3>
+          <p>A constructor runs automatically when a node is created, so you can set the data and the pointer in one step instead of assigning them afterwards.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">node_ctor.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">struct Node {
+    int data;
+    Node* next;
+
+    // default: empty node, pointing nowhere
+    Node() : data(0), next(nullptr) {}
+
+    // value only — next still points nowhere
+    Node(int x) : data(x), next(nullptr) {}
+
+    // value and the node that follows it
+    Node(int x, Node* ptr) : data(x), next(ptr) {}
+};</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Building a list</h3>
+          <p>Create the last node first, then work backwards — each new node needs the address of the one after it.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">build.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int main() {
+    // data = 3, next → nullptr
+    Node* node3 = new Node(3);
+
+    // data = 2, next → node3
+    Node* node2 = new Node(2, node3);
+
+    // data = 1, next → node2
+    Node* node1 = new Node(1, node2);
+}</code></pre>
+          </div>
+
+          <div class="diagram">
+            <img src="../../../figures/single_list.png" alt="Three nodes linked in sequence" />
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Traversal</h2>
+      <p>Start at <code>head</code> and follow <code>next</code> until you hit <code>nullptr</code>. Copy the head into a temporary <code>current</code> pointer first — move <code>head</code> itself and you've thrown away the start of the list.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">traverse.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void traverse(Node* head) {
+
+    // temporary pointer, starting at the head
+    Node* current = head;
+
+    while (current != nullptr) {
+
+        cout &lt;&lt; current-&gt;data &lt;&lt; "  ";
+
+        // step to the next node
+        current = current-&gt;next;
+    }
+}</code></pre>
+          </div>
+          <p>When the loop ends <code>current</code> is <code>nullptr</code> and <code>head</code> is untouched.</p>
+        </div>
+      </details>
+
+      <h2 class="text-data">Getting the size</h2>
+      <p>There's no stored length — you count as you walk, which makes this <span class="text-pointer">O(n)</span> where a vector's <code>.size()</code> is instant.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">size.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int size(Node* head) {
+
+    Node* current = head;
+    int count = 0;
+
+    while (current != nullptr) {
+        count++;
+        current = current-&gt;next;
+    }
+
+    return count;
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Inserting elements</h2>
+      <p>Three positions, same shape each time: make the node, point it at what should follow, then point the thing before it at the new node. Order matters — link the new node first, or you'll lose the rest of the list.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — front, back and a given position</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">At the front</h3>
+          <p>Cheapest insertion there is: no traversal at all.</p>
+          <div class="diagram">
+            <img src="../../../figures/list_insert_front.png" alt="Inserting a node at the front of a list" />
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">add_front.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void add_front(int val, Node*&amp; head) {
+
+    Node* newNode = new Node(val);
+
+    // the new node points at the old first node
+    newNode-&gt;next = head;
+
+    // head now points at the new node
+    head = newNode;
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">At the end</h3>
+          <p>Without a <code>tail</code> pointer you have to walk to the last node first, which makes this <span class="text-pointer">O(n)</span>.</p>
+          <div class="diagram">
+            <img src="../../../figures/list_insert_back.png" alt="Inserting a node at the end of a list" />
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">add_back.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void add_back(int val, Node* head) {
+
+    Node* newNode = new Node(val);
+    Node* current = head;
+
+    // walk to the last node
+    while (current-&gt;next != nullptr) {
+        current = current-&gt;next;
+    }
+
+    // link it on
+    current-&gt;next = newNode;
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">At a given position</h3>
+          <p>Stop at the node <em>before</em> the target position — you need to change its <code>next</code>.</p>
+          <div class="diagram">
+            <img src="../../../figures/list_insert.png" alt="Inserting a node in the middle of a list" />
+          </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">insert_at.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void insert_at_position(int val, int pos, Node* head) {
+
+    Node* newNode = new Node(val);
+
+    // walk to the node before the position
+    Node* current = head;
+    for (int i = 1; i &lt; pos; i++) {
+        current = current-&gt;next;
+    }
+
+    // splice the new node into the chain
+    newNode-&gt;next = current-&gt;next;
+    current-&gt;next = newNode;
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Deleting an element</h2>
+      <p>Two steps every time: route the chain around the node, then <code>delete</code> it. Skip the second and the node leaks; do it in the wrong order and you're reading freed memory.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — front, back and a given position</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">From the front</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">delete_front.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void delete_front(Node*&amp; head) {
+
+    // keep hold of the old first node
+    Node* temp = head;
+
+    // move head along
+    head = head-&gt;next;
+
+    // free the old one
+    delete temp;
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">From the end</h3>
+          <p>You need the second-to-last node, because it's the one whose <code>next</code> has to become <code>nullptr</code>.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">delete_back.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void delete_back(Node*&amp; head) {
+
+    // walk to the second-to-last node
+    Node* current = head;
+    while (current-&gt;next-&gt;next != nullptr) {
+        current = current-&gt;next;
+    }
+
+    delete current-&gt;next;
+
+    // mark the new end of the list
+    current-&gt;next = nullptr;
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">At a given position</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">delete_at.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void delete_at_position(int pos, Node*&amp; head) {
+
+    // walk to the node before the target
+    Node* current = head;
+    for (int i = 1; i &lt; pos; i++) {
+        current = current-&gt;next;
+    }
+
+    // the node to remove
+    Node* temp = current-&gt;next;
+
+    // route around it
+    current-&gt;next = temp-&gt;next;
+
+    // free it
+    delete temp;
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <div class="callout warn">
+        <span class="callout-label">Watch out</span>
+        <p>These functions assume the list is long enough for what you're asking. On an empty list <code>current-&gt;next</code> dereferences <code>nullptr</code> and crashes, and the same happens when <code>pos</code> runs past the end. Real implementations check for those cases first.</p>
+      </div>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="linked-lists.html"><span class="pn-dir">← Previous</span><span class="pn-title">Linked lists</span></a>
+        <a class="pn-link next" href="linked-lists-doubly.html"><span class="pn-dir">Next →</span><span class="pn-title">Doubly linked lists</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
+</body>
+</html>

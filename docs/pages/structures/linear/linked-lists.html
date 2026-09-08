@@ -3,11 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Linked List — DSA_guide</title>
-<meta name="description" content="Nodes connected by next pointers — why insertion is cheap even though indexing isn't." />
+<title>Linked lists — DSA_guide</title>
+<meta name="description" content="What a linked list is, how nodes and pointers form a chain, and the singly, doubly and circular variants." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -19,26 +27,99 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="data-structures.html">Data structures</a><span class="sep">/</span><a href="linear-structures.html">Linear data structures</a></div>
-      <h1>Linked list</h1>
-      <p class="doc-lede">Nodes connected by <code>next</code> pointers — why insertion is cheap even though indexing isn't. This page is still being written.</p>
+      <div class="doc-kicker"><a href="index.html">Linear data structures</a></div>
+      <h1>Linked lists</h1>
+      <p class="doc-lede">A linked list is a chain of <strong class="text-data">nodes</strong>, each holding a value and a <strong class="text-pointer">pointer</strong> to the next one. Nothing sits in contiguous memory — the pointers are what hold the sequence together.</p>
 
-      <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>Builds on <a href="pointers.html">Pointers &amp; memory</a> — each node here is a small heap-allocated struct linked to the next by a pointer.</p>
+      <div class="callout warn">
+        <span class="callout-label">Prerequisites</span>
+        <p>Be comfortable with <span class="text-pointer">pointers</span>, dereferencing and dynamic memory allocation before starting here — a linked list is really just those three ideas applied in a loop. The <a data-href="pages/concepts/pointers.html">pointers &amp; memory</a> page covers what you need.</p>
       </div>
 
-      <h2>What's planned</h2>
+      <h2 class="text-data">What is a linked list?</h2>
+      <p>It's a linear structure built from individual nodes. Each node stores two things:</p>
       <ul>
-        <li>Node structure: value + <code>next</code> pointer</li>
-        <li>Head, tail, and traversal</li>
-        <li>Insertion and deletion, and why they're <code>O(1)</code> at a known position</li>
-        <li>Singly linked list vs. array — a direct tradeoff comparison</li>
+        <li>a piece of <span class="text-data">data</span>;</li>
+        <li>a <span class="text-pointer">next</span> pointer, holding the address of the following node.</li>
       </ul>
+
+      <div class="diagram">
+        <img src="../../../figures/node_lists.png" alt="A node holding a data field and a next pointer" />
+      </div>
+      <p class="diagram-caption">One node: a value, plus the address of whatever comes next.</p>
+
+      <p>The last node's <code>next</code> points to <code>nullptr</code>, and that's what marks the end of the list. Unlike an array, the elements are scattered across memory — each one simply knows where to find the next.</p>
+
+      <h2 class="text-data">Advantages and downsides</h2>
+      <p>Every trade-off below comes from the same source: pointers instead of contiguous memory.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Advantages</th><th>Downsides</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong class="text-data">Cheap insertion and deletion</strong><br>Rewire two pointers and you're done.</td>
+              <td><strong>No random access</strong><br>You can't jump straight to index <code>i</code>.</td>
+            </tr>
+            <tr>
+              <td><strong class="text-data">Grows and shrinks freely</strong><br>Size changes one node at a time, at runtime.</td>
+              <td><strong>Extra memory per node</strong><br>Every node pays for its <code>next</code> pointer.</td>
+            </tr>
+            <tr>
+              <td><strong class="text-data">No contiguous block needed</strong><br>Nodes fit wherever there's room.</td>
+              <td><strong>Slower traversal</strong><br>Scattered nodes defeat the CPU cache.</td>
+            </tr>
+            <tr>
+              <td><strong class="text-data">No shifting</strong><br>Inserting in the middle moves nothing.</td>
+              <td><strong>Reaching a position costs O(n)</strong><br>You must walk there from the head.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-data">Types of linked list</h2>
+
+      <h3 class="text-pointer">Singly linked</h3>
+      <p>Each node holds data and one <code>next</code> pointer. Traversal runs in one direction only.</p>
+      <div class="diagram">
+        <img src="../../../figures/single_list.png" alt="A singly linked list: three nodes chained by next pointers" />
+      </div>
+
+      <h3 class="text-pointer">Doubly linked</h3>
+      <p>Each node adds a <code>prev</code> pointer alongside <code>next</code>, so you can walk the list in both directions.</p>
+      <div class="diagram">
+        <img src="../../../figures/doubly_list.png" alt="A doubly linked list with next and prev pointers" />
+      </div>
+
+      <h3 class="text-pointer">Circular</h3>
+      <p>The last node points back to the first instead of to <code>nullptr</code>, closing the chain into a loop. This works on top of either of the two forms above.</p>
+      <div class="diagram">
+        <img src="../../../figures/circular_list_single.png" alt="A circular singly linked list" />
+      </div>
+      <div class="diagram">
+        <img src="../../../figures/circular_list_doubly.png" alt="A circular doubly linked list" />
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-label">Quick recap</span>
+        <p><strong class="text-data">Singly</strong> vs. <strong class="text-data">doubly</strong> describes how many pointers each node carries. <strong class="text-pointer">Circular</strong> vs. non-circular describes what the last node points at. The two axes are independent — you can have any combination.</p>
+      </div>
+
+      <h2 class="text-data">Where to go next</h2>
+      <div class="card-grid">
+        <a class="topic-card" href="linked-lists-singly.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><path d="M8 12h8"/></svg>
+          <div><h3 class="text-pointer">Singly linked lists</h3><p>Head and tail, building nodes, traversal, insertion and deletion.</p></div>
+        </a>
+        <a class="topic-card" href="linked-lists-doubly.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><path d="M8 10h8M8 14h8"/></svg>
+          <div><h3 class="text-pointer">Doubly linked lists</h3><p>Two pointers per node and two-way traversal.</p><span class="soon-tag">soon</span></div>
+        </a>
+      </div>
 
       <div class="doc-footer-nav">
         <a class="pn-link prev" href="strings.html"><span class="pn-dir">← Previous</span><span class="pn-title">Strings</span></a>
-        <a class="pn-link next" href="stack.html"><span class="pn-dir">Next →</span><span class="pn-title">Stack</span></a>
+        <a class="pn-link next" href="linked-lists-singly.html"><span class="pn-dir">Next →</span><span class="pn-title">Singly linked lists</span></a>
       </div>
     </article>
   </div>
@@ -48,8 +129,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
