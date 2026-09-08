@@ -19,75 +19,7 @@
 const SITE_NAME = "DSA guide";
 const FOOTER_NAME = "CBS";
 
-// const NAV = [
-//   {
-//     title: "Getting started",
-//     children: [
-//       { title: "C++ starter", 
-//         url: "pages/00_cpp-starter.html",
-//         children: [
-//           { title: "Basics", url: "pages/01_cpp_basic.html" },
-//           { title: "Intermediate", url: "pages/02_cpp_inter.html" },
-//           { title: "Advanced", url: "pages/03_cpp_advanced.html" },
-//         ],
-//       },
-//     ],
-//   },
 
-//   {
-//     title: "Core concepts",
-//     children: [
-//       { title: "Complexity analysis", url: "pages/complexity.html" },
-//       { title: "Pointers & memory", url: "pages/pointers.html" },
-//     ],
-//   },
-
-//   {
-//     title: "Explore the guide",
-//     children: [
-//       {
-//         title: "Data structures",
-//         url: "pages/data-structures.html",
-//         children: [
-//           {
-//             title: "Linear data structures",
-//             url: "pages/linear-structures.html",
-//             children: [
-//               { title: "Arrays", url: "pages/arrays.html" },
-//               { title: "Strings", url: "pages/strings.html" },
-//               { title: "Linked list", url: "pages/linked-lists.html" },
-//               { title: "Stack", url: "pages/stack.html" },
-//               { title: "Queue", url: "pages/queue.html" },
-//             ],
-//           },
-
-//           {
-//             title: "Non-linear data structures",
-//             url: "pages/non-linear-structures.html",
-//             children: [
-//               { title: "Trees", url: "pages/tree.html" },
-//               { title: "Graphs", url: "pages/graphs.html" },
-//             ],
-//           },
-//         ],
-//       },
-
-//       {
-//         title: "Algorithms",
-//         url: "pages/algorithms.html",
-//         children: [
-//           { title: "Search algorithms", url: "pages/searching.html" },
-//           { title: "Sorting", url: "pages/sorting.html" },
-//         ],
-//       },
-
-//       {
-//         title: "Common patterns",
-//         url: "pages/patterns.html",
-//       },
-//     ],
-//   },
-// ];
 
 const NAV = [
   {
@@ -118,7 +50,12 @@ const NAV = [
           {
             title: "Linear data structures", url: "pages/structures/linear/index.html",
             children: [
-              { title: "Arrays", url: "pages/structures/linear/arrays.html" },
+              { title: "Arrays", url: "pages/structures/linear/arrays.html",
+                children: [
+                  { title: "Static arrays",  url: "pages/structures/linear/arrays-static.html" },
+                  { title: "Dynamic arrays", url: "pages/structures/linear/arrays-dynamic.html" },
+                ]
+              },
               { title: "Strings", url: "pages/structures/linear/strings.html" },
               { title: "Linked list", url: "pages/structures/linear/linked-lists.html" },
               { title: "Stack", url: "pages/structures/linear/stack.html" },
@@ -151,38 +88,48 @@ const NAV = [
 const SEARCH_INDEX = [
   { title: "Introduction", section: "Home", url: "index.html",
     body: "home overview dsa_guide learning path what this guide covers" },
-  { title: "C++ Introduction", section: "Getting started", url: "pages/00_cpp-starter.html",
+  { title: "C++ starter", section: "Getting started", url: "pages/cpp/index.html",
     body: "variables types control flow functions syntax refresher before dsa" },
-  { title: "Complexity analysis", section: "Core concepts", url: "pages/complexity.html",
+  { title: "C++ basics", section: "Getting started", url: "pages/cpp/basics.html",
+    body: "cin cout input data types operators conditionals loops functions templates" },
+  { title: "C++ intermediate", section: "Getting started", url: "pages/cpp/intermediate.html",
+    body: "references structs classes stl overloading" },
+  { title: "C++ advanced", section: "Getting started", url: "pages/cpp/advanced.html",
+    body: "templates lambdas smart pointers move semantics" },
+  { title: "Complexity analysis", section: "Core concepts", url: "pages/concepts/complexity.html",
     body: "big o notation growth rate time space tradeoff" },
-  { title: "Pointers & memory", section: "Core concepts", url: "pages/pointers.html",
+  { title: "Pointers & memory", section: "Core concepts", url: "pages/concepts/pointers.html",
     body: "pointer reference address dereference new delete stack heap memory management" },
-  { title: "Data structures", section: "Data structures", url: "pages/data-structures.html",
+  { title: "Data structures", section: "Data structures", url: "pages/structures/index.html",
     body: "overview linear non-linear structures" },
-  { title: "Linear data structures", section: "Data structures", url: "pages/linear-structures.html",
-    body: "arrays strings linked list stack queue sequential" },
-  { title: "Arrays", section: "Linear data structures", url: "pages/arrays.html",
-    body: "array vector static dynamic index contiguous memory capacity reallocation push_back" },
-  { title: "Strings", section: "Linear data structures", url: "pages/strings.html",
+  { title: "Linear data structures", section: "Data structures", url: "pages/structures/linear/index.html",
+    body: "arrays strings linked list stack queue sequential comparison" },
+  { title: "Arrays", section: "Linear data structures", url: "pages/structures/linear/arrays.html",
+    body: "array contiguous memory index advantages downsides static dynamic cache" },
+  { title: "Static arrays", section: "Arrays", url: "pages/structures/linear/arrays-static.html",
+    body: "c-style array fixed size declaration initialization sizeof traversal bounds stack" },
+  { title: "Dynamic arrays", section: "Arrays", url: "pages/structures/linear/arrays-dynamic.html",
+    body: "vector push_back insert erase pop_back clear size capacity reserve iterator matrix 2d heap new delete" },
+  { title: "Strings", section: "Linear data structures", url: "pages/structures/linear/strings.html",
     body: "std::string char array c-string null terminator substring" },
-  { title: "Linked list", section: "Linear data structures", url: "pages/linked-lists.html",
+  { title: "Linked list", section: "Linear data structures", url: "pages/structures/linear/linked-lists.html",
     body: "singly linked list node next pointer head tail traversal insertion deletion" },
-  { title: "Stack", section: "Linear data structures", url: "pages/stack.html",
+  { title: "Stack", section: "Linear data structures", url: "pages/structures/linear/stack.html",
     body: "lifo push pop top stack" },
-  { title: "Queue", section: "Linear data structures", url: "pages/queue.html",
+  { title: "Queue", section: "Linear data structures", url: "pages/structures/linear/queue.html",
     body: "fifo enqueue dequeue front back queue" },
-  { title: "Non-linear data structures", section: "Data structures", url: "pages/non-linear-structures.html",
-    body: "tree graph hierarchical network" },
-  { title: "Tree", section: "Non-linear data structures", url: "pages/tree.html",
-    body: "binary tree node root leaf traversal" },
-  { title: "Graphs", section: "Non-linear data structures", url: "pages/graphs.html",
+  { title: "Non-linear data structures", section: "Data structures", url: "pages/structures/non-linear/index.html",
+    body: "tree graph hierarchical network heap hash table" },
+  { title: "Trees", section: "Non-linear data structures", url: "pages/structures/non-linear/trees.html",
+    body: "binary tree node root leaf traversal bst" },
+  { title: "Graphs", section: "Non-linear data structures", url: "pages/structures/non-linear/graphs.html",
     body: "graph vertex edge adjacency directed undirected" },
-  { title: "Algorithms", section: "Algorithms", url: "pages/algorithms.html",
+  { title: "Algorithms", section: "Algorithms", url: "pages/algorithms/index.html",
     body: "overview search sorting" },
-  { title: "Search algorithms", section: "Algorithms", url: "pages/searching.html",
+  { title: "Search algorithms", section: "Algorithms", url: "pages/algorithms/searching.html",
     body: "linear search binary search" },
-  { title: "Sorting", section: "Algorithms", url: "pages/sorting.html",
+  { title: "Sorting", section: "Algorithms", url: "pages/algorithms/sorting.html",
     body: "bubble selection insertion merge quick heap sort complexity comparison" },
-  { title: "Common patterns", section: "Common patterns", url: "pages/patterns.html",
+  { title: "Common patterns", section: "Common patterns", url: "pages/patterns/index.html",
     body: "two pointers sliding window leetcode patterns" },
 ];

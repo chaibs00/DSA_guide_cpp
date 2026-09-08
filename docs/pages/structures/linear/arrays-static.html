@@ -19,9 +19,6 @@ const BASE = (function () {
 document.head.insertAdjacentHTML("beforeend",
   '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
 </script>
-<style>
-  .mem-addr { font-family: 'IBM Plex Mono'; font-size: 9.5px; fill: var(--pointer); }
-</style>
 </head>
 <body>
 
@@ -40,86 +37,76 @@ document.head.insertAdjacentHTML("beforeend",
       <h2 class="text-data">Declaration</h2>
       <p>The size goes in square brackets after the name, and it must be known when the array is declared.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">syntax</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">data_type array_name[size];</code></pre>
-      </div>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">syntax</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">data_type array_name[size];</code></pre>
+        </div>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// array to store integer values
-int arr[5];
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">// array to store integer values
+  int arr[5];
 
-// array to store char values
-char arr[10];
+  // array to store char values
+  char arr[10];
 
-// an array of strings
-string arr[12];</code></pre>
-      </div>
+  // an array of strings
+  string arr[12];</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Initialising</h2>
       <p>There are several ways to fill an array at the moment you declare it.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">initialise.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// initialise while declaring
-char arr[5] = { 'a', 'b', 'c', 'd', 'e' };
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">initialise.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">// initialise while declaring
+  char arr[5] = { 'a', 'b', 'c', 'd', 'e' };
 
-// let the compiler work out the size
-int arr[] = { 1, 2, 3, 4, 5 };
+  // let the compiler work out the size
+  int arr[] = { 1, 2, 3, 4, 5 };
 
-// partial initialisation — the rest are value-initialised
-string arr[10] = { "hello", "world", "!" };
+  // partial initialisation — the rest are value-initialised
+  string arr[10] = { "hello", "world", "!" };
 
-// empty initialisation — every element is 0
-int arr[5] = {};</code></pre>
-      </div>
+  // empty initialisation — every element is 0
+  int arr[5] = {};</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Accessing elements</h2>
       <p>Each element is reached by its <span class="text-data">index</span>. The first element is at index <code>0</code>, the last at <code>size - 1</code>.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">access.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">int arr[] = {10, 2, 7, 1, 3, 5, 1};
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">access.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">int arr[] = {10, 2, 7, 1, 3, 5, 1};
 
-cout &lt;&lt; arr[0];   // 10
-cout &lt;&lt; arr[1];   // 2
-cout &lt;&lt; arr[5];   // 5
-cout &lt;&lt; arr[10];  // out of bounds — garbage value</code></pre>
-      </div>
+  cout &lt;&lt; arr[0];   // 10
+  cout &lt;&lt; arr[1];   // 2
+  cout &lt;&lt; arr[5];   // 5
+  cout &lt;&lt; arr[10];  // out of bounds — garbage value</code></pre>
+        </div>
 
-      <div class="diagram">
-        <svg viewBox="0 0 350 90" width="350" xmlns="http://www.w3.org/2000/svg">
-          <g font-family="IBM Plex Mono">
-            <g transform="translate(0,20)">
-              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x100</text>
-              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">10</text>
-              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[0]</text>
-            </g>
-            <g transform="translate(72,20)">
-              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x104</text>
-              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">2</text>
-              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[1]</text>
-            </g>
-            <g transform="translate(144,20)">
-              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x108</text>
-              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">7</text>
-              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[2]</text>
-            </g>
-            <g transform="translate(216,20)">
-              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x10C</text>
-              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">1</text>
-              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[3]</text>
-            </g>
-            <g transform="translate(288,20)">
-              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x110</text>
-              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">3</text>
-              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[4]</text>
-            </g>
-          </g>
-        </svg>
-      </div>
-      <p class="diagram-caption">Each address is 4 bytes after the previous one, because an <code>int</code> usually occupies 4 bytes.</p>
+        <div class="diagram">
+          <img src="../../../figures/arrays.png" alt="Array elements with their memory addresses increasing by 4 bytes" />
+        </div>
+        <p class="diagram-caption">Each address is 4 bytes after the previous one, because an <code>int</code> usually occupies 4 bytes.</p>
+        </div>
+      </details>
+
 
       <div class="callout warn">
         <span class="callout-label">Watch out</span>
@@ -129,33 +116,45 @@ cout &lt;&lt; arr[10];  // out of bounds — garbage value</code></pre>
       <h2 class="text-data">Changing elements</h2>
       <p>Assignment through the index overwrites in place.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">change.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">int arr[] = {5, 10, 15};
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">change.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">int arr[] = {5, 10, 15};
 
-arr[1] = 100;
+  arr[1] = 100;
 
-// arr is now {5, 100, 15}</code></pre>
-      </div>
+  // arr is now {5, 100, 15}</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Traversal</h2>
       <p>Visiting every element costs <span class="text-data">O(n)</span> — one step per element, no shortcut.</p>
 
-      <h3 class="text-pointer">Index-based loop</h3>
-      <p>A static array doesn't carry its own length, so compute it from the total byte size divided by the size of one element.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — both loop styles</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">Index-based loop</h3>
+        <p>A static array doesn't carry its own length, so compute it from the total byte size divided by the size of one element.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">int arr[] = {3, 5, 7, 9, 11};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">int arr[] = {3, 5, 7, 9, 11};
 
-// size of a static array
-int size = sizeof(arr) / sizeof(arr[0]);
+  // size of a static array
+  int size = sizeof(arr) / sizeof(arr[0]);
 
-for (int i = 0; i &lt; size; i++) {
-    cout &lt;&lt; arr[i] &lt;&lt; " ";
-}
-// 3 5 7 9 11</code></pre>
-      </div>
+  for (int i = 0; i &lt; size; i++) {
+      cout &lt;&lt; arr[i] &lt;&lt; " ";
+  }
+  // 3 5 7 9 11</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h3 class="text-pointer">Range-based loop</h3>
       <p>Shorter, and no size calculation needed.</p>

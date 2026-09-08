@@ -38,125 +38,155 @@ document.head.insertAdjacentHTML("beforeend",
       <p class="doc-lede">A dynamic array can <strong class="text-data">change size at runtime</strong>, with its memory allocated on the heap. In C++ you get one through <code>std::vector</code>, which handles that memory for you.</p>
 
       <h2 class="text-data">Declaration</h2>
-      <h3 class="text-pointer">Using std::vector</h3>
-      <p>Include <code>&lt;vector&gt;</code> first. The four forms below cover almost every case you'll write.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — vector and new</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">Using std::vector</h3>
+        <p>Include <code>&lt;vector&gt;</code> first. The four forms below cover almost every case you'll write.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">#include &lt;vector&gt;
-using namespace std;
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">#include &lt;vector&gt;
+  using namespace std;
 
-vector&lt;int&gt; v1;              // empty                  → { }
-vector&lt;int&gt; v2(5);           // size 5, all zeros      → {0, 0, 0, 0, 0}
-vector&lt;int&gt; v3(5, 10);       // size 5, all tens       → {10, 10, 10, 10, 10}
-vector&lt;int&gt; v4 = {1, 2, 3};  // initialiser list       → {1, 2, 3}</code></pre>
-      </div>
+  vector&lt;int&gt; v1;              // empty                  → { }
+  vector&lt;int&gt; v2(5);           // size 5, all zeros      → {0, 0, 0, 0, 0}
+  vector&lt;int&gt; v3(5, 10);       // size 5, all tens       → {10, 10, 10, 10, 10}
+  vector&lt;int&gt; v4 = {1, 2, 3};  // initialiser list       → {1, 2, 3}</code></pre>
+        </div>
 
-      <h3 class="text-pointer">Manual allocation with new</h3>
-      <p>You can also allocate a block yourself. This lives on the heap rather than the stack, and nothing frees it automatically.</p>
+        <h3 class="text-pointer">Manual allocation with new</h3>
+        <p>You can also allocate a block yourself. This lives on the heap rather than the stack, and nothing frees it automatically.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">manual.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// allocate an array of size 5 on the heap
-int* arr = new int[5];
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">manual.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">// allocate an array of size 5 on the heap
+  int* arr = new int[5];
 
-// values must be assigned manually
-arr[0] = 12;
+  // values must be assigned manually
+  arr[0] = 12;
 
-// release the memory allocated by new
-delete[] arr;</code></pre>
-      </div>
+  // release the memory allocated by new
+  delete[] arr;</code></pre>
+        </div>
 
-      <div class="callout warn">
-        <span class="callout-label">Watch out</span>
-        <p>Memory you allocate with <code>new</code> is yours to free. Forget the matching <code>delete[]</code> and it leaks. Values are not initialised either, so reading before assigning gives you garbage. <code>std::vector</code> exists precisely so you don't have to get this right.</p>
-      </div>
+        <div class="callout warn">
+          <span class="callout-label">Watch out</span>
+          <p>Memory you allocate with <code>new</code> is yours to free. Forget the matching <code>delete[]</code> and it leaks. Values are not initialised either, so reading before assigning gives you garbage. <code>std::vector</code> exists precisely so you don't have to get this right.</p>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Accessing elements</h2>
-      <h3 class="text-pointer">First and last</h3>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — front, back, [] and .at()</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">First and last</h3>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">front_back.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">front_back.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
 
-v.front();   // 3 — first element
-v.back();    // 1 — last element</code></pre>
-      </div>
+  v.front();   // 3 — first element
+  v.back();    // 1 — last element</code></pre>
+        </div>
 
-      <h3 class="text-pointer">By index</h3>
-      <p>Two ways to reach index <code>i</code>: the subscript operator, or <code>.at()</code>.</p>
+        <h3 class="text-pointer">By index</h3>
+        <p>Two ways to reach index <code>i</code>: the subscript operator, or <code>.at()</code>.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">index.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">index.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
 
-v[0];      // 3
-v.at(0);   // 3
+  v[0];      // 3
+  v.at(0);   // 3
 
-v[6];      // no bounds check — garbage or undefined behaviour
-v.at(6);   // throws std::out_of_range</code></pre>
-      </div>
+  v[6];      // no bounds check — garbage or undefined behaviour
+  v.at(6);   // throws std::out_of_range</code></pre>
+        </div>
 
-      <div class="callout note">
-        <span class="callout-label">Which one</span>
-        <p><code>v[i]</code> is faster because it checks nothing. <code>v.at(i)</code> is safer because it throws when the index is invalid. Use <code>.at()</code> while you're learning or when the index comes from outside your code.</p>
-      </div>
+        <div class="callout note">
+          <span class="callout-label">Which one</span>
+          <p><code>v[i]</code> is faster because it checks nothing. <code>v.at(i)</code> is safer because it throws when the index is invalid. Use <code>.at()</code> while you're learning or when the index comes from outside your code.</p>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Adding elements</h2>
-      <h3 class="text-pointer">At the back</h3>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — push_back and insert</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">At the back</h3>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">push_back.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">push_back.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
 
-v.push_back(10);   // v = {3, 2, 1, 10}</code></pre>
-      </div>
+  v.push_back(10);   // v = {3, 2, 1, 10}</code></pre>
+        </div>
 
-      <h3 class="text-pointer">At a given index</h3>
-      <p><code>insert(position, value)</code> takes an <span class="text-pointer">iterator</span>, not an index. <code>v.begin()</code> points at the first element, so <code>v.begin() + i</code> points at index <code>i</code>.</p>
+        <h3 class="text-pointer">At a given index</h3>
+        <p><code>insert(position, value)</code> takes an <span class="text-pointer">iterator</span>, not an index. <code>v.begin()</code> points at the first element, so <code>v.begin() + i</code> points at index <code>i</code>.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">insert.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">insert.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1};
 
-// insert 10 at index 1
-v.insert(v.begin() + 1, 10);   // v = {3, 10, 2, 1}</code></pre>
-      </div>
+  // insert 10 at index 1
+  v.insert(v.begin() + 1, 10);   // v = {3, 10, 2, 1}</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Removing elements</h2>
       <p><code>pop_back()</code> drops the last element and shrinks the size by one; <code>clear()</code> empties the whole thing.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">remove.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 8, 1, 4};
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — pop_back, clear and erase</summary>
+        <div class="disclose-body">
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">remove.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 8, 1, 4};
 
-v.pop_back();   // v = {3, 8, 1}, size is now 3
-v.clear();      // v = { }</code></pre>
-      </div>
+  v.pop_back();   // v = {3, 8, 1}, size is now 3
+  v.clear();      // v = { }</code></pre>
+        </div>
 
-      <p><code>erase()</code> removes at a position — everything after it shifts one place left, which is why this costs <span class="text-pointer">O(n)</span>.</p>
+        <p><code>erase()</code> removes at a position — everything after it shifts one place left, which is why this costs <span class="text-pointer">O(n)</span>.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">erase.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 8, 1, 4};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">erase.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 8, 1, 4};
 
-v.erase(v.begin());       // remove the first  → {8, 1, 4}
-v.erase(v.begin() + 2);   // remove index 2    → {8, 1}</code></pre>
-      </div>
+  v.erase(v.begin());       // remove the first  → {8, 1, 4}
+  v.erase(v.begin() + 2);   // remove index 2    → {8, 1}</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">Traversal</h2>
-      <h3 class="text-pointer">Index-based</h3>
-      <p>Needs the size, which <code>.size()</code> gives you directly — no <code>sizeof</code> arithmetic here.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — both loop styles</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">Index-based</h3>
+        <p>Needs the size, which <code>.size()</code> gives you directly — no <code>sizeof</code> arithmetic here.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1, 4};
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;int&gt; v = {3, 2, 1, 4};
 
-for (int i = 0; i &lt; v.size(); i++) {
-    cout &lt;&lt; v[i] &lt;&lt; " ";
-}
-// 3 2 1 4</code></pre>
-      </div>
+  for (int i = 0; i &lt; v.size(); i++) {
+      cout &lt;&lt; v[i] &lt;&lt; " ";
+  }
+  // 3 2 1 4</code></pre>
+        </div>
+        </div>
+      </details>
+
 
       <h3 class="text-pointer">Range-based</h3>
 
@@ -207,155 +237,143 @@ for (int x : v) {
       <p class="diagram-caption">The reallocation copies every existing element, so that one <code>push_back()</code> costs <span class="text-pointer">O(n)</span> — while every other call is <span class="text-data">O(1)</span>.</p>
 
       <h2 class="text-data">Useful functions</h2>
-      <h3 class="text-pointer">Size and capacity</h3>
-      <div class="table-wrap">
-        <table class="doc-table">
-          <thead><tr><th>Function</th><th>What it does</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">v.size()</td><td>Number of elements stored</td></tr>
-            <tr><td class="mono">v.capacity()</td><td>How many it can hold before reallocating</td></tr>
-            <tr><td class="mono">v.empty()</td><td>True when there are no elements</td></tr>
-            <tr><td class="mono">v.resize(n)</td><td>Change the size to <code>n</code></td></tr>
-            <tr><td class="mono">v.reserve(n)</td><td>Reserve capacity without changing the size</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the full function reference</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">Size and capacity</h3>
+        <div class="table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Function</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">v.size()</td><td>Number of elements stored</td></tr>
+              <tr><td class="mono">v.capacity()</td><td>How many it can hold before reallocating</td></tr>
+              <tr><td class="mono">v.empty()</td><td>True when there are no elements</td></tr>
+              <tr><td class="mono">v.resize(n)</td><td>Change the size to <code>n</code></td></tr>
+              <tr><td class="mono">v.reserve(n)</td><td>Reserve capacity without changing the size</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h3 class="text-pointer">Element access</h3>
-      <div class="table-wrap">
-        <table class="doc-table">
-          <thead><tr><th>Function</th><th>What it does</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">v[i]</td><td>Access without a bounds check</td></tr>
-            <tr><td class="mono">v.at(i)</td><td>Access with a bounds check</td></tr>
-            <tr><td class="mono">v.front()</td><td>First element</td></tr>
-            <tr><td class="mono">v.back()</td><td>Last element</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <h3 class="text-pointer">Element access</h3>
+        <div class="table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Function</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">v[i]</td><td>Access without a bounds check</td></tr>
+              <tr><td class="mono">v.at(i)</td><td>Access with a bounds check</td></tr>
+              <tr><td class="mono">v.front()</td><td>First element</td></tr>
+              <tr><td class="mono">v.back()</td><td>Last element</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h3 class="text-pointer">Iterators</h3>
-      <div class="table-wrap">
-        <table class="doc-table">
-          <thead><tr><th>Function</th><th>What it does</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">v.begin()</td><td>Iterator to the first element</td></tr>
-            <tr><td class="mono">v.end()</td><td>Iterator to one past the last</td></tr>
-            <tr><td class="mono">v.rbegin()</td><td>Reverse iterator, starting at the last element</td></tr>
-            <tr><td class="mono">v.rend()</td><td>Reverse end</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <h3 class="text-pointer">Iterators</h3>
+        <div class="table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Function</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">v.begin()</td><td>Iterator to the first element</td></tr>
+              <tr><td class="mono">v.end()</td><td>Iterator to one past the last</td></tr>
+              <tr><td class="mono">v.rbegin()</td><td>Reverse iterator, starting at the last element</td></tr>
+              <tr><td class="mono">v.rend()</td><td>Reverse end</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h3 class="text-pointer">Modifiers</h3>
-      <div class="table-wrap">
-        <table class="doc-table">
-          <thead><tr><th>Function</th><th>What it does</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">v.push_back(x)</td><td>Add at the end</td></tr>
-            <tr><td class="mono">v.emplace_back(x)</td><td>Construct in place at the end</td></tr>
-            <tr><td class="mono">v.pop_back()</td><td>Remove the last element</td></tr>
-            <tr><td class="mono">v.insert(pos, x)</td><td>Insert at a position</td></tr>
-            <tr><td class="mono">v.erase(pos)</td><td>Remove at a position</td></tr>
-            <tr><td class="mono">v.clear()</td><td>Remove every element</td></tr>
-          </tbody>
-        </table>
-      </div>
+        <h3 class="text-pointer">Modifiers</h3>
+        <div class="table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Function</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">v.push_back(x)</td><td>Add at the end</td></tr>
+              <tr><td class="mono">v.emplace_back(x)</td><td>Construct in place at the end</td></tr>
+              <tr><td class="mono">v.pop_back()</td><td>Remove the last element</td></tr>
+              <tr><td class="mono">v.insert(pos, x)</td><td>Insert at a position</td></tr>
+              <tr><td class="mono">v.erase(pos)</td><td>Remove at a position</td></tr>
+              <tr><td class="mono">v.clear()</td><td>Remove every element</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </details>
+
 
       <h2 class="text-data">2-dimensional arrays</h2>
       <p>Everything so far has been one-dimensional. A matrix is just a vector whose elements are themselves vectors.</p>
 
-      <h3 class="text-pointer">Declaration</h3>
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">matrix_declare.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// 3 rows × 4 columns, every element 0
-vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4, 0));
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — declaration, access and traversal</summary>
+        <div class="disclose-body">
+        <h3 class="text-pointer">Declaration</h3>
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">matrix_declare.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">// 3 rows × 4 columns, every element 0
+  vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4, 0));
 
-// same shape — elements get the default value (0)
-vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4));
+  // same shape — elements get the default value (0)
+  vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4));
 
-// size unknown up front: declare, then resize
-vector&lt;vector&lt;int&gt;&gt; M;
-M.resize(3, vector&lt;int&gt;(4, 0));</code></pre>
-      </div>
+  // size unknown up front: declare, then resize
+  vector&lt;vector&lt;int&gt;&gt; M;
+  M.resize(3, vector&lt;int&gt;(4, 0));</code></pre>
+        </div>
 
-      <h3 class="text-pointer">Accessing an element</h3>
-      <p>Two indices, always in the order <code>[row][column]</code>: the first picks the row, the second the column within it.</p>
+        <div class="diagram">
+          <img src="../../../figures/matrix.png" alt="A 3 by 4 matrix drawn as a vector of vectors" />
+        </div>
+        <p class="diagram-caption">A matrix is a vector whose elements are themselves vectors — 3 rows of 4 values.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">matrix_access.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4));
+        <h3 class="text-pointer">Accessing an element</h3>
+        <p>Two indices, always in the order <code>[row][column]</code>: the first picks the row, the second the column within it.</p>
 
-M[0][0];   // first row, first column
-M[1][2];   // second row, third column
-M[2][3];   // last valid cell of a 3 × 4 matrix</code></pre>
-      </div>
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">matrix_access.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4));
 
-      <div class="diagram">
-        <svg viewBox="0 0 300 150" width="300" xmlns="http://www.w3.org/2000/svg">
-          <g font-family="IBM Plex Mono" font-size="11">
-            <text x="60" y="12" text-anchor="middle" fill="var(--text-faint)">[0]</text>
-            <text x="110" y="12" text-anchor="middle" fill="var(--text-faint)">[1]</text>
-            <text x="160" y="12" text-anchor="middle" fill="var(--text-faint)">[2]</text>
-            <text x="210" y="12" text-anchor="middle" fill="var(--text-faint)">[3]</text>
-            <g transform="translate(0,20)">
-              <text x="20" y="25" text-anchor="middle" fill="var(--text-faint)">[0]</text>
-              <rect class="cell-value" x="35" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="85" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="135" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="185" y="5" width="50" height="30" rx="5"/>
-            </g>
-            <g transform="translate(0,60)">
-              <text x="20" y="25" text-anchor="middle" fill="var(--text-faint)">[1]</text>
-              <rect class="cell-value" x="35" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="85" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="135" y="5" width="50" height="30" rx="5" stroke-width="2.5"/>
-              <text x="160" y="25" text-anchor="middle" fill="var(--data)" font-weight="600">M[1][2]</text>
-              <rect class="cell-value" x="185" y="5" width="50" height="30" rx="5"/>
-            </g>
-            <g transform="translate(0,100)">
-              <text x="20" y="25" text-anchor="middle" fill="var(--text-faint)">[2]</text>
-              <rect class="cell-value" x="35" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="85" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="135" y="5" width="50" height="30" rx="5"/>
-              <rect class="cell-value" x="185" y="5" width="50" height="30" rx="5"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-      <p class="diagram-caption">Row index down the left, column index across the top.</p>
+  M[0][0];   // first row, first column
+  M[1][2];   // second row, third column
+  M[2][3];   // last valid cell of a 3 × 4 matrix</code></pre>
+        </div>
 
-      <h3 class="text-pointer">Traversal</h3>
-      <p><code>M.size()</code> is the number of rows; <code>M[i].size()</code> is the number of columns in row <code>i</code>. Two nested loops cover the grid.</p>
+        <div class="diagram">
+          <img src="../../../figures/matrix_acess.png" alt="Accessing a matrix cell with a row index and a column index" />
+        </div>
+        <p class="diagram-caption">Row index down the left, column index across the top.</p>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">matrix_traverse.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4, 0));
+        <h3 class="text-pointer">Traversal</h3>
+        <p><code>M.size()</code> is the number of rows; <code>M[i].size()</code> is the number of columns in row <code>i</code>. Two nested loops cover the grid.</p>
 
-int rows = M.size();      // 3
-int cols = M[0].size();   // 4
+        <div class="code-block">
+          <div class="code-block-head"><span class="code-block-file">matrix_traverse.cpp</span><button class="copy-btn">Copy</button></div>
+          <pre><code class="language-cpp">vector&lt;vector&lt;int&gt;&gt; M(3, vector&lt;int&gt;(4, 0));
 
-// index-based
-for (int i = 0; i &lt; M.size(); i++) {
-    for (int j = 0; j &lt; M[i].size(); j++) {
-        cout &lt;&lt; M[i][j] &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl;
-}
+  int rows = M.size();      // 3
+  int cols = M[0].size();   // 4
 
-// range-based
-for (auto &amp;row : M) {
-    for (auto &amp;val : row) {
-        cout &lt;&lt; val &lt;&lt; " ";
-    }
-    cout &lt;&lt; endl;
-}</code></pre>
-      </div>
+  // index-based
+  for (int i = 0; i &lt; M.size(); i++) {
+      for (int j = 0; j &lt; M[i].size(); j++) {
+          cout &lt;&lt; M[i][j] &lt;&lt; " ";
+      }
+      cout &lt;&lt; endl;
+  }
 
-      <div class="callout tip">
-        <span class="callout-label">Tip</span>
-        <p>Use <code>&amp;</code> in a range-based loop over a matrix. Without it each row is copied on every iteration, which turns a cheap traversal into an expensive one.</p>
-      </div>
+  // range-based
+  for (auto &amp;row : M) {
+      for (auto &amp;val : row) {
+          cout &lt;&lt; val &lt;&lt; " ";
+      }
+      cout &lt;&lt; endl;
+  }</code></pre>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-label">Tip</span>
+          <p>Use <code>&amp;</code> in a range-based loop over a matrix. Without it each row is copied on every iteration, which turns a cheap traversal into an expensive one.</p>
+        </div>
+        </div>
+      </details>
+
 
       <div class="doc-footer-nav">
         <a class="pn-link prev" href="arrays-static.html"><span class="pn-dir">← Previous</span><span class="pn-title">Static arrays</span></a>

@@ -4,10 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Strings — DSA_guide</title>
-<meta name="description" content="std::string, C-strings, and the operations you'll use constantly once you start solving problems." />
+<meta name="description" content="std::string in C++: declaration, indexing, traversal, conversions, case changes, substrings and common operations." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -19,25 +30,253 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="data-structures.html">Data structures</a><span class="sep">/</span><a href="linear-structures.html">Linear data structures</a></div>
+      <div class="doc-kicker"><a href="index.html">Linear data structures</a></div>
       <h1>Strings</h1>
-      <p class="doc-lede">std::string, C-strings, and the operations you'll use constantly once you start solving problems — this page is still being written.</p>
+      <p class="doc-lede">A string is a sequence of characters. Underneath it behaves like a <strong class="text-data">dynamic array of characters</strong>, but the extra rules and operations layered on top make it an abstract data type in its own right.</p>
 
       <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>Since a string is really just an array of characters with extra conveniences, this guide builds directly on <a href="arrays.html">Arrays</a>.</p>
+        <span class="callout-label">Array or ADT?</span>
+        <p>Both, depending on where you look. Internally a <code>std::string</code> is an array of characters that grows on demand, and it's mutable in the same way. What makes it an <span class="text-data">ADT</span> rather than a plain array is the set of built-in operations that come with it — searching, slicing, concatenating, comparing — which is why we treat it as its own structure here.</p>
       </div>
 
-      <h2>What's planned</h2>
-      <ul>
-        <li><code>std::string</code> vs. C-style <code>char</code> arrays</li>
-        <li>Why C-strings need a null terminator and <code>std::string</code> doesn't</li>
-        <li>Common operations: substring, concatenation, comparison</li>
-        <li>Complexity table for string operations</li>
-      </ul>
+      <h2 class="text-data">Declaration</h2>
+      <p>C++ gives you the <code>string</code> type from the standard library. Include <code>&lt;string&gt;</code> and assign like any other value.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;string&gt;
+using namespace std;
+
+string s1 = "Hello World!";</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Accessing characters</h2>
+      <p>Exactly like an array: index from <code>0</code>, and the last character sits at <code>size() - 1</code>.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">access.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "hello";
+
+cout &lt;&lt; s[0];   // h
+cout &lt;&lt; s[1];   // e</code></pre>
+          </div>
+
+          <div class="diagram">
+            <img src="../../../figures/string.png" alt="The characters of a string with their indices" />
+          </div>
+          <p class="diagram-caption">Each character occupies one slot, addressed by its index.</p>
+        </div>
+      </details>
+
+      <h2 class="text-data">Traversal</h2>
+      <p>The same two loops you use on a vector — index-based when you need the position, range-based when you only need the character.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — both loop styles</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">Index-based loop</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "hello";
+
+for (int i = 0; i &lt; s.size(); i++) {
+    cout &lt;&lt; s[i] &lt;&lt; " ";
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Range-based loop</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">traverse_range.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "hello";
+
+for (char c : s) {
+    cout &lt;&lt; c &lt;&lt; " ";
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">String and number conversion</h2>
+      <p>Plenty of problems hand you digits as text, or expect a number back as text. Two directions, both one function call.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — stoi, to_string and friends</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">String → number</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">to_number.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "2015";
+
+int x = stoi(s);   // 2015</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Function</th><th>Converts to</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">stoi(s)</td><td class="mono">int</td></tr>
+                <tr><td class="mono">stol(s)</td><td class="mono">long</td></tr>
+                <tr><td class="mono">stoll(s)</td><td class="mono">long long</td></tr>
+                <tr><td class="mono">stof(s)</td><td class="mono">float</td></tr>
+                <tr><td class="mono">stod(s)</td><td class="mono">double</td></tr>
+                <tr><td class="mono">stold(s)</td><td class="mono">long double</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="text-pointer">Number → string</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">to_string.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int x = 2024;
+
+string s = to_string(x);   // "2024"</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Lowercase and uppercase</h2>
+      <p>Case folding shows up constantly in matching problems — one character at a time, or the whole string at once.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — toupper, tolower and transform</summary>
+        <div class="disclose-body">
+          <h3 class="text-pointer">A single character</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">char_case.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">char c = 'a';
+
+char upper = toupper(c);   // 'A'
+char lower = tolower(c);   // 'a'</code></pre>
+          </div>
+
+          <h3 class="text-pointer">A whole string</h3>
+          <p>Loop over it and convert in place — note the <code>&amp;</code>, without it you'd be modifying a copy.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">string_case_loop.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "HeLLo";
+
+for (char &amp;c : s) {
+    c = tolower(c);
+}
+// "hello"</code></pre>
+          </div>
+
+          <p>Or hand the job to <code>transform()</code>:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">string_case_transform.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;algorithm&gt;
+
+string s = "HeLLo";
+
+transform(s.begin(), s.end(), s.begin(), ::tolower);
+// "hello"</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Argument</th><th>What it is</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">s.begin()</td><td>Iterator to the first character to transform</td></tr>
+                <tr><td class="mono">s.end()</td><td>One past the last character — marks the end of the range</td></tr>
+                <tr><td class="mono">s.begin()</td><td>Output iterator: writing back into the same string, in place</td></tr>
+                <tr><td class="mono">::tolower</td><td>The function applied to each character</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Substrings</h2>
+      <p>A substring is a <span class="text-data">contiguous</span> run of characters taken from a string. <code>substr()</code> is one of the operations you'll reach for most — pattern matching, parsing, recursion on prefixes and suffixes.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — syntax and examples</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">syntax</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">s.substr(start_index, length)</code></pre>
+          </div>
+
+          <ul>
+            <li><code>start_index</code> — index of the first character to extract.</li>
+            <li><code>length</code> — how many characters to take. Leave it out and the substring runs to the end of the string.</li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">substr.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string s = "ABCD";
+
+s.substr(0, 1);            // "A"  — from index 0, one character
+s.substr(1, 2);            // "BC" — from index 1, two characters
+s.substr(2);               // "CD" — from index 2 to the end
+s.substr(s.size() - 1);    // "D"  — the last character</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Common operations</h2>
+      <p>The everyday handful: length, joining, adding and removing at the end, and comparison.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — size, concatenation, push_back, pop_back, comparison</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">operations.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">// size
+string s = "hello";
+cout &lt;&lt; s.size();          // 5
+
+// concatenation
+string a = "hello";
+string b = "world";
+string c = a + " " + b;    // "hello world"
+
+// add a character at the end
+string t = "abc";
+t.push_back('d');          // "abcd"
+
+// remove the last character
+string u = "abcd";
+u.pop_back();              // "abc"
+
+// comparison
+if (a == "hello") {
+    cout &lt;&lt; "Equal";
+}</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operation</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">s.size()</td><td>Number of characters</td></tr>
+                <tr><td class="mono">s.empty()</td><td>True when the string has no characters</td></tr>
+                <tr><td class="mono">a + b</td><td>Join two strings into a new one</td></tr>
+                <tr><td class="mono">s.push_back(c)</td><td>Append one character</td></tr>
+                <tr><td class="mono">s.pop_back()</td><td>Remove the last character</td></tr>
+                <tr><td class="mono">a == b</td><td>Compare character by character</td></tr>
+                <tr><td class="mono">s.substr(i, n)</td><td>Extract a contiguous slice</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <div class="callout tip">
+        <span class="callout-label">Tip</span>
+        <p><code>==</code> on strings compares contents, not addresses — unlike C-style <code>char*</code>, where it would compare <span class="text-pointer">pointers</span> and quietly give you the wrong answer.</p>
+      </div>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="arrays.html"><span class="pn-dir">← Previous</span><span class="pn-title">Arrays</span></a>
+        <a class="pn-link prev" href="arrays-dynamic.html"><span class="pn-dir">← Previous</span><span class="pn-title">Dynamic arrays</span></a>
         <a class="pn-link next" href="linked-lists.html"><span class="pn-dir">Next →</span><span class="pn-title">Linked list</span></a>
       </div>
     </article>
@@ -48,8 +287,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
