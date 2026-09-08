@@ -3,11 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Linear Data Structures — DSA_guide</title>
-<meta name="description" content="Arrays, strings, linked lists, stacks, and queues — data structures where elements sit in a sequence." />
+<title>Linear data structures — DSA_guide</title>
+<meta name="description" content="Arrays, strings, linked lists, stacks and queues — how they differ and when to use each." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -19,35 +27,105 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="data-structures.html">Data structures</a></div>
+      <div class="doc-kicker"><a href="../../data-structures.html">Data structures</a></div>
       <h1>Linear data structures</h1>
-      <p class="doc-lede">In a linear structure, every element has at most one predecessor and one successor — you can lay the whole thing out in a straight line. The five below cover the ones you'll use constantly.</p>
+      <p class="doc-lede">Elements sit in one <strong class="text-data">sequence</strong>: each has at most one predecessor and one successor, so you can walk from the first to the last without ever choosing a branch. What separates them is where you're allowed to add, remove and read.</p>
+
+      <h2 class="text-data">What we cover here</h2>
+      <p>Five structures, in the order they build on each other. Arrays come first because everything else is either built on top of one or defined in contrast to it.</p>
 
       <div class="card-grid">
         <a class="topic-card" href="arrays.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="9" width="5" height="6"/><rect x="9.5" y="9" width="5" height="6"/><rect x="17" y="9" width="5" height="6"/></svg>
-          <div><h3>Arrays</h3><p>Static arrays vs. <code>std::vector</code>, indexing, and reallocation.</p></div>
+          <div><h3 class="text-pointer">Arrays</h3><p>Contiguous memory, indexing, static arrays vs. <code>std::vector</code>.</p></div>
         </a>
         <a class="topic-card" href="strings.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h4M4 12h16M4 18h10"/></svg>
-          <div><h3>Strings</h3><p><code>std::string</code>, C-strings, and common operations.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Strings</h3><p><code>std::string</code>, C-strings, and the operations you reach for most.</p><span class="soon-tag">soon</span></div>
         </a>
         <a class="topic-card" href="linked-lists.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><path d="M8 12h8"/></svg>
-          <div><h3>Linked list</h3><p>Nodes, <code>next</code> pointers, and cheap insertion.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Linked lists</h3><p>Scattered nodes joined by <code>next</code> pointers; cheap insertion, no indexing.</p><span class="soon-tag">soon</span></div>
         </a>
         <a class="topic-card" href="stack.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="4.5" rx="1"/><rect x="4" y="10" width="16" height="4.5" rx="1"/><rect x="4" y="16" width="16" height="4.5" rx="1"/></svg>
-          <div><h3>Stack</h3><p>Last in, first out — push, pop, and peek.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Stack</h3><p>Last in, first out — push, pop, top, and where it shows up.</p><span class="soon-tag">soon</span></div>
         </a>
         <a class="topic-card" href="queue.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="9" width="18" height="6" rx="1"/><path d="M1 12h3M20 12h3"/></svg>
-          <div><h3>Queue</h3><p>First in, first out — enqueue and dequeue.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Queue</h3><p>First in, first out — enqueue at the back, dequeue from the front.</p><span class="soon-tag">soon</span></div>
         </a>
       </div>
 
+      <h2 class="text-data">How they differ</h2>
+      <p>Same family, different rules of access. This is the table to come back to when you're deciding which one a problem wants.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Structure</th>
+              <th>Memory</th>
+              <th>Access</th>
+              <th>Insert / erase</th>
+              <th>Where it fits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono text-data">Array</td>
+              <td>Contiguous block</td>
+              <td>By index — <span class="badge good">O(1)</span></td>
+              <td>At the end <span class="badge good">O(1)*</span>, elsewhere <span class="badge bad">O(n)</span></td>
+              <td>Known-size data you read far more than you reshape.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">String</td>
+              <td>Contiguous block</td>
+              <td>By index — <span class="badge good">O(1)</span></td>
+              <td>At the end <span class="badge good">O(1)*</span>, elsewhere <span class="badge bad">O(n)</span></td>
+              <td>Text: an array of characters with text tooling on top.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Linked list</td>
+              <td>Scattered nodes + <span class="text-pointer">pointers</span></td>
+              <td>By traversal — <span class="badge bad">O(n)</span></td>
+              <td><span class="badge good">O(1)</span> once you hold the node</td>
+              <td>Frequent insertion or removal in the middle.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Stack</td>
+              <td>Array or list underneath</td>
+              <td>Top element only — <span class="badge good">O(1)</span></td>
+              <td>One end only — <span class="badge good">O(1)</span></td>
+              <td>Undo, recursion, backtracking, matching brackets.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Queue</td>
+              <td>Array or list underneath</td>
+              <td>Front element only — <span class="badge good">O(1)</span></td>
+              <td>Back in, front out — <span class="badge good">O(1)</span></td>
+              <td>Scheduling, buffering, breadth-first search.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="muted">* Amortised: appending is constant on average, but an occasional reallocation copies everything.</p>
+
+      <div class="callout note">
+        <span class="callout-label">Strings aren't really a data structure</span>
+        <p>A string is a <span class="text-data">data type</span>, not a data structure of its own — underneath it is an array of characters. We give it a page anyway because in practice you use it exactly like a linear structure, and interview problems treat it as one: the same two-pointer, sliding-window and traversal techniques apply directly.</p>
+      </div>
+
+      <h2 class="text-data">How to read this section</h2>
+      <div class="callout tip">
+        <span class="callout-label">Suggested order</span>
+        <p>Start with arrays and strings to get comfortable with indexing and contiguous memory. Then linked lists, which trade indexing for cheap insertion and introduce <span class="text-pointer">pointers</span> as the connective tissue. Stacks and queues come last: both are restricted views over what you already know, so the interesting part is <em>when</em> the restriction helps, not how it's built.</p>
+      </div>
+
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="data-structures.html"><span class="pn-dir">← Previous</span><span class="pn-title">Data structures</span></a>
+        <a class="pn-link prev" href="../../data-structures.html"><span class="pn-dir">← Previous</span><span class="pn-title">Data structures</span></a>
         <a class="pn-link next" href="arrays.html"><span class="pn-dir">Next →</span><span class="pn-title">Arrays</span></a>
       </div>
     </article>
@@ -58,8 +136,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Static arrays — DSA_guide</title>
+<meta name="description" content="C-style arrays in C++: declaration, initialisation, accessing and changing elements, and traversal." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
+<style>
+  .mem-addr { font-family: 'IBM Plex Mono'; font-size: 9.5px; fill: var(--pointer); }
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a href="index.html">Linear data structures</a><span class="sep">/</span><a href="arrays.html">Arrays</a></div>
+      <h1>Static arrays</h1>
+      <p class="doc-lede">A static array has a <strong class="text-data">fixed size</strong>, decided at declaration and unchangeable at runtime. That rigidity is the price for being fast, cheap and predictable.</p>
+
+      <h2 class="text-data">Declaration</h2>
+      <p>The size goes in square brackets after the name, and it must be known when the array is declared.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">syntax</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">data_type array_name[size];</code></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// array to store integer values
+int arr[5];
+
+// array to store char values
+char arr[10];
+
+// an array of strings
+string arr[12];</code></pre>
+      </div>
+
+      <h2 class="text-data">Initialising</h2>
+      <p>There are several ways to fill an array at the moment you declare it.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">initialise.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">// initialise while declaring
+char arr[5] = { 'a', 'b', 'c', 'd', 'e' };
+
+// let the compiler work out the size
+int arr[] = { 1, 2, 3, 4, 5 };
+
+// partial initialisation — the rest are value-initialised
+string arr[10] = { "hello", "world", "!" };
+
+// empty initialisation — every element is 0
+int arr[5] = {};</code></pre>
+      </div>
+
+      <h2 class="text-data">Accessing elements</h2>
+      <p>Each element is reached by its <span class="text-data">index</span>. The first element is at index <code>0</code>, the last at <code>size - 1</code>.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">access.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">int arr[] = {10, 2, 7, 1, 3, 5, 1};
+
+cout &lt;&lt; arr[0];   // 10
+cout &lt;&lt; arr[1];   // 2
+cout &lt;&lt; arr[5];   // 5
+cout &lt;&lt; arr[10];  // out of bounds — garbage value</code></pre>
+      </div>
+
+      <div class="diagram">
+        <svg viewBox="0 0 350 90" width="350" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="IBM Plex Mono">
+            <g transform="translate(0,20)">
+              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x100</text>
+              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">10</text>
+              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[0]</text>
+            </g>
+            <g transform="translate(72,20)">
+              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x104</text>
+              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">2</text>
+              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[1]</text>
+            </g>
+            <g transform="translate(144,20)">
+              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x108</text>
+              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">7</text>
+              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[2]</text>
+            </g>
+            <g transform="translate(216,20)">
+              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x10C</text>
+              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">1</text>
+              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[3]</text>
+            </g>
+            <g transform="translate(288,20)">
+              <text class="mem-addr" x="30" y="-8" text-anchor="middle">0x110</text>
+              <rect class="cell-value" x="0" y="0" width="60" height="45" rx="6"/><text x="30" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--data)">3</text>
+              <text x="30" y="60" text-anchor="middle" font-size="11" fill="var(--text-faint)">[4]</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <p class="diagram-caption">Each address is 4 bytes after the previous one, because an <code>int</code> usually occupies 4 bytes.</p>
+
+      <div class="callout warn">
+        <span class="callout-label">Watch out</span>
+        <p>C++ does not check bounds on a static array. Reading or writing past the end is undefined behaviour, not a clean crash — it may quietly return a garbage value or corrupt memory that belongs to something else.</p>
+      </div>
+
+      <h2 class="text-data">Changing elements</h2>
+      <p>Assignment through the index overwrites in place.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">change.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">int arr[] = {5, 10, 15};
+
+arr[1] = 100;
+
+// arr is now {5, 100, 15}</code></pre>
+      </div>
+
+      <h2 class="text-data">Traversal</h2>
+      <p>Visiting every element costs <span class="text-data">O(n)</span> — one step per element, no shortcut.</p>
+
+      <h3 class="text-pointer">Index-based loop</h3>
+      <p>A static array doesn't carry its own length, so compute it from the total byte size divided by the size of one element.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">traverse_index.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">int arr[] = {3, 5, 7, 9, 11};
+
+// size of a static array
+int size = sizeof(arr) / sizeof(arr[0]);
+
+for (int i = 0; i &lt; size; i++) {
+    cout &lt;&lt; arr[i] &lt;&lt; " ";
+}
+// 3 5 7 9 11</code></pre>
+      </div>
+
+      <h3 class="text-pointer">Range-based loop</h3>
+      <p>Shorter, and no size calculation needed.</p>
+
+      <div class="code-block">
+        <div class="code-block-head"><span class="code-block-file">traverse_range.cpp</span><button class="copy-btn">Copy</button></div>
+        <pre><code class="language-cpp">int arr[] = {3, 5, 7, 9, 11};
+
+for (int num : arr) {
+    cout &lt;&lt; num &lt;&lt; " ";
+}
+// 3 5 7 9 11</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-label">Tip</span>
+        <p>The <code>sizeof</code> trick only works where the array is declared. Pass the array to a function and it decays to a <span class="text-pointer">pointer</span>, so <code>sizeof(arr)</code> becomes the size of a pointer — pass the length alongside it, or use <code>std::vector</code>.</p>
+      </div>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="arrays.html"><span class="pn-dir">← Previous</span><span class="pn-title">Arrays</span></a>
+        <a class="pn-link next" href="arrays-dynamic.html"><span class="pn-dir">Next →</span><span class="pn-title">Dynamic arrays</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
+</body>
+</html>
