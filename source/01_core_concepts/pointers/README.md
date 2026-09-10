@@ -8,7 +8,7 @@
 
 <div align="center "> 
 
-![Linked_list](/assets/pointers.png)
+![pointer](/assets/pointers.png)
 
 </div>
 

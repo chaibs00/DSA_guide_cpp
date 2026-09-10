@@ -28,6 +28,9 @@ This repository is a learning project and may contain imperfections. **It’s sh
 
 
 
+### Usefull websites or youtube chains  :
+- https://www.youtube.com/@PaulProgramming
+
 
 
 
