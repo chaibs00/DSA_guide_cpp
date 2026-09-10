@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recursion — DSA_guide</title>
+<meta name="description" content="Base case and recursive case, how the call stack works, recursion vs iteration, and the common problems to watch for." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker">Core concepts</div>
+      <h1>Recursion</h1>
+      <p class="doc-lede">A <strong class="text-data">recursive</strong> function is a function that calls itself. Each call works on a smaller version of the problem, until the problem is small enough to answer directly.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 300" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="rah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+
+          <g class="node-box">
+            <rect x="150" y="34" width="300" height="44" rx="6" stroke-width="1.5"/>
+            <text x="300" y="61" text-anchor="middle" font-family="var(--font-mono)" font-size="13.5" stroke="none">fact(4) = 4 * fact(3)</text>
+          </g>
+          <g class="node-box">
+            <rect x="150" y="90" width="300" height="44" rx="6" stroke-width="1.5"/>
+            <text x="300" y="117" text-anchor="middle" font-family="var(--font-mono)" font-size="13.5" stroke="none">fact(3) = 3 * fact(2)</text>
+          </g>
+          <g class="node-box">
+            <rect x="150" y="146" width="300" height="44" rx="6" stroke-width="1.5"/>
+            <text x="300" y="173" text-anchor="middle" font-family="var(--font-mono)" font-size="13.5" stroke="none">fact(2) = 2 * fact(1)</text>
+          </g>
+          <g class="cell-value">
+            <rect x="150" y="202" width="300" height="44" rx="6" stroke-width="1.5"/>
+            <text x="300" y="229" text-anchor="middle" font-family="var(--font-mono)" font-size="13.5" font-weight="600" stroke="none">fact(1) = 1</text>
+          </g>
+          <text x="300" y="268" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--data)" stroke="none">base case — stops here</text>
+
+          <path class="ptr-line" marker-end="url(#rah)" d="M 120 40 L 120 214"/>
+          <text x="104" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none" transform="rotate(-90 104 130)">calls go down</text>
+
+          <path class="ptr-line" marker-end="url(#rah)" d="M 480 240 L 480 66"/>
+          <text x="496" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none" transform="rotate(90 496 130)">results come back up</text>
+
+          <text x="536" y="61" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">24</text>
+          <text x="536" y="117" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">6</text>
+          <text x="536" y="173" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">2</text>
+          <text x="536" y="229" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">1</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Nothing is computed on the way down. The multiplications happen on the way back up.</p>
+
+      <h2 class="text-data">Base case and recursive case</h2>
+      <p>Every recursive function needs two parts. The <strong class="text-data">base case</strong> returns an answer without calling itself. The <strong class="text-pointer">recursive case</strong> calls the function on a smaller input.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">factorial.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int fact(int n) {
+
+    if (n &lt;= 1) return 1;       // base case
+
+    return n * fact(n - 1);     // recursive case
+}</code></pre>
+          </div>
+
+          <p>Two things must be true or the function never stops:</p>
+          <ul>
+            <li>The input gets <strong>smaller</strong> at every call.</li>
+            <li>It always <strong>reaches</strong> the base case.</li>
+          </ul>
+
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p><code>fact(n - 1)</code> gets smaller, but <code>fact(n / 2)</code> with <code>n = 1</code> stays at <code>0</code> forever if the base case only checks <code>n == 1</code>. Check that the base case is actually reachable from every input.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">How the call stack works</h2>
+      <p>Each call gets its own <strong class="text-pointer">stack frame</strong> holding its parameters and local variables. The frame stays alive until the call returns, so during <code>fact(4)</code> there are four frames in memory at once.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — step by step</summary>
+        <div class="disclose-body">
+          <p>Calling <code>fact(4)</code> runs in this order:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">trace.txt</span><button class="copy-btn">Copy</button></div>
+            <pre><code>fact(4)  ->  needs fact(3)
+fact(3)  ->  needs fact(2)
+fact(2)  ->  needs fact(1)
+fact(1)  ->  returns 1        base case
+
+fact(2)  ->  returns 2 * 1  = 2
+fact(3)  ->  returns 3 * 2  = 6
+fact(4)  ->  returns 4 * 6  = 24</code></pre>
+          </div>
+
+          <p>The first half is the calls going down, the second half is the results coming back. This is why recursion uses memory: the frames of the calls that are still waiting cannot be freed yet.</p>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>The space complexity of a recursive function is at least <code>O(depth)</code>, even when it allocates nothing itself.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Recursion vs iteration</h2>
+      <p>Anything written with recursion can be written with a loop, and the other way around. The choice is about which one is easier to read for the problem.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the same function both ways</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">both_ways.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">// recursive
+int factRec(int n) {
+    if (n &lt;= 1) return 1;
+    return n * factRec(n - 1);
+}
+
+// iterative
+int factIter(int n) {
+    int result = 1;
+
+    for (int i = 2; i &lt;= n; i++)
+        result *= i;
+
+    return result;
+}</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th></th><th>Recursion</th><th>Iteration</th></tr></thead>
+              <tbody>
+                <tr><td>Extra memory</td><td class="mono">O(depth)</td><td class="mono">O(1)</td></tr>
+                <tr><td>Speed</td><td><span class="badge mid">call overhead</span></td><td><span class="badge good">faster</span></td></tr>
+                <tr><td>Trees and graphs</td><td><span class="badge good">natural</span></td><td><span class="badge mid">needs a stack</span></td></tr>
+                <tr><td>Simple counting loops</td><td><span class="badge mid">overkill</span></td><td><span class="badge good">natural</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Use recursion when the data itself is nested — trees, graphs, folders, nested JSON. Use a loop when you are just counting or scanning a list.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Recursion that branches</h2>
+      <p>When a function calls itself more than once, the calls form a <strong class="text-pointer">tree</strong> instead of a straight line. This is where recursion gets expensive.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 250" width="620" style="max-width:100%;">
+          <line x1="310" y1="62" x2="215" y2="104" stroke="var(--text-faint)" stroke-width="1.4"/>
+          <line x1="310" y1="62" x2="430" y2="104" stroke="var(--text-faint)" stroke-width="1.4"/>
+          <line x1="200" y1="137" x2="140" y2="179" stroke="var(--text-faint)" stroke-width="1.4"/>
+          <line x1="200" y1="137" x2="265" y2="179" stroke="var(--text-faint)" stroke-width="1.4"/>
+          <line x1="430" y1="137" x2="380" y2="179" stroke="var(--text-faint)" stroke-width="1.4"/>
+          <line x1="430" y1="137" x2="490" y2="179" stroke="var(--text-faint)" stroke-width="1.4"/>
+
+          <g class="node-box">
+            <rect x="270" y="30" width="80" height="32" rx="5" stroke-width="1.5"/>
+            <text x="310" y="51" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" stroke="none">fib(4)</text>
+          </g>
+          <g class="node-box">
+            <rect x="160" y="105" width="80" height="32" rx="5" stroke-width="1.5"/>
+            <text x="200" y="126" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" stroke="none">fib(3)</text>
+          </g>
+          <rect x="390" y="105" width="80" height="32" rx="5" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+          <text x="430" y="126" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--danger)">fib(2)</text>
+
+          <rect x="100" y="180" width="80" height="32" rx="5" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+          <text x="140" y="201" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--danger)">fib(2)</text>
+          <g class="cell-value">
+            <rect x="225" y="180" width="80" height="32" rx="5" stroke-width="1.5"/>
+            <text x="265" y="201" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" stroke="none">fib(1)</text>
+          </g>
+          <g class="cell-value">
+            <rect x="340" y="180" width="80" height="32" rx="5" stroke-width="1.5"/>
+            <text x="380" y="201" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" stroke="none">fib(1)</text>
+          </g>
+          <g class="cell-value">
+            <rect x="450" y="180" width="80" height="32" rx="5" stroke-width="1.5"/>
+            <text x="490" y="201" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" stroke="none">fib(0)</text>
+          </g>
+
+          <text x="310" y="238" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--danger)" stroke="none">fib(2) is computed twice — and it gets much worse as n grows</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The call tree for <code>fib(4)</code>. Teal nodes are base cases, red nodes are repeated work.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the problem and the fix</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">The slow version</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fib_slow.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int fib(int n) {
+    if (n &lt;= 1) return n;
+
+    return fib(n - 1) + fib(n - 2);   // two calls per call
+}
+// O(2ⁿ) — fib(50) takes years</code></pre>
+          </div>
+          <p>Each call makes two more calls, so the number of calls roughly doubles at every level. The same values are recomputed again and again.</p>
+
+          <h3 class="text-pointer">Memoization</h3>
+          <p>Store each result the first time it is computed, and reuse it after that.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fib_memo.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">long long fib(int n, vector&lt;long long&gt;&amp; memo) {
+    if (n &lt;= 1) return n;
+
+    if (memo[n] != -1) return memo[n];    // already computed
+
+    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+    return memo[n];
+}
+
+int main() {
+    int n = 50;
+    vector&lt;long long&gt; memo(n + 1, -1);
+    cout &lt;&lt; fib(n, memo);
+}
+// O(n) — each value is computed once</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Recursion plus memoization is the base of dynamic programming. If a recursive function is slow, first check whether it is solving the same subproblem more than once.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Common mistakes</h2>
+      <p>Most recursion bugs come from three places.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Missing or unreachable base case</h3>
+          <p>The function keeps calling itself, the stack fills up, and the program crashes with a stack overflow.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">no_base.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int bad(int n) {
+    return n * bad(n - 1);    // never stops
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Depth too large</h3>
+          <p>Even with a correct base case, a depth of a few hundred thousand can overflow the stack. A loop has no such limit.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">deep.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int sum(int n) {
+    if (n == 0) return 0;
+    return n + sum(n - 1);
+}
+
+sum(1000000);   // likely stack overflow</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Forgetting to return the recursive call</h3>
+          <p>The call runs, but the result is thrown away.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">no_return.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int bad(int n) {
+    if (n &lt;= 1) return 1;
+
+    n * bad(n - 1);    // ✗ result discarded
+    return n * bad(n - 1);   // ✓
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Where recursion is used</h2>
+      <p>Recursion fits problems whose structure repeats inside itself.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Area</th><th>Why recursion fits</th></tr></thead>
+              <tbody>
+                <tr><td>Tree traversal</td><td>Each subtree is a smaller tree</td></tr>
+                <tr><td>Graph search (DFS)</td><td>Each neighbour starts the same search again</td></tr>
+                <tr><td>Merge sort, quicksort</td><td>Split the array, sort each half the same way</td></tr>
+                <tr><td>Binary search</td><td>Search one half with the same function</td></tr>
+                <tr><td>Backtracking</td><td>Try a choice, recurse, undo it and try the next</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>A short example — the sum of every node in a binary tree, which is hard to write with a loop and short with recursion:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">tree_sum.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+int treeSum(Node* root) {
+    if (root == nullptr) return 0;    // base case
+
+    return root-&gt;data
+         + treeSum(root-&gt;left)
+         + treeSum(root-&gt;right);
+}</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" data-href="pages/concepts/pointers.html"><span class="pn-dir">← Previous</span><span class="pn-title">Pointers &amp; memory</span></a>
+        <a class="pn-link next" data-href="pages/structures/index.html"><span class="pn-dir">Next →</span><span class="pn-title">Data structures</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
+</body>
+</html>

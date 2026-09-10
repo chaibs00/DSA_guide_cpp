@@ -39,6 +39,7 @@ const NAV = [
     children: [
       { title: "Complexity analysis", url: "pages/concepts/complexity.html" },
       { title: "Pointers & memory", url: "pages/concepts/pointers.html" },
+      { title: "Recursion", url: "pages/concepts/recursion.html" },
     ],
   },
   {
@@ -106,6 +107,8 @@ const SEARCH_INDEX = [
     body: "big o notation growth rate time space tradeoff" },
   { title: "Pointers & memory", section: "Core concepts", url: "pages/concepts/pointers.html",
     body: "pointer reference address dereference new delete stack heap memory management" },
+  { title: "Recursion", section: "Core concepts", url: "pages/concepts/recursion.html",
+  body: "recursion recursive base case call stack stack frame memoization fibonacci factorial backtracking depth" },
   { title: "Data structures", section: "Data structures", url: "pages/structures/index.html",
     body: "overview linear non-linear structures" },
   { title: "Linear data structures", section: "Data structures", url: "pages/structures/linear/index.html",

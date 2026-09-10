@@ -3,14 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Complexity Analysis — DSA_guide</title>
-<meta name="description" content="How to reason about Big-O notation, time complexity, and space complexity before writing your first data structure." />
+<title>Complexity analysis — DSA_guide</title>
+<meta name="description" content="Big-O notation, time and space complexity, and how to count operations in loops and recursion." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -24,108 +32,357 @@
     <article class="doc">
       <div class="doc-kicker">Core concepts</div>
       <h1>Complexity analysis</h1>
-      <p class="doc-lede">Before you learn a single data structure, you need a way to compare them. Big-O notation is that yardstick — it describes how an algorithm's cost grows as its input grows, not how fast it runs on your machine today.</p>
-
-      <h2>Why complexity matters</h2>
-      <p>Two pieces of code can solve the same problem and both "work" on a small test case, yet behave completely differently once the input reaches real-world size. Complexity analysis tells you which one that will be, without having to run either.</p>
-      <p class="muted">It comes in two flavors, and you'll see both used throughout this guide:</p>
-      <ul>
-        <li><strong class="text-data">Time complexity</strong> — how the number of operations grows as input size (<code>n</code>) grows.</li>
-        <li><strong class="text-pointer">Space complexity</strong> — how much extra memory the algorithm needs as <code>n</code> grows.</li>
-      </ul>
-
-      <h2>Reading Big-O notation</h2>
-      <p>Big-O describes the <em>worst-case growth rate</em>, ignoring constants and lower-order terms. <code>O(2n + 5)</code> is just <code>O(n)</code> — as <code>n</code> gets large, the <code>+5</code> becomes irrelevant and the <code>2</code> doesn't change the shape of the curve.</p>
-
+      <p class="doc-lede">Complexity analysis measures <strong class="text-data">how the cost of an algorithm grows when the input gets bigger</strong>. It is written with Big-O notation, like <code>O(n)</code> or <code>O(n²)</code>.</p>
       <div class="diagram">
-        <svg viewBox="0 0 360 210" width="360" xmlns="http://www.w3.org/2000/svg">
-          <line x1="30" y1="10" x2="30" y2="170" stroke="var(--border)" stroke-width="1.5"/>
-          <line x1="30" y1="170" x2="345" y2="170" stroke="var(--border)" stroke-width="1.5"/>
-          <text x="34" y="8" font-family="IBM Plex Mono" font-size="10" fill="var(--text-faint)">operations</text>
-          <text x="300" y="188" font-family="IBM Plex Mono" font-size="10" fill="var(--text-faint)">input size (n)</text>
+        <svg viewBox="0 0 620 330" width="620" style="max-width:100%;">
+          <line x1="60" y1="45" x2="60" y2="285" stroke="var(--border)" stroke-width="1.5"/>
+          <line x1="60" y1="285" x2="580" y2="285" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="52" y="52" text-anchor="end" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)">operations</text>
+          <text x="580" y="305" text-anchor="end" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)">input size n &#8594;</text>
 
-          <polyline points="30,160 340,160" fill="none" stroke="#8991A0" stroke-width="2"/>
-          <polyline points="30,168 90,140 150,125 210,115 270,108 330,102" fill="none" stroke="var(--pointer)" stroke-width="2"/>
-          <polyline points="30,170 330,40" fill="none" stroke="var(--data)" stroke-width="2"/>
-          <polyline points="30,170 90,130 150,95 210,68 270,45 320,26" fill="none" stroke="#7BB3F0" stroke-width="2"/>
-          <path d="M30,170 C 120,168 210,120 260,20" fill="none" stroke="var(--danger)" stroke-width="2"/>
+          <polyline fill="none" stroke="var(--data)" stroke-width="2" points="60,275 142,275 224,275 306,275 388,275 471,275 580,275"/>
+          <text x="586" y="279" font-family="var(--font-mono)" font-size="11.5" fill="var(--data)">O(1)</text>
 
-          <g font-family="IBM Plex Mono" font-size="10.5">
-            <rect x="30" y="184" width="8" height="8" fill="#8991A0"/><text x="42" y="192" fill="var(--text-muted)">O(1)</text>
-            <rect x="90" y="184" width="8" height="8" fill="var(--pointer)"/><text x="102" y="192" fill="var(--text-muted)">O(log n)</text>
-            <rect x="165" y="184" width="8" height="8" fill="var(--data)"/><text x="177" y="192" fill="var(--text-muted)">O(n)</text>
-            <rect x="215" y="184" width="8" height="8" fill="#7BB3F0"/><text x="227" y="192" fill="var(--text-muted)">O(n log n)</text>
-            <rect x="300" y="184" width="8" height="8" fill="var(--danger)"/><text x="312" y="192" fill="var(--text-muted)">O(n²)</text>
-          </g>
+          <polyline fill="none" stroke="var(--data)" stroke-width="2" opacity="0.75" points="60,280 87,249 115,231 142,218 169,208 197,200 224,193 252,187 279,181 306,177 334,172 361,168 388,165 416,161 443,158 471,155 498,153 525,150 553,148 580,145"/>
+          <text x="586" y="149" font-family="var(--font-mono)" font-size="11.5" fill="var(--data)">O(log n)</text>
+
+          <polyline fill="none" stroke="var(--text-faint)" stroke-width="2" points="60,273 115,249 169,225 224,201 279,177 334,153 388,129 443,105 498,81 553,57 580,45"/>
+          <text x="560" y="38" font-family="var(--font-mono)" font-size="11.5" fill="var(--text-muted)">O(n)</text>
+
+          <polyline fill="none" stroke="var(--pointer)" stroke-width="2" points="60,280 87,269 115,253 142,234 169,213 197,191 224,167 252,142 279,116 306,89 334,61 361,45"/>
+          <text x="352" y="38" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)">O(n log n)</text>
+
+          <polyline fill="none" stroke="var(--danger)" stroke-width="2" points="60,284 101,280 142,273 183,263 224,250 265,233 306,213 347,190 388,163 429,134 471,101 512,64 539,45"/>
+          <text x="528" y="38" text-anchor="end" font-family="var(--font-mono)" font-size="11.5" fill="var(--danger)">O(n²)</text>
         </svg>
       </div>
-      <p class="diagram-caption">Growth of common complexity classes as input size increases — shape matters, not the exact numbers.</p>
+      <p class="diagram-caption">The same input size, five different growth rates.</p>
 
-      <div class="table-wrap">
-        <table class="doc-table">
-          <thead><tr><th>Notation</th><th>Name</th><th>Typical example</th><th>Growth</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">O(1)</td><td>Constant</td><td>Accessing <code>arr[i]</code></td><td><span class="badge good">excellent</span></td></tr>
-            <tr><td class="mono">O(log n)</td><td>Logarithmic</td><td>Binary search</td><td><span class="badge good">excellent</span></td></tr>
-            <tr><td class="mono">O(n)</td><td>Linear</td><td>Scanning a vector once</td><td><span class="badge mid">okay</span></td></tr>
-            <tr><td class="mono">O(n log n)</td><td>Linearithmic</td><td>Merge sort, quick sort</td><td><span class="badge mid">okay</span></td></tr>
-            <tr><td class="mono">O(n²)</td><td>Quadratic</td><td>Bubble sort, nested loops</td><td><span class="badge bad">watch out</span></td></tr>
-            <tr><td class="mono">O(2ⁿ)</td><td>Exponential</td><td>Naive recursive Fibonacci</td><td><span class="badge bad">avoid</span></td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h2 class="text-data">Big-O notation</h2>
+      <p>Big-O describes the growth of an algorithm, not its exact runtime. We count the operations, then keep only the part that grows fastest.</p>
 
-      <h2>Time complexity in code</h2>
-      <p>Here's the same idea across three loop shapes. Watch how the number of nested loops over <code>n</code> maps directly to the exponent in the notation.</p>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p>Two rules are used every time:</p>
+          <ul>
+            <li><strong>Drop the constants.</strong> <code>3n</code> becomes <code>O(n)</code>.</li>
+            <li><strong>Keep only the biggest term.</strong> <code>n² + n + 50</code> becomes <code>O(n²)</code>.</li>
+          </ul>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">constant.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// O(1) — cost doesn't depend on the size of arr
-int getFirst(const std::vector&lt;int&gt;&amp; arr) {
-    return arr[0];
-}</code></pre>
-      </div>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">counting.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int f(vector&lt;int&gt;&amp; v) {
+    int total = 0;                          // 1
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">linear.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// O(n) — one pass over every element
-int sum(const std::vector&lt;int&gt;&amp; arr) {
-    int total = 0;
-    for (int x : arr) {
+    for (int x : v)                         // n
         total += x;
-    }
-    return total;
-}</code></pre>
-      </div>
 
-      <div class="code-block">
-        <div class="code-block-head"><span class="code-block-file">quadratic.cpp</span><button class="copy-btn">Copy</button></div>
-        <pre><code class="language-cpp">// O(n^2) — a nested loop over the same input
-bool hasDuplicate(const std::vector&lt;int&gt;&amp; arr) {
-    for (size_t i = 0; i &lt; arr.size(); i++) {
-        for (size_t j = i + 1; j &lt; arr.size(); j++) {
-            if (arr[i] == arr[j]) return true;
-        }
+    for (int i = 0; i &lt; v.size(); i++)      // n
+        for (int j = 0; j &lt; v.size(); j++)  // n  -&gt; n * n
+            total += v[i] * v[j];
+
+    return total;                           // 1
+}
+// 2 + n + n²  ->  O(n²)</code></pre>
+          </div>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Big-O is the worst case. There is also <strong>Ω</strong> for the best case and <strong>Θ</strong> when both are the same, but Big-O is what people use most of the time.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Reading complexity from the code</h2>
+      <p>Three rules cover most cases: loops one after another are added, nested loops are multiplied, and cutting the input in half gives a logarithm.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — constant, linear, quadratic, logarithmic</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">O(1) — constant</h3>
+          <p>The work does not depend on the input size. Reading <code>v[0]</code> takes the same time in an array of 10 or 10 million.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">constant.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int first(vector&lt;int&gt;&amp; v) {
+    return v[0];      // one step
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">O(n) — linear</h3>
+          <p>One loop over the input. If the input doubles, the work doubles.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">linear.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int findMax(vector&lt;int&gt;&amp; v) {
+    int best = v[0];
+
+    for (int x : v) {            // n times
+        if (x &gt; best) best = x;
     }
+
+    return best;
+}</code></pre>
+          </div>
+          <p>Two loops one after another give <code>n + n = 2n</code>, which is still <code>O(n)</code>. Only nested loops multiply.</p>
+
+          <h3 class="text-pointer">O(n²) — quadratic</h3>
+          <p>A loop inside a loop. Each element is compared with every other element.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">quadratic.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">bool hasDuplicate(vector&lt;int&gt;&amp; v) {
+    for (int i = 0; i &lt; v.size(); i++)          // n
+        for (int j = i + 1; j &lt; v.size(); j++)  // n
+            if (v[i] == v[j]) return true;
+
     return false;
+}
+// O(n²)</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>The inner loop starts at <code>i + 1</code>, so it runs about <code>n²/2</code> times. The constant is dropped, so it is still <code>O(n²)</code>.</p>
+          </div>
+
+          <h3 class="text-pointer">O(log n) — logarithmic</h3>
+          <p>Each step removes half of what is left. Searching 1,000,000 sorted elements takes about 20 steps.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">logarithmic.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int binarySearch(vector&lt;int&gt;&amp; v, int target) {
+    int lo = 0, hi = v.size() - 1;
+
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;
+
+        if (v[mid] == target) return mid;
+        if (v[mid] &lt; target)  lo = mid + 1;   // drop the left half
+        else                  hi = mid - 1;   // drop the right half
+    }
+
+    return -1;
 }</code></pre>
-      </div>
+          </div>
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>A loop with <code>i++</code> is linear. A loop with <code>i *= 2</code>, or one that halves a range, is logarithmic.</p>
+          </div>
+        </div>
+      </details>
 
-      <div class="callout tip">
-        <span class="callout-label">Tip</span>
-        <p>When you see nested loops that each scan the full input, that's a strong signal you're looking at <code>O(n²)</code> — and a strong hint to ask whether a hash set or sorting step could bring it down to <code>O(n)</code> or <code>O(n log n)</code>.</p>
-      </div>
+      <h2 class="text-data">Common growth rates</h2>
+      <p>These are the classes you will meet most often, from fastest to slowest.</p>
 
-      <h2>Space complexity</h2>
-      <p>Space complexity follows the same logic, but counts memory instead of steps. <code>sum()</code> above uses <code>O(1)</code> extra space — one <code>int</code> accumulator, regardless of how big <code>arr</code> is. A function that builds a new vector the same size as its input uses <code>O(n)</code> space.</p>
-      <div class="callout note">
-        <span class="callout-label">Note</span>
-        <p>Time and space can trade off against each other. Later guides — starting with arrays — will point out exactly where that tradeoff shows up.</p>
-      </div>
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Complexity</th><th>Name</th><th>Example</th><th>Works up to</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">O(1)</td><td>Constant</td><td>Array index, hash lookup</td><td><span class="badge good">any n</span></td></tr>
+                <tr><td class="mono">O(log n)</td><td>Logarithmic</td><td>Binary search</td><td><span class="badge good">any n</span></td></tr>
+                <tr><td class="mono">O(n)</td><td>Linear</td><td>Scanning an array</td><td><span class="badge good">~10⁸</span></td></tr>
+                <tr><td class="mono">O(n log n)</td><td>Linearithmic</td><td>Merge sort, quicksort</td><td><span class="badge good">~10⁶</span></td></tr>
+                <tr><td class="mono">O(n²)</td><td>Quadratic</td><td>Bubble sort, nested loops</td><td><span class="badge mid">~10⁴</span></td></tr>
+                <tr><td class="mono">O(2ⁿ)</td><td>Exponential</td><td>Recursive subsets</td><td><span class="badge bad">~20</span></td></tr>
+                <tr><td class="mono">O(n!)</td><td>Factorial</td><td>All permutations</td><td><span class="badge bad">~10</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>At <code>n = 1,000,000</code>, an <code>O(n log n)</code> algorithm needs about 20 million operations. An <code>O(n²)</code> one needs a trillion.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Space complexity</h2>
+      <p>The same idea, applied to memory: how much <strong class="text-pointer">extra</strong> memory the algorithm needs. The input itself is not counted.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">O(1) — in place</h3>
+          <p>Only a few variables, whatever the input size.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">in_place.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void reverse(vector&lt;int&gt;&amp; v) {
+    int lo = 0, hi = v.size() - 1;   // two ints
+
+    while (lo &lt; hi) {
+        swap(v[lo], v[hi]);
+        lo++; hi--;
+    }
+}
+// time O(n), space O(1)</code></pre>
+          </div>
+
+          <h3 class="text-pointer">O(n) — extra memory</h3>
+          <p>A new container that grows with the input.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">extra_space.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">vector&lt;int&gt; doubled(vector&lt;int&gt;&amp; v) {
+    vector&lt;int&gt; out;                 // n elements
+
+    for (int x : v) out.push_back(x * 2);
+
+    return out;
+}
+// time O(n), space O(n)</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Recursion uses memory too</h3>
+          <p>Each recursive call keeps a frame on the stack until it returns, so the depth of the recursion is memory.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">recursion_space.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int sum(int n) {
+    if (n == 0) return 0;
+    return n + sum(n - 1);   // n frames at the same time
+}
+// time O(n), space O(n)</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Time and memory can often be traded. A hash map gives <code>O(1)</code> lookup but uses <code>O(n)</code> memory.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Best, average and worst case</h2>
+      <p>The same algorithm can have different complexities depending on the input. Linear search is the clearest example.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Case</th><th>Situation</th><th>Complexity</th></tr></thead>
+              <tbody>
+                <tr><td>Best</td><td>Target is the first element</td><td class="mono">O(1)</td></tr>
+                <tr><td>Average</td><td>Target is in the middle</td><td class="mono">O(n)</td></tr>
+                <tr><td>Worst</td><td>Target is last or missing</td><td class="mono">O(n)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="text-pointer">Amortized complexity</h3>
+          <p>The average cost of an operation over many calls, when a few calls are expensive. <code>push_back</code> is usually <code>O(1)</code>, but when the vector is full it allocates a bigger block and copies everything, which is <code>O(n)</code>.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">amortized.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">vector&lt;int&gt; v;
+
+for (int i = 0; i &lt; n; i++)
+    v.push_back(i);    // usually O(1), sometimes O(n)
+
+// n insertions cost O(n) in total -> O(1) amortized</code></pre>
+          </div>
+          <p>The capacity doubles each time, so the copies get rarer as the vector grows.</p>
+        </div>
+      </details>
+
+      <h2 class="text-data">Complexity of common operations</h2>
+      <p>A reference table for choosing a data structure or a sorting algorithm.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — data structures and sorting</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Data structures</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Space</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Array / vector</td>
+                  <td><span class="badge good">O(1)</span></td><td><span class="badge mid">O(n)</span></td>
+                  <td><span class="badge mid">O(n)</span></td><td><span class="badge mid">O(n)</span></td><td class="mono">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Singly linked list</td>
+                  <td><span class="badge mid">O(n)</span></td><td><span class="badge mid">O(n)</span></td>
+                  <td><span class="badge good">O(1)</span></td><td><span class="badge good">O(1)</span></td><td class="mono">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Stack / queue</td>
+                  <td><span class="badge mid">O(n)</span></td><td><span class="badge mid">O(n)</span></td>
+                  <td><span class="badge good">O(1)</span></td><td><span class="badge good">O(1)</span></td><td class="mono">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Balanced BST</td>
+                  <td><span class="badge good">O(log n)</span></td><td><span class="badge good">O(log n)</span></td>
+                  <td><span class="badge good">O(log n)</span></td><td><span class="badge good">O(log n)</span></td><td class="mono">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Hash table</td>
+                  <td><span class="badge good">O(1)*</span></td><td><span class="badge good">O(1)*</span></td>
+                  <td><span class="badge good">O(1)*</span></td><td><span class="badge good">O(1)*</span></td><td class="mono">O(n)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted">* average case. With many collisions a hash table becomes <code>O(n)</code>.</p>
+
+          <h3 class="text-pointer">Sorting algorithms</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Bubble sort</td>
+                  <td><span class="badge good">O(n)</span></td><td><span class="badge bad">O(n²)</span></td>
+                  <td><span class="badge bad">O(n²)</span></td><td class="mono">O(1)</td>
+                </tr>
+                <tr>
+                  <td>Insertion sort</td>
+                  <td><span class="badge good">O(n)</span></td><td><span class="badge bad">O(n²)</span></td>
+                  <td><span class="badge bad">O(n²)</span></td><td class="mono">O(1)</td>
+                </tr>
+                <tr>
+                  <td>Merge sort</td>
+                  <td><span class="badge good">O(n log n)</span></td><td><span class="badge good">O(n log n)</span></td>
+                  <td><span class="badge good">O(n log n)</span></td><td class="mono">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Quicksort</td>
+                  <td><span class="badge good">O(n log n)</span></td><td><span class="badge good">O(n log n)</span></td>
+                  <td><span class="badge bad">O(n²)</span></td><td class="mono">O(log n)</td>
+                </tr>
+                <tr>
+                  <td>Heap sort</td>
+                  <td><span class="badge good">O(n log n)</span></td><td><span class="badge good">O(n log n)</span></td>
+                  <td><span class="badge good">O(n log n)</span></td><td class="mono">O(1)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">How to analyze a piece of code</h2>
+      <p>Five steps that cover most cases.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <ol>
+            <li><strong>Find <code>n</code>.</strong> It is the input whose size changes the cost. With two inputs, write <code>O(n + m)</code>.</li>
+            <li><strong>Count the loops.</strong> Loops in sequence are added, nested loops are multiplied.</li>
+            <li><strong>Check the calls inside.</strong> An <code>O(n)</code> call inside an <code>O(n)</code> loop gives <code>O(n²)</code>.</li>
+            <li><strong>Count the extra memory.</strong> New containers, plus the recursion depth.</li>
+            <li><strong>Simplify.</strong> <code>4n² + 100n + 7</code> becomes <code>O(n²)</code>.</li>
+          </ol>
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>Big-O hides the constants. On small inputs an <code>O(n²)</code> algorithm can be faster than an <code>O(n log n)</code> one. Use complexity to choose, then measure.</p>
+          </div>
+        </div>
+      </details>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="00_cpp-starter.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ starter</span></a>
-        <a class="pn-link next" href="pages/pointers.html"><span class="pn-dir">Next →</span><span class="pn-title">Pointers &amp; memory</span></a>
+        <a class="pn-link prev" data-href="pages/cpp/advanced.html"><span class="pn-dir">← Previous</span><span class="pn-title">C++ advanced</span></a>
+        <a class="pn-link next" data-href="pages/concepts/pointers.html"><span class="pn-dir">Next →</span><span class="pn-title">Pointers &amp; memory</span></a>
       </div>
     </article>
   </div>
@@ -135,9 +392,13 @@ bool hasDuplicate(const std::vector&lt;int&gt;&amp; arr) {
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
-<script src="../assets/js/code.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>

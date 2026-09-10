@@ -3,11 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pointers & Memory — DSA_guide</title>
-<meta name="description" content="Addresses, the stack vs. the heap, and how new and delete actually work." />
+<title>Pointers &amp; memory — DSA_guide</title>
+<meta name="description" content="Addresses, dereferencing, pointer arithmetic, the stack vs. the heap, and the memory bugs that come with them." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -21,24 +32,449 @@
     <article class="doc">
       <div class="doc-kicker">Core concepts</div>
       <h1>Pointers &amp; memory</h1>
-      <p class="doc-lede">Addresses, the stack vs. the heap, and how <code>new</code> and <code>delete</code> actually work — this page is still being written.</p>
+      <p class="doc-lede">Every variable has a <strong class="text-data">value</strong> and a <strong class="text-pointer">memory address</strong>. A pointer is simply a variable whose value <em>is</em> an address. Once that clicks, linked lists and trees stop being mysterious — they are all built out of this one idea.</p>
+
+
+      <div class="diagram">
+        <img src="../../figures/pointers.png" alt="A variable holding a value, and a pointer holding that variable's address" />
+      </div>
+      <p class="diagram-caption">A pointer is a variable whose value is another variable's address.</p>
+
+      <h2 class="text-data">Declaring and dereferencing</h2>
+      <p>Three symbols do all the work: <code>*</code> in a declaration makes a pointer type, <code>&amp;</code> takes an address, and <code>*</code> in an expression follows a pointer back to the value.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — declaration, address-of, dereferencing</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Declaration</h3>
+          <p>A pointer must name the type it points to — the compiler needs that to know how many bytes to read, and how far to jump in pointer arithmetic.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* p;      // pointer to an int
+double* d;   // pointer to a double
+char* c;     // pointer to a char</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p><code>int* p;</code> and <code>int *p;</code> are identical — the position of <code>*</code> is only a style choice. But <code>int* a, b;</code> declares one pointer and one plain int. Declare one per line and the trap disappears.</p>
+          </div>
+
+          <h3 class="text-pointer">Address-of operator</h3>
+          <p>The <code>&amp;</code> operator returns the memory address of a variable.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">address_of.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int a = 10;
+
+cout &lt;&lt; &amp;a;      // e.g. 0x61ff — where a lives
+
+int* p = &amp;a;     // p now stores that address</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Dereferencing</h3>
+          <p>Used on a pointer, <code>*</code> gives the value stored at that address.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">dereference.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int a = 10;
+int* p = &amp;a;
+
+cout &lt;&lt; *p;      // 10       — the value p points to
+cout &lt;&lt; p;       // 0x61ff   — the address of a
+cout &lt;&lt; &amp;p;      // 0x7ffd   — the address of p itself</code></pre>
+          </div>
+
+          <div class="diagram">
+            <svg viewBox="0 0 620 210" width="620" style="max-width:100%;">
+              <defs>
+                <marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+                </marker>
+              </defs>
+              <text x="90" y="42" font-family="var(--font-mono)" font-size="13" fill="var(--text-muted)" stroke="none">int a = 10;</text>
+              <g class="cell-value">
+                <rect x="90" y="56" width="150" height="58" rx="6" stroke-width="1.5"/>
+                <text x="165" y="92" text-anchor="middle" font-family="var(--font-mono)" font-size="19" font-weight="600" stroke="none">10</text>
+              </g>
+              <text x="165" y="134" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">at 0x61ff</text>
+
+              <text x="380" y="42" font-family="var(--font-mono)" font-size="13" fill="var(--text-muted)" stroke="none">int* p = &amp;a;</text>
+              <g class="node-box">
+                <rect x="380" y="56" width="150" height="58" rx="6" stroke-width="1.5"/>
+                <text x="455" y="92" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="600" fill="var(--pointer)" stroke="none">0x61ff</text>
+              </g>
+              <text x="455" y="134" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">at 0x7ffd</text>
+
+              <path class="ptr-line" marker-end="url(#ah1)" d="M 380 150 C 320 190, 250 190, 200 122"/>
+              <text x="292" y="198" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">*p reads through the arrow</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">Following the arrow is dereferencing; <code>p</code> itself is just the address.</p>
+
+          <h3 class="text-pointer">Writing through a pointer</h3>
+          <p>Dereferencing also works on the left of an assignment, which is the whole point — it lets you change memory you have no name for.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">write_through.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">*p = 99;
+
+cout &lt;&lt; a;       // 99 — a changed, without touching `a`</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Null pointers</h2>
+      <p>A pointer that doesn't point anywhere should be set to <code>nullptr</code>. Dereferencing it crashes the program — which sounds bad but is the <em>good</em> case, because it fails loudly and immediately.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">null.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* ptr = nullptr;      // safe: explicitly points to nothing
+
+// always check before dereferencing
+if (ptr != nullptr) {
+    cout &lt;&lt; *ptr;
+}</code></pre>
+          </div>
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>An <strong>uninitialized</strong> pointer is the dangerous one. <code>int* p;</code> holds whatever garbage was already in that memory, which may well look like a valid address — so dereferencing it can silently corrupt unrelated data instead of crashing. Initialize every pointer, to <code>nullptr</code> if nothing else.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Pointers and arrays</h2>
+      <p>An array name decays to a pointer to its first element, which is why <code>arr[i]</code> and <code>*(arr + i)</code> are the same expression to the compiler.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 230" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+          <text x="60" y="34" font-family="var(--font-mono)" font-size="13" fill="var(--text-muted)" stroke="none">int arr[4] = {1, 2, 3, 4};</text>
+
+          <g class="cell-value">
+            <rect x="60" y="52" width="110" height="52" rx="5" stroke-width="1.5"/>
+            <text x="115" y="85" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="600" stroke="none">1</text>
+          </g>
+          <g class="cell-value">
+            <rect x="180" y="52" width="110" height="52" rx="5" stroke-width="1.5"/>
+            <text x="235" y="85" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="600" stroke="none">2</text>
+          </g>
+          <g class="cell-value">
+            <rect x="300" y="52" width="110" height="52" rx="5" stroke-width="1.5"/>
+            <text x="355" y="85" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="600" stroke="none">3</text>
+          </g>
+          <g class="cell-value">
+            <rect x="420" y="52" width="110" height="52" rx="5" stroke-width="1.5"/>
+            <text x="475" y="85" text-anchor="middle" font-family="var(--font-mono)" font-size="17" font-weight="600" stroke="none">4</text>
+          </g>
+
+          <text x="115" y="122" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">[0] 0x1000</text>
+          <text x="235" y="122" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">[1] 0x1004</text>
+          <text x="355" y="122" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">[2] 0x1008</text>
+          <text x="475" y="122" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">[3] 0x100C</text>
+
+          <path class="ptr-line" marker-end="url(#ah2)" d="M 115 178 L 115 112"/>
+          <text x="115" y="198" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--pointer)" stroke="none">p</text>
+
+          <path class="ptr-line" marker-end="url(#ah2)" d="M 355 178 L 355 112" stroke-dasharray="4 3"/>
+          <text x="355" y="198" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--pointer)" stroke="none">p + 2</text>
+
+          <text x="310" y="222" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--text-faint)" stroke="none">+2 moves 8 bytes, not 2 — sizeof(int) does the scaling</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Elements sit in contiguous memory, which is what makes index math possible.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — indexing and pointer arithmetic</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Reaching elements</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">arrays.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int arr[3] = {10, 20, 30};
+int* p = arr;          // p points to arr[0]
+
+cout &lt;&lt; *p;            // 10
+cout &lt;&lt; *(p + 1);      // 20
+cout &lt;&lt; *(p + 2);      // 30
+
+cout &lt;&lt; p[1];          // 20 — identical to *(p + 1)</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Pointer arithmetic</h3>
+          <p>Adding to a pointer moves it by whole elements, not bytes — the compiler multiplies by <code>sizeof(T)</code> for you.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">arithmetic.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int arr[4] = {1, 2, 3, 4};
+int* p = arr;   // -&gt; arr[0]
+
+p++;            // -&gt; arr[1]
+p = p + 2;      // -&gt; arr[3]
+p--;            // -&gt; arr[2]</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Subtracting two pointers into the same array gives the number of elements between them — that's how <code>end - begin</code> yields a size. Moving a pointer outside an array's bounds (except one past the end) is undefined behavior, even if you never dereference it.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Pointers to pointers</h2>
+      <p>A pointer is a variable, so it has an address too, so another pointer can hold it. You meet this when a function needs to modify a <em>pointer</em> rather than the value it points at.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 150" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+          <g class="node-box">
+            <rect x="40" y="50" width="140" height="52" rx="6" stroke-width="1.5"/>
+            <text x="110" y="82" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" fill="var(--pointer)" stroke="none">0x7ffd</text>
+          </g>
+          <text x="110" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--text-muted)" stroke="none">int** P2</text>
+
+          <path class="ptr-line" marker-end="url(#ah3)" d="M 180 76 L 232 76"/>
+
+          <g class="node-box">
+            <rect x="240" y="50" width="140" height="52" rx="6" stroke-width="1.5"/>
+            <text x="310" y="82" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" fill="var(--pointer)" stroke="none">0x61ff</text>
+          </g>
+          <text x="310" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--text-muted)" stroke="none">int* P1</text>
+
+          <path class="ptr-line" marker-end="url(#ah3)" d="M 380 76 L 432 76"/>
+
+          <g class="cell-value">
+            <rect x="440" y="50" width="140" height="52" rx="6" stroke-width="1.5"/>
+            <text x="510" y="83" text-anchor="middle" font-family="var(--font-mono)" font-size="18" font-weight="600" stroke="none">10</text>
+          </g>
+          <text x="510" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" fill="var(--text-muted)" stroke="none">int a</text>
+
+          <text x="310" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">*P2 is P1&#160;&#160;·&#160;&#160;**P2 is 10</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Each <code>*</code> follows one arrow along the chain.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">double_pointer.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int a = 10;
+int* P1 = &amp;a;
+int** P2 = &amp;P1;
+
+cout &lt;&lt; **P2;    // 10</code></pre>
+          </div>
+          <p>Useful when a function needs to modify a pointer itself, not just the value it points to.</p>
+        </div>
+      </details>
+
+      <h2 class="text-data">Passing by value, reference, or pointer</h2>
+      <p>Passing by <strong>value</strong> copies the argument, so the function works on a duplicate. Passing by <strong class="text-pointer">reference</strong> or <strong class="text-pointer">pointer</strong> hands over access to the original.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the three styles compared</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">passing.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void passValue(int x)      { x++; }
+void passReference(int&amp; x) { x++; }
+void passPtr(int* x)       { (*x)++; }
+
+int a = 5;
+passValue(a);      // a is still 5 — only the copy changed
+passReference(a);  // a is now 6
+passPtr(&amp;a);       // a is now 7</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Style</th><th>Call site</th><th>Can be null?</th><th>Can be repointed?</th><th>Use when</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="mono">int x</td><td class="mono">f(a)</td>
+                  <td><span class="badge bad">n/a</span></td><td><span class="badge bad">n/a</span></td>
+                  <td>Small, read-only values</td>
+                </tr>
+                <tr>
+                  <td class="mono">int&amp; x</td><td class="mono">f(a)</td>
+                  <td><span class="badge bad">no</span></td><td><span class="badge bad">no</span></td>
+                  <td>Default choice for modifying a caller's variable</td>
+                </tr>
+                <tr>
+                  <td class="mono">int* x</td><td class="mono">f(&amp;a)</td>
+                  <td><span class="badge good">yes</span></td><td><span class="badge good">yes</span></td>
+                  <td>"No value" is meaningful, or you must rebind</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Prefer references in modern C++ — they can't be null and need no <code>&amp;</code> at the call site. Reach for a pointer when absence is a real state to represent, which is exactly why linked-list and tree nodes use pointers: a missing next node <em>is</em> <code>nullptr</code>.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Dynamic memory: stack vs. heap</h2>
+      <p>Local variables live on the <strong class="text-data">stack</strong> and vanish when their scope ends. <code>new</code> allocates on the <strong class="text-pointer">heap</strong>, which stays alive until you <code>delete</code> it, and whose size you can decide at runtime.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 260" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+          <rect x="40" y="40" width="230" height="190" rx="8" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="155" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="13" font-weight="600" fill="var(--data)" stroke="none">STACK</text>
+
+          <g class="node-box">
+            <rect x="66" y="66" width="178" height="46" rx="5" stroke-width="1.5"/>
+            <text x="155" y="94" text-anchor="middle" font-family="var(--font-mono)" font-size="13" fill="var(--pointer)" stroke="none">p &#8594; 0x9a40</text>
+          </g>
+          <g class="cell-value">
+            <rect x="66" y="126" width="178" height="46" rx="5" stroke-width="1.5"/>
+            <text x="155" y="154" text-anchor="middle" font-family="var(--font-mono)" font-size="13" stroke="none">int n = 5</text>
+          </g>
+          <text x="155" y="200" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">freed automatically</text>
+          <text x="155" y="216" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">at end of scope</text>
+
+          <rect x="350" y="40" width="230" height="190" rx="8" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="465" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="13" font-weight="600" fill="var(--pointer)" stroke="none">HEAP</text>
+
+          <g class="cell-value">
+            <rect x="376" y="66" width="178" height="46" rx="5" stroke-width="1.5"/>
+            <text x="465" y="95" text-anchor="middle" font-family="var(--font-mono)" font-size="16" font-weight="600" stroke="none">42</text>
+          </g>
+          <text x="465" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">at 0x9a40</text>
+          <text x="465" y="200" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" stroke="none">stays until you</text>
+          <text x="465" y="216" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--danger)" stroke="none">delete p;</text>
+
+          <path class="ptr-line" marker-end="url(#ah4)" d="M 244 89 L 368 89"/>
+        </svg>
+      </div>
+      <p class="diagram-caption">The pointer lives on the stack; the thing it points to lives on the heap.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — new and delete</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">heap.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* p = new int;        // allocate one int on the heap
+*p = 42;
+delete p;                // hand the memory back
+
+int* arr = new int[10];  // an array, sized at runtime
+delete[] arr;            // note the [] — must match new[]</code></pre>
+          </div>
+          <p>Unlike stack variables, heap memory stays allocated until you explicitly free it.</p>
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p><code>new</code> pairs with <code>delete</code>, and <code>new[]</code> pairs with <code>delete[]</code>. Mixing them is undefined behavior.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Dangling pointers and memory leaks</h2>
+      <p>The two classic failure modes are mirror images: using memory after you freed it, and never freeing it at all.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — dangling pointers and leaks</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Dangling pointers</h3>
+          <p>A dangling pointer points at memory that has already been freed.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">dangling.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int* p = new int(5);
+delete p;
+
+cout &lt;&lt; *p;      // undefined behavior — p is dangling</code></pre>
+          </div>
+          <p>Always null a pointer right after deleting it, so a bad access fails loudly:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">after_delete.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">delete p;
+p = nullptr;</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Memory leaks</h3>
+          <p>The opposite mistake — memory allocated with <code>new</code> and never returned, held for the lifetime of the program.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">leak.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void leaky() {
+    int* p = new int(5);
+}   // p goes out of scope; the heap int is now unreachable
+    // and can never be freed — leaked</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Production C++ mostly avoids raw <code>new</code>/<code>delete</code>, using <code>std::vector</code> and smart pointers (<code>std::unique_ptr</code>, <code>std::shared_ptr</code>) that free themselves. Learn the manual version first — every data structure ahead is built on it — then reach for the safe tools in real code.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">const with pointers</h2>
+      <p><code>const</code> can attach to the pointer, to what it points at, or both. Read the declaration right-to-left and it becomes mechanical: <code>int* const p</code> is "p is a const pointer to int".</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the three combinations</summary>
+        <div class="disclose-body">
+          <ul>
+            <li><code>p1</code> is the pointer itself</li>
+            <li><code>*p1</code> is the value it points to</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">const.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int a = 10, b = 20;
+
+const int* p1 = &amp;a;        // pointer to a CONSTANT int
+// *p1 = 5;   ✗ cannot change the value
+p1 = &amp;b;                   // ✓ can repoint
+
+int* const p2 = &amp;a;        // CONSTANT pointer to an int
+*p2 = 5;                   // ✓ can change the value
+// p2 = &amp;b;   ✗ cannot repoint
+
+const int* const p3 = &amp;a;  // neither is allowed</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Declaration</th><th>Value changeable?</th><th>Pointer reassignable?</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">const int* p</td><td><span class="badge bad">no</span></td><td><span class="badge good">yes</span></td></tr>
+                <tr><td class="mono">int* const p</td><td><span class="badge good">yes</span></td><td><span class="badge bad">no</span></td></tr>
+                <tr><td class="mono">const int* const p</td><td><span class="badge bad">no</span></td><td><span class="badge bad">no</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p><code>const int* p</code> and <code>int const* p</code> mean the same thing. The rule: <code>const</code> applies to whatever is immediately to its left, unless it is leftmost, in which case it applies to the right.</p>
+          </div>
+        </div>
+      </details>
 
       <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>This is the prerequisite for <a href="linked-lists.html">Linked list</a> — everything there assumes you're comfortable with pointers first.</p>
+        <span class="callout-label">Next</span>
+        <p>These ideas get put to work straight away — a linked list is nothing more than values connected by the pointers you just met.</p>
       </div>
 
-      <h2>What's planned</h2>
-      <ul>
-        <li>What an address actually is, and the <code>&amp;</code> / <code>*</code> operators</li>
-        <li>Stack vs. heap allocation</li>
-        <li><code>new</code>, <code>delete</code>, and manual memory management</li>
-        <li>Dangling pointers, memory leaks, and how to avoid them</li>
-      </ul>
-
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="complexity.html"><span class="pn-dir">← Previous</span><span class="pn-title">Complexity analysis</span></a>
-        <a class="pn-link next" href="data-structures.html"><span class="pn-dir">Next →</span><span class="pn-title">Data structures</span></a>
+        <a class="pn-link prev" data-href="pages/concepts/complexity.html"><span class="pn-dir">← Previous</span><span class="pn-title">Complexity analysis</span></a>
+        <a class="pn-link next" data-href="pages/structures/recursion.html"><span class="pn-dir">Next →</span><span class="pn-title">Recursion</span></a>
       </div>
     </article>
   </div>
@@ -48,8 +484,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
