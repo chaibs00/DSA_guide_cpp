@@ -4,10 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Stack — DSA_guide</title>
-<meta name="description" content="The stack data structure — last in, first out." />
+<meta name="description" content="LIFO order, push and pop, filling and displaying a stack, and reversing an array with one." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -19,25 +30,506 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="data-structures.html">Data structures</a><span class="sep">/</span><a href="linear-structures.html">Linear data structures</a></div>
+      <div class="doc-kicker"><a data-href="pages/structures/linear/index.html">Linear data structures</a></div>
       <h1>Stack</h1>
-      <p class="doc-lede">Last in, first out — this page is still being written.</p>
+      <p class="doc-lede">A stack stores elements in <strong class="text-data">LIFO</strong> order — last in, first out. You can only add and remove at one end, called the <strong class="text-pointer">top</strong>.</p>
 
-      <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>A stack only allows adding and removing from one end, which is what makes both operations <code>O(1)</code>.</p>
+      <div class="diagram">
+        <img src="../../../figures/stack.png" alt="A stack with elements added and removed at the top" />
       </div>
 
-      <h2>What's planned</h2>
-      <ul>
-        <li><code>push</code>, <code>pop</code>, and <code>top</code>/<code>peek</code></li>
-        <li>Implementing a stack with <code>std::vector</code> vs. a linked list</li>
-        <li>Classic use cases: undo history, expression evaluation, call stacks</li>
-      </ul>
+      <h2 class="text-data">How a stack works</h2>
+      <p>Think of a pile of plates. You put a new plate on top, and you take the top plate off. The plate at the bottom is the last one you can reach.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 250" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="sah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+
+          <g class="cell-value">
+            <rect x="250" y="60" width="120" height="40" rx="5" stroke-width="1.5"/>
+            <text x="310" y="86" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">40</text>
+          </g>
+          <g class="node-box">
+            <rect x="250" y="100" width="120" height="40" rx="5" stroke-width="1.5"/>
+            <text x="310" y="126" text-anchor="middle" font-family="var(--font-mono)" font-size="15" stroke="none">30</text>
+          </g>
+          <g class="node-box">
+            <rect x="250" y="140" width="120" height="40" rx="5" stroke-width="1.5"/>
+            <text x="310" y="166" text-anchor="middle" font-family="var(--font-mono)" font-size="15" stroke="none">20</text>
+          </g>
+          <g class="node-box">
+            <rect x="250" y="180" width="120" height="40" rx="5" stroke-width="1.5"/>
+            <text x="310" y="206" text-anchor="middle" font-family="var(--font-mono)" font-size="15" stroke="none">10</text>
+          </g>
+
+          <text x="242" y="85" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--data)" stroke="none">top</text>
+          <text x="242" y="205" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">bottom</text>
+
+          <path class="ptr-line" marker-end="url(#sah)" d="M 150 34 L 244 64"/>
+          <text x="145" y="30" text-anchor="end" font-family="var(--font-mono)" font-size="12.5" fill="var(--pointer)" stroke="none">push(40)</text>
+
+          <path class="ptr-line" marker-end="url(#sah)" d="M 376 64 L 470 34"/>
+          <text x="476" y="30" font-family="var(--font-mono)" font-size="12.5" fill="var(--pointer)" stroke="none">pop()</text>
+
+          <text x="310" y="240" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--text-faint)" stroke="none">both operations happen at the same end</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">10 was pushed first, so it comes out last.</p>
+
+      <h2 class="text-data">The operations</h2>
+      <p>A stack has five operations. All of them are <span class="text-pointer">O(1)</span> because none of them needs to move the other elements.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operation</th><th>What it does</th><th>Complexity</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">push(x)</td><td>Add x on top</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">pop()</td><td>Remove the top element</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">top()</td><td>Read the top element without removing it</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">empty()</td><td>True if the stack has no elements</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">size()</td><td>Number of elements</td><td><span class="badge good">O(1)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>In C++, <code>pop()</code> removes the top element but does <strong>not</strong> return it. To use the value, read it with <code>top()</code> first, then call <code>pop()</code>.</p>
+          </div>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Calling <code>top()</code> or <code>pop()</code> on an empty stack is undefined behavior. Always check <code>empty()</code> first.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Filling a stack</h2>
+      <p>The standard library gives you a ready stack in <code>&lt;stack&gt;</code>. Elements come out in the reverse order of how they went in.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — declaring and filling</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Declaring a stack</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+int main() {
+    stack&lt;int&gt; s;          // stack of ints
+    stack&lt;string&gt; names;   // stack of strings
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Filling it one by one</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fill.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">stack&lt;int&gt; s;
+
+s.push(10);
+s.push(20);
+s.push(30);
+
+cout &lt;&lt; s.top();    // 30 — the last one pushed
+cout &lt;&lt; s.size();   // 3</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Filling it from an array</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fill_from_array.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int arr[5] = {1, 2, 3, 4, 5};
+
+stack&lt;int&gt; s;
+
+for (int i = 0; i &lt; 5; i++) {
+    s.push(arr[i]);
+}
+
+cout &lt;&lt; s.top();    // 5 — the last element of the array</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Displaying a stack</h2>
+      <p>A stack has no loop over its elements: you can only see the top. To print everything you have to pop, which <strong>empties the stack</strong>.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the destructive way and the safe way</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Popping everything</h3>
+          <p>This prints the elements from top to bottom, and leaves the stack empty.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">display.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void display(stack&lt;int&gt; s) {     // note: a COPY, not a reference
+
+    while (!s.empty()) {
+
+        cout &lt;&lt; s.top() &lt;&lt; "  ";  // read the top
+        s.pop();                  // then remove it
+    }
+
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    stack&lt;int&gt; s;
+    s.push(10); s.push(20); s.push(30);
+
+    display(s);      // 30  20  10
+    cout &lt;&lt; s.size();  // 3 — the original is untouched
+}</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Taking the parameter <strong>by value</strong> (<code>stack&lt;int&gt; s</code>, not <code>stack&lt;int&gt;&amp; s</code>) makes a copy, so the function can empty the copy while the caller keeps its stack. This is the simplest way to write a display function.</p>
+          </div>
+
+          <h3 class="text-pointer">Keeping the elements</h3>
+          <p>If you cannot copy, move the elements into a second stack and put them back.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">display_restore.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void display(stack&lt;int&gt;&amp; s) {
+
+    stack&lt;int&gt; temp;
+
+    // empty s into temp, printing on the way
+    while (!s.empty()) {
+        cout &lt;&lt; s.top() &lt;&lt; "  ";
+        temp.push(s.top());
+        s.pop();
+    }
+
+    // put everything back
+    while (!temp.empty()) {
+        s.push(temp.top());
+        temp.pop();
+    }
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Moving a stack into another stack reverses it. Doing it twice puts the order back to what it was.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Reversing an array with a stack</h2>
+      <p>This is the most common use of a stack. Push every element, then pop them back into the array — LIFO does the reversing for you.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 360" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="sah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+
+          <text x="160" y="62" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">input</text>
+          <g class="cell-value">
+            <rect x="170" y="36" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="204" y="62" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">1</text>
+          </g>
+          <g class="cell-value">
+            <rect x="242" y="36" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="276" y="62" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">2</text>
+          </g>
+          <g class="cell-value">
+            <rect x="314" y="36" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="348" y="62" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">3</text>
+          </g>
+          <g class="cell-value">
+            <rect x="386" y="36" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="420" y="62" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">4</text>
+          </g>
+
+          <path class="ptr-line" marker-end="url(#sah2)" d="M 310 84 L 310 110"/>
+          <text x="326" y="103" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">push 1, 2, 3, 4</text>
+
+          <g class="node-box">
+            <rect x="260" y="118" width="100" height="36" rx="5" stroke-width="1.5"/>
+            <text x="310" y="142" text-anchor="middle" font-family="var(--font-mono)" font-size="14" stroke="none">4</text>
+          </g>
+          <g class="node-box">
+            <rect x="260" y="156" width="100" height="36" rx="5" stroke-width="1.5"/>
+            <text x="310" y="180" text-anchor="middle" font-family="var(--font-mono)" font-size="14" stroke="none">3</text>
+          </g>
+          <g class="node-box">
+            <rect x="260" y="194" width="100" height="36" rx="5" stroke-width="1.5"/>
+            <text x="310" y="218" text-anchor="middle" font-family="var(--font-mono)" font-size="14" stroke="none">2</text>
+          </g>
+          <g class="node-box">
+            <rect x="260" y="232" width="100" height="36" rx="5" stroke-width="1.5"/>
+            <text x="310" y="256" text-anchor="middle" font-family="var(--font-mono)" font-size="14" stroke="none">1</text>
+          </g>
+          <text x="252" y="142" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">top</text>
+
+          <path class="ptr-line" marker-end="url(#sah2)" d="M 310 276 L 310 302"/>
+          <text x="326" y="295" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">pop back into the array</text>
+
+          <text x="160" y="332" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)" stroke="none">output</text>
+          <g class="cell-value">
+            <rect x="170" y="306" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="204" y="332" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">4</text>
+          </g>
+          <g class="cell-value">
+            <rect x="242" y="306" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="276" y="332" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">3</text>
+          </g>
+          <g class="cell-value">
+            <rect x="314" y="306" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="348" y="332" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">2</text>
+          </g>
+          <g class="cell-value">
+            <rect x="386" y="306" width="68" height="40" rx="5" stroke-width="1.5"/>
+            <text x="420" y="332" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">1</text>
+          </g>
+        </svg>
+      </div>
+      <p class="diagram-caption">The first element pushed is the last one popped, so the order comes out reversed.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — reversing an array, a vector and a string</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Reversing an array</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">reverse_array.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+void reverse(int arr[], int n) {
+
+    stack&lt;int&gt; s;
+
+    // push every element
+    for (int i = 0; i &lt; n; i++) {
+        s.push(arr[i]);
+    }
+
+    // pop them back in reverse order
+    for (int i = 0; i &lt; n; i++) {
+        arr[i] = s.top();
+        s.pop();
+    }
+}
+
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+
+    reverse(arr, 5);
+
+    for (int i = 0; i &lt; 5; i++)
+        cout &lt;&lt; arr[i] &lt;&lt; "  ";   // 5  4  3  2  1
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Reversing a vector</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">reverse_vector.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void reverse(vector&lt;int&gt;&amp; v) {
+
+    stack&lt;int&gt; s;
+
+    for (int x : v) s.push(x);
+
+    for (int i = 0; i &lt; v.size(); i++) {
+        v[i] = s.top();
+        s.pop();
+    }
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Reversing a string</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">reverse_string.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">string reverse(string str) {
+
+    stack&lt;char&gt; s;
+
+    for (char ch : str) s.push(ch);
+
+    string result = "";
+
+    while (!s.empty()) {
+        result += s.top();
+        s.pop();
+    }
+
+    return result;
+}
+
+// reverse("hello") -> "olleh"</code></pre>
+          </div>
+
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Time <code>O(n)</code>, space <code>O(n)</code> for the stack. Swapping two indices from both ends does the same job in <code>O(1)</code> space, so the stack version is mostly useful when you cannot reach the elements by index — for example a linked list, or a stream of values.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Building your own stack</h2>
+      <p>Two ways to implement one: on top of an array, or on top of a linked list.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — array version and linked list version</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">With an array</h3>
+          <p>An index called <code>topIndex</code> marks the top. It starts at <code>-1</code> for an empty stack.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">array_stack.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">class Stack {
+private:
+    int data[100];
+    int topIndex;
+
+public:
+    Stack() : topIndex(-1) {}
+
+    bool empty() { return topIndex == -1; }
+
+    void push(int x) {
+        if (topIndex == 99) return;   // full
+        data[++topIndex] = x;
+    }
+
+    void pop() {
+        if (empty()) return;
+        topIndex--;                   // the value stays, but is unreachable
+    }
+
+    int top() {
+        return data[topIndex];
+    }
+
+    int size() { return topIndex + 1; }
+};</code></pre>
+          </div>
+          <p>Simple and fast, but the capacity is fixed at 100.</p>
+
+          <h3 class="text-pointer">With a linked list</h3>
+          <p>The head of the list is the top of the stack. There is no size limit.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">list_stack.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">struct Node {
+    int data;
+    Node* next;
+
+    Node(int x) : data(x), next(nullptr) {}
+};
+
+class Stack {
+private:
+    Node* head;
+    int count;
+
+public:
+    Stack() : head(nullptr), count(0) {}
+
+    bool empty() { return head == nullptr; }
+
+    void push(int x) {
+        Node* newNode = new Node(x);
+        newNode-&gt;next = head;     // point at the old top
+        head = newNode;           // the new node is the top
+        count++;
+    }
+
+    void pop() {
+        if (empty()) return;
+
+        Node* temp = head;
+        head = head-&gt;next;
+        delete temp;
+        count--;
+    }
+
+    int top() { return head-&gt;data; }
+
+    int size() { return count; }
+};</code></pre>
+          </div>
+
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th></th><th>Array</th><th>Linked list</th></tr></thead>
+              <tbody>
+                <tr><td>Size limit</td><td><span class="badge mid">fixed</span></td><td><span class="badge good">none</span></td></tr>
+                <tr><td>Memory per element</td><td><span class="badge good">value only</span></td><td><span class="badge mid">value + pointer</span></td></tr>
+                <tr><td>push / pop</td><td><span class="badge good">O(1)</span></td><td><span class="badge good">O(1)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Where stacks are used</h2>
+      <p>Any time you need to remember what came before, and handle the most recent item first.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Use</th><th>How the stack helps</th></tr></thead>
+              <tbody>
+                <tr><td>Function calls</td><td>Each call is pushed, and popped when it returns</td></tr>
+                <tr><td>Undo in an editor</td><td>The last action is the first one undone</td></tr>
+                <tr><td>Back button</td><td>The last page visited is the first one returned to</td></tr>
+                <tr><td>Matching brackets</td><td>Push an opening bracket, pop when the closing one arrives</td></tr>
+                <tr><td>Depth-first search</td><td>Holds the nodes still to visit</td></tr>
+                <tr><td>Reversing</td><td>LIFO order reverses the input</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>Bracket matching is a short example worth reading:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">brackets.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">bool isBalanced(string str) {
+
+    stack&lt;char&gt; s;
+
+    for (char ch : str) {
+
+        if (ch == '(' || ch == '[' || ch == '{') {
+            s.push(ch);
+        }
+        else {
+            if (s.empty()) return false;    // closing with nothing open
+
+            char open = s.top();
+            s.pop();
+
+            if (ch == ')' &amp;&amp; open != '(') return false;
+            if (ch == ']' &amp;&amp; open != '[') return false;
+            if (ch == '}' &amp;&amp; open != '{') return false;
+        }
+    }
+
+    return s.empty();    // everything that opened was closed
+}</code></pre>
+          </div>
+        </div>
+      </details>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="linked-lists.html"><span class="pn-dir">← Previous</span><span class="pn-title">Linked list</span></a>
-        <a class="pn-link next" href="queue.html"><span class="pn-dir">Next →</span><span class="pn-title">Queue</span></a>
+        <a class="pn-link prev" data-href="pages/structures/linear/linked-lists.html"><span class="pn-dir">← Previous</span><span class="pn-title">Linked lists</span></a>
+        <a class="pn-link next" data-href="pages/structures/linear/queue.html"><span class="pn-dir">Next →</span><span class="pn-title">Queue</span></a>
       </div>
     </article>
   </div>
@@ -47,8 +539,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>

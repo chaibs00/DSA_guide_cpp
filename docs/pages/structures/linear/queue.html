@@ -4,10 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Queue — DSA_guide</title>
-<meta name="description" content="The queue data structure — first in, first out." />
+<meta name="description" content="FIFO order, enqueue and dequeue, filling and displaying a queue, and the circular queue, deque and priority queue variants." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/atelier-forest-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -19,25 +30,554 @@
 
   <div class="content-col">
     <article class="doc">
-      <div class="doc-kicker"><a href="data-structures.html">Data structures</a><span class="sep">/</span><a href="linear-structures.html">Linear data structures</a></div>
+      <div class="doc-kicker"><a data-href="pages/structures/linear/index.html">Linear data structures</a></div>
       <h1>Queue</h1>
-      <p class="doc-lede">First in, first out — this page is still being written.</p>
+      <p class="doc-lede">A queue stores elements in <strong class="text-data">FIFO</strong> order — first in, first out. Elements are added at the <strong class="text-pointer">back</strong> and removed from the <strong class="text-pointer">front</strong>, like a line of people waiting.</p>
 
-      <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>A queue adds at one end and removes from the other, which is the opposite discipline from a stack.</p>
+      <div class="diagram">
+        <img src="../../../figures/queue.png" alt="A queue with elements entering at the back and leaving at the front" />
       </div>
 
-      <h2>What's planned</h2>
-      <ul>
-        <li><code>enqueue</code> and <code>dequeue</code></li>
-        <li>Implementing a queue with <code>std::deque</code></li>
-        <li>Classic use cases: task scheduling, BFS traversal</li>
-      </ul>
+      <h2 class="text-data">How a queue works</h2>
+      <p>A queue uses two ends instead of one. This is the opposite of a stack: the first element you add is the first one you get back.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 620 200" width="620" style="max-width:100%;">
+          <defs>
+            <marker id="qah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+            </marker>
+          </defs>
+
+          <g class="cell-value">
+            <rect x="170" y="70" width="68" height="48" rx="5" stroke-width="1.5"/>
+            <text x="204" y="100" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">10</text>
+          </g>
+          <g class="cell-value">
+            <rect x="242" y="70" width="68" height="48" rx="5" stroke-width="1.5"/>
+            <text x="276" y="100" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">20</text>
+          </g>
+          <g class="cell-value">
+            <rect x="314" y="70" width="68" height="48" rx="5" stroke-width="1.5"/>
+            <text x="348" y="100" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">30</text>
+          </g>
+          <g class="cell-value">
+            <rect x="386" y="70" width="68" height="48" rx="5" stroke-width="1.5"/>
+            <text x="420" y="100" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">40</text>
+          </g>
+
+          <path class="ptr-line" marker-end="url(#qah)" d="M 162 94 L 96 94"/>
+          <text x="129" y="76" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">pop</text>
+
+          <path class="ptr-line" marker-end="url(#qah)" d="M 528 94 L 462 94"/>
+          <text x="495" y="76" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">push</text>
+
+          <text x="204" y="142" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data)" stroke="none">front</text>
+          <text x="420" y="142" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--data)" stroke="none">back</text>
+
+          <text x="310" y="176" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--text-faint)" stroke="none">10 was added first, so it leaves first</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Elements move through the queue in the order they arrived.</p>
+
+      <h2 class="text-data">The operations</h2>
+      <p>All the operations are <span class="text-pointer">O(1)</span>. Note that in C++ the methods are called <code>push</code> and <code>pop</code>, not <code>enqueue</code> and <code>dequeue</code>.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Operation</th><th>Also called</th><th>What it does</th><th>Complexity</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">push(x)</td><td class="mono">enqueue</td><td>Add x at the back</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">pop()</td><td class="mono">dequeue</td><td>Remove the front element</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">front()</td><td>—</td><td>Read the first element</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">back()</td><td>—</td><td>Read the last element</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">empty()</td><td>—</td><td>True if the queue has no elements</td><td><span class="badge good">O(1)</span></td></tr>
+                <tr><td class="mono">size()</td><td>—</td><td>Number of elements</td><td><span class="badge good">O(1)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>Like the stack, <code>pop()</code> removes the front element but does <strong>not</strong> return it. Read it with <code>front()</code> first, then call <code>pop()</code>. Calling either on an empty queue is undefined behavior.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Filling a queue</h2>
+      <p>The standard queue lives in <code>&lt;queue&gt;</code>. Elements come out in the same order they went in.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — declaring and filling</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Declaring a queue</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">declare.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;queue&gt;
+using namespace std;
+
+int main() {
+    queue&lt;int&gt; q;          // queue of ints
+    queue&lt;string&gt; names;   // queue of strings
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Filling it one by one</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fill.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">queue&lt;int&gt; q;
+
+q.push(10);
+q.push(20);
+q.push(30);
+
+cout &lt;&lt; q.front();   // 10 — the first one pushed
+cout &lt;&lt; q.back();    // 30 — the last one pushed
+cout &lt;&lt; q.size();    // 3</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Filling it from an array</h3>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">fill_from_array.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">int arr[5] = {1, 2, 3, 4, 5};
+
+queue&lt;int&gt; q;
+
+for (int i = 0; i &lt; 5; i++) {
+    q.push(arr[i]);
+}
+
+cout &lt;&lt; q.front();   // 1 — the first element of the array</code></pre>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Displaying a queue</h2>
+      <p>Same problem as the stack: there is no loop over the elements. To print everything you have to pop, which empties the queue.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — the destructive way and the safe way</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">Popping everything</h3>
+          <p>Taking the parameter <strong>by value</strong> makes a copy, so the caller keeps its queue.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">display.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void display(queue&lt;int&gt; q) {      // a COPY, not a reference
+
+    while (!q.empty()) {
+
+        cout &lt;&lt; q.front() &lt;&lt; "  ";  // read the front
+        q.pop();                    // then remove it
+    }
+
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    queue&lt;int&gt; q;
+    q.push(10); q.push(20); q.push(30);
+
+    display(q);        // 10  20  30
+    cout &lt;&lt; q.size();  // 3 — the original is untouched
+}</code></pre>
+          </div>
+
+          <h3 class="text-pointer">Keeping the elements</h3>
+          <p>A queue can be rotated: pop from the front and push straight back. After <code>size()</code> rotations everything is back where it started.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">display_rotate.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void display(queue&lt;int&gt;&amp; q) {
+
+    int n = q.size();
+
+    for (int i = 0; i &lt; n; i++) {
+
+        cout &lt;&lt; q.front() &lt;&lt; "  ";
+
+        q.push(q.front());   // put it back at the end
+        q.pop();             // remove it from the front
+    }
+}</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>Store <code>q.size()</code> in <code>n</code> before the loop. Using <code>q.size()</code> as the condition would never end, because the queue keeps the same size while you rotate it.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Reversing a queue</h2>
+      <p>A queue cannot reverse itself, because both of its ends work in the same direction. A stack does the job: empty the queue into a stack, then empty the stack back into the queue.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">reverse_queue.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+void reverse(queue&lt;int&gt;&amp; q) {
+
+    stack&lt;int&gt; s;
+
+    // queue -> stack (this reverses the order)
+    while (!q.empty()) {
+        s.push(q.front());
+        q.pop();
+    }
+
+    // stack -> queue
+    while (!s.empty()) {
+        q.push(s.top());
+        s.pop();
+    }
+}
+
+// 1 2 3 4  ->  4 3 2 1</code></pre>
+          </div>
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>This is the standard trick whenever you need the reverse of a FIFO order. Time <code>O(n)</code>, space <code>O(n)</code> for the stack.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Types of queue</h2>
+      <p>Four variants come up regularly. They all keep the FIFO idea but change what you are allowed to do at each end.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand — simple, circular, deque, priority</summary>
+        <div class="disclose-body">
+
+          <h3 class="text-pointer">1. Simple queue</h3>
+          <p>The one above. Push at the back, pop at the front, nothing else.</p>
+
+          <h3 class="text-pointer">2. Circular queue</h3>
+          <p>Made for an array implementation. In a plain array queue, popping moves the front index forward and the space at the start is wasted — after a few pushes and pops the queue looks full while the beginning of the array is empty.</p>
+          <p>A circular queue fixes this by wrapping the indices back to <code>0</code> with the modulo operator.</p>
+
+          <div class="diagram">
+            <svg viewBox="0 0 620 300" width="620" style="max-width:100%;">
+              <defs>
+                <marker id="qah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+                </marker>
+              </defs>
+
+              <circle cx="310" cy="150" r="95" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+              <circle cx="310" cy="55"  r="24" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+              <text x="310" y="60" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)">0</text>
+
+              <circle cx="377" cy="83"  r="24" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+              <text x="377" y="88" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)">1</text>
+
+              <circle cx="405" cy="150" r="24" fill="var(--data-soft)" stroke="var(--data)" stroke-width="1.5"/>
+              <text x="405" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" font-weight="600" fill="var(--data)">10</text>
+
+              <circle cx="377" cy="217" r="24" fill="var(--data-soft)" stroke="var(--data)" stroke-width="1.5"/>
+              <text x="377" y="222" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" font-weight="600" fill="var(--data)">20</text>
+
+              <circle cx="310" cy="245" r="24" fill="var(--data-soft)" stroke="var(--data)" stroke-width="1.5"/>
+              <text x="310" y="250" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" font-weight="600" fill="var(--data)">30</text>
+
+              <circle cx="243" cy="217" r="24" fill="var(--data-soft)" stroke="var(--data)" stroke-width="1.5"/>
+              <text x="243" y="222" text-anchor="middle" font-family="var(--font-mono)" font-size="12.5" font-weight="600" fill="var(--data)">40</text>
+
+              <circle cx="215" cy="150" r="24" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+              <text x="215" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)">6</text>
+
+              <circle cx="243" cy="83"  r="24" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+              <text x="243" y="88" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)">7</text>
+
+              <path class="ptr-line" marker-end="url(#qah2)" d="M 500 150 L 432 150"/>
+              <text x="508" y="154" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">front</text>
+
+              <path class="ptr-line" marker-end="url(#qah2)" d="M 150 200 L 220 212"/>
+              <text x="142" y="204" text-anchor="end" font-family="var(--font-mono)" font-size="12" fill="var(--pointer)" stroke="none">rear</text>
+
+              <text x="310" y="290" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--text-faint)" stroke="none">after index 7, the next slot is 0 again</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">The array is treated as a ring, so no space is wasted.</p>
+
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">circular_queue.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">class CircularQueue {
+private:
+    int data[8];
+    int front, rear, count;
+
+public:
+    CircularQueue() : front(0), rear(-1), count(0) {}
+
+    bool empty() { return count == 0; }
+    bool full()  { return count == 8; }
+
+    void push(int x) {
+        if (full()) return;
+
+        rear = (rear + 1) % 8;    // wrap back to 0 after 7
+        data[rear] = x;
+        count++;
+    }
+
+    void pop() {
+        if (empty()) return;
+
+        front = (front + 1) % 8;  // wrap back to 0 after 7
+        count--;
+    }
+
+    int getFront() { return data[front]; }
+    int size()     { return count; }
+};</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p><code>% 8</code> is what makes it circular. Keeping a separate <code>count</code> is the simplest way to tell a full queue from an empty one — in both cases <code>front</code> and <code>rear</code> sit next to each other.</p>
+          </div>
+
+          <h3 class="text-pointer">3. Deque (double-ended queue)</h3>
+          <p>A deque lets you push and pop at <strong>both</strong> ends. It can act as a queue, as a stack, or as both at once.</p>
+
+          <div class="diagram">
+            <svg viewBox="0 0 620 165" width="620" style="max-width:100%;">
+              <defs>
+                <marker id="qah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--pointer)" stroke="none"/>
+                </marker>
+              </defs>
+
+              <g class="cell-value">
+                <rect x="200" y="60" width="68" height="48" rx="5" stroke-width="1.5"/>
+                <text x="234" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">10</text>
+              </g>
+              <g class="cell-value">
+                <rect x="272" y="60" width="68" height="48" rx="5" stroke-width="1.5"/>
+                <text x="306" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">20</text>
+              </g>
+              <g class="cell-value">
+                <rect x="344" y="60" width="68" height="48" rx="5" stroke-width="1.5"/>
+                <text x="378" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">30</text>
+              </g>
+              <g class="cell-value">
+                <rect x="416" y="60" width="68" height="48" rx="5" stroke-width="1.5"/>
+                <text x="450" y="90" text-anchor="middle" font-family="var(--font-mono)" font-size="15" font-weight="600" stroke="none">40</text>
+              </g>
+
+              <path class="ptr-line" marker-end="url(#qah3)" d="M 128 72 L 192 72"/>
+              <text x="160" y="46" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">push_front</text>
+
+              <path class="ptr-line" marker-end="url(#qah3)" d="M 192 98 L 128 98"/>
+              <text x="160" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">pop_front</text>
+
+              <path class="ptr-line" marker-end="url(#qah3)" d="M 556 72 L 492 72"/>
+              <text x="524" y="46" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">push_back</text>
+
+              <path class="ptr-line" marker-end="url(#qah3)" d="M 492 98 L 556 98"/>
+              <text x="524" y="130" text-anchor="middle" font-family="var(--font-mono)" font-size="11.5" fill="var(--pointer)" stroke="none">pop_back</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">Four operations instead of two — both ends are open.</p>
+
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">deque.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;deque&gt;
+using namespace std;
+
+deque&lt;int&gt; dq;
+
+dq.push_back(20);    // 20
+dq.push_back(30);    // 20 30
+dq.push_front(10);   // 10 20 30
+
+cout &lt;&lt; dq.front();  // 10
+cout &lt;&lt; dq.back();   // 30
+
+dq.pop_front();      // 20 30
+dq.pop_back();       // 20
+
+cout &lt;&lt; dq[0];       // 20 — a deque also supports indexing</code></pre>
+          </div>
+          <p>Unlike <code>queue</code> and <code>stack</code>, a deque can be looped over normally:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">deque_loop.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">for (int x : dq) {
+    cout &lt;&lt; x &lt;&lt; "  ";      // no popping needed
+}</code></pre>
+          </div>
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p><code>std::queue</code> and <code>std::stack</code> are built on top of <code>std::deque</code> by default — they just hide the operations you are not supposed to use. If you need to display a container often, using a deque directly is easier.</p>
+          </div>
+
+          <h3 class="text-pointer">4. Priority queue</h3>
+          <p>Elements come out by <strong>priority</strong> instead of arrival order. In C++ the largest value comes out first by default.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">priority_queue.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">#include &lt;queue&gt;
+using namespace std;
+
+priority_queue&lt;int&gt; pq;      // max-heap: biggest first
+
+pq.push(30);
+pq.push(10);
+pq.push(50);
+
+cout &lt;&lt; pq.top();   // 50 — not 30
+
+// smallest first
+priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; minPq;
+
+minPq.push(30);
+minPq.push(10);
+minPq.push(50);
+
+cout &lt;&lt; minPq.top();   // 10</code></pre>
+          </div>
+          <div class="callout note">
+            <span class="callout-label">Note</span>
+            <p>A priority queue uses <code>top()</code>, not <code>front()</code>. It is built on a heap, so <code>push</code> and <code>pop</code> are <code>O(log n)</code> instead of <code>O(1)</code>.</p>
+          </div>
+
+          <h3 class="text-pointer">Comparison</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Type</th><th>Add</th><th>Remove</th><th>Order out</th><th>Header</th></tr></thead>
+              <tbody>
+                <tr><td>Simple queue</td><td>back</td><td>front</td><td>Arrival order</td><td class="mono">&lt;queue&gt;</td></tr>
+                <tr><td>Circular queue</td><td>back (wraps)</td><td>front (wraps)</td><td>Arrival order</td><td class="mono">manual</td></tr>
+                <tr><td>Deque</td><td>both ends</td><td>both ends</td><td>Your choice</td><td class="mono">&lt;deque&gt;</td></tr>
+                <tr><td>Priority queue</td><td>anywhere</td><td>top</td><td>By priority</td><td class="mono">&lt;queue&gt;</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Building your own queue</h2>
+      <p>The linked list version is the simplest one to write, because it needs no wrapping and has no size limit.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <p>Two pointers are kept: <code>front</code> for removing and <code>rear</code> for adding. Both operations stay <code>O(1)</code> because neither one has to walk the list.</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">list_queue.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">struct Node {
+    int data;
+    Node* next;
+
+    Node(int x) : data(x), next(nullptr) {}
+};
+
+class Queue {
+private:
+    Node* front;
+    Node* rear;
+    int count;
+
+public:
+    Queue() : front(nullptr), rear(nullptr), count(0) {}
+
+    bool empty() { return front == nullptr; }
+
+    void push(int x) {
+        Node* newNode = new Node(x);
+
+        if (empty()) {
+            front = rear = newNode;    // first element: both ends
+        } else {
+            rear-&gt;next = newNode;      // link it after the last one
+            rear = newNode;            // it becomes the new last
+        }
+
+        count++;
+    }
+
+    void pop() {
+        if (empty()) return;
+
+        Node* temp = front;
+        front = front-&gt;next;
+
+        if (front == nullptr) rear = nullptr;   // the queue is now empty
+
+        delete temp;
+        count--;
+    }
+
+    int getFront() { return front-&gt;data; }
+    int size()     { return count; }
+};</code></pre>
+          </div>
+          <div class="callout warn">
+            <span class="callout-label">Watch out</span>
+            <p>When the last element is removed, <code>rear</code> must be set to <code>nullptr</code> as well. Forgetting it leaves <code>rear</code> pointing at freed memory, and the next <code>push</code> writes through a dangling pointer.</p>
+          </div>
+        </div>
+      </details>
+
+      <h2 class="text-data">Where queues are used</h2>
+      <p>Any time things must be handled in the order they arrived.</p>
+
+      <details class="disclose">
+        <summary style="cursor: pointer;">Click to expand</summary>
+        <div class="disclose-body">
+          <div class="table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Use</th><th>How the queue helps</th></tr></thead>
+              <tbody>
+                <tr><td>Breadth-first search</td><td>Holds the nodes to visit, level by level</td></tr>
+                <tr><td>Task scheduling</td><td>Jobs run in the order they were submitted</td></tr>
+                <tr><td>Print queue</td><td>Documents print in the order they were sent</td></tr>
+                <tr><td>Buffering</td><td>Data is read at the speed it arrived</td></tr>
+                <tr><td>Priority queue</td><td>Dijkstra's algorithm, event simulation</td></tr>
+                <tr><td>Deque</td><td>Sliding window problems, undo with a size limit</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>BFS is the clearest example — the queue is what makes the search go level by level:</p>
+          <div class="code-block">
+            <div class="code-block-head"><span class="code-block-file">bfs.cpp</span><button class="copy-btn">Copy</button></div>
+            <pre><code class="language-cpp">void bfs(Node* root) {
+
+    if (root == nullptr) return;
+
+    queue&lt;Node*&gt; q;
+    q.push(root);
+
+    while (!q.empty()) {
+
+        Node* current = q.front();
+        q.pop();
+
+        cout &lt;&lt; current-&gt;data &lt;&lt; "  ";
+
+        if (current-&gt;left)  q.push(current-&gt;left);
+        if (current-&gt;right) q.push(current-&gt;right);
+    }
+}</code></pre>
+          </div>
+          <div class="callout tip">
+            <span class="callout-label">Tip</span>
+            <p>Swap the queue for a stack in that code and the traversal becomes depth-first. The structure you choose decides the order of the search.</p>
+          </div>
+        </div>
+      </details>
 
       <div class="doc-footer-nav">
-        <a class="pn-link prev" href="stack.html"><span class="pn-dir">← Previous</span><span class="pn-title">Stack</span></a>
-        <a class="pn-link next" href="non-linear-structures.html"><span class="pn-dir">Next →</span><span class="pn-title">Non-linear data structures</span></a>
+        <a class="pn-link prev" data-href="pages/structures/linear/stack.html"><span class="pn-dir">← Previous</span><span class="pn-title">Stack</span></a>
       </div>
     </article>
   </div>
@@ -47,8 +587,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
