@@ -4,16 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Common Patterns — DSA_guide</title>
-<meta name="description" content="Recurring problem-solving patterns that show up across many interview and LeetCode-style problems." />
+<meta name="description" content="Recurring problem-solving patterns — two pointers, sliding window, prefix sums, monotonic stacks and more." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
 <script>
-["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
-  const s = document.createElement("script");
-  s.src = BASE + "assets/js/" + f;
-  s.async = false;
-  document.body.appendChild(s);
-});
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
 </script>
 </head>
 <body>
@@ -27,30 +28,177 @@
   <div class="content-col">
     <article class="doc">
       <h1>Common patterns</h1>
-      <p class="doc-lede">Beyond individual data structures and algorithms, a handful of recurring patterns show up across most LeetCode-style problems. This section collects them once the core data structures and algorithms are in place.</p>
+      <p class="doc-lede">Most interview problems are not new problems. They are a small set of <strong class="text-data">techniques</strong> wearing different stories, and once you can name the technique a problem wants, the code is usually short. This section collects the ones that keep coming back.</p>
+
+      <h2 class="text-data">What a pattern actually is</h2>
+      <p>A pattern is smaller than an algorithm. Binary search is an algorithm — it has a name, a proof and a fixed cost. "Two pointers" is a way of moving through data that shows up inside dozens of different algorithms. You don't implement a pattern; you recognise one and it tells you what shape your loop takes.</p>
+      <p>The payoff is speed of recognition. A problem that reads as "longest substring with at most k distinct characters" is a sliding window before you've thought about it, and that one observation removes the brute-force <code>O(n²)</code> attempt entirely.</p>
 
       <div class="callout note">
-        <span class="callout-label">Coming soon</span>
-        <p>This section is still being planned — the cards below are a preview of what's likely to land here first.</p>
+        <span class="callout-label">Still being written</span>
+        <p>The cards below are the planned running order. They're listed here so you can see where the section is going — pages arrive one at a time.</p>
       </div>
 
-      <div class="card-grid">
+      <h2 class="text-data">What we cover here</h2>
+      <p>Ten patterns, ordered from the ones that need nothing but an array to the ones that lean on a data structure from earlier sections.</p>
+
+      <div class="card-grid rows">
         <span class="topic-card disabled">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M8.2 12h7.6"/></svg>
-          <div><h3>Two pointers</h3><p>Scanning a sequence from both ends inward.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Two pointers</h3><p>Walk a sorted sequence from both ends and close the gap.</p><span class="soon-tag">soon</span></div>
         </span>
         <span class="topic-card disabled">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="9" width="9" height="6" rx="1"/><path d="M17 12h4"/></svg>
-          <div><h3>Sliding window</h3><p>Tracking a moving subrange efficiently.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Sliding window</h3><p>Grow and shrink a subrange instead of re-scanning it.</p><span class="soon-tag">soon</span></div>
         </span>
         <span class="topic-card disabled">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 18l4-9 4 6 4-11 4 14"/></svg>
-          <div><h3>Fast &amp; slow pointers</h3><p>Cycle detection and finding midpoints.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Fast &amp; slow pointers</h3><p>One pointer at double speed finds cycles and midpoints.</p><span class="soon-tag">soon</span></div>
         </span>
         <span class="topic-card disabled">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V14M10 20V8M16 20V4"/></svg>
-          <div><h3>Prefix sums</h3><p>Precomputing running totals for range queries.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Prefix sums</h3><p>Precompute running totals so any range costs one subtraction.</p><span class="soon-tag">soon</span></div>
         </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          <div><h3 class="text-pointer">Frequency counting</h3><p>A hash map turns "have I seen this?" into a constant-time check.</p><span class="soon-tag">soon</span></div>
+        </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h18"/><path d="M12 5v14M7 8l-3 4 3 4M17 8l3 4-3 4"/></svg>
+          <div><h3 class="text-pointer">Binary search on the answer</h3><p>Search the range of possible answers, not the array.</p><span class="soon-tag">soon</span></div>
+        </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="10" height="4" rx="1"/><rect x="9" y="14" width="12" height="4" rx="1"/></svg>
+          <div><h3 class="text-pointer">Merge intervals</h3><p>Sort by start, then fold anything that overlaps into the last one.</p><span class="soon-tag">soon</span></div>
+        </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V16M9 20V12M14 20V7M19 20V3"/><path d="M3 20h18"/></svg>
+          <div><h3 class="text-pointer">Monotonic stack</h3><p>Keep a stack in sorted order to find the next greater element.</p><span class="soon-tag">soon</span></div>
+        </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 7H4l8-7z"/><path d="M6 14h12M8 19h8"/></svg>
+          <div><h3 class="text-pointer">Top-K with a heap</h3><p>Keep only the k elements that matter instead of sorting everything.</p><span class="soon-tag">soon</span></div>
+        </span>
+        <span class="topic-card disabled">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 0114-5"/><path d="M20 12a8 8 0 01-14 5"/><path d="M18 4v3h-3M6 20v-3h3"/></svg>
+          <div><h3 class="text-pointer">Cyclic sort</h3><p>When values are 1…n, put each one where it belongs and read off the gap.</p><span class="soon-tag">soon</span></div>
+        </span>
+      </div>
+
+      <h2 class="text-data">Reading the signal</h2>
+      <p>Problems are written to disguise their pattern, but the disguise is thin. These phrasings are reliable tells.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>The problem says</th>
+              <th>Needs</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono text-data">Two pointers</td>
+              <td>"Pair that sums to…", "remove duplicates in place", "is it a palindrome"</td>
+              <td>Sorted input</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Sliding window</td>
+              <td>"Longest / shortest contiguous…", "subarray of size k"</td>
+              <td>Contiguous range</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Fast &amp; slow</td>
+              <td>"Does the list have a cycle", "find the middle node"</td>
+              <td>Linked list or implicit chain</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Prefix sums</td>
+              <td>"Sum of range [i, j]" asked many times, "subarray sums to k"</td>
+              <td>Extra array</td>
+              <td><span class="badge good">O(1)</span> per query</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Frequency counting</td>
+              <td>"Anagram", "first non-repeating", "most common element"</td>
+              <td>Hash map</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Binary search on answer</td>
+              <td>"Minimum capacity such that…", "smallest k that works"</td>
+              <td>Monotone check function</td>
+              <td><span class="badge good">O(n log n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Merge intervals</td>
+              <td>"Overlapping meetings", "merge ranges", "can they all fit"</td>
+              <td>Sort by start</td>
+              <td><span class="badge mid">O(n log n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Monotonic stack</td>
+              <td>"Next greater element", "largest rectangle", "daily temperatures"</td>
+              <td>Stack</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Top-K</td>
+              <td>"K largest", "k most frequent", "k closest points"</td>
+              <td>Heap of size k</td>
+              <td><span class="badge good">O(n log k)</span></td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Cyclic sort</td>
+              <td>"Numbers from 1 to n", "find the missing / duplicate one"</td>
+              <td>Values bounded by n</td>
+              <td><span class="badge good">O(n)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-data">The shape most of them share</h2>
+      <p>Two pointers, sliding window and monotonic stacks are all the same skeleton: one index moves forward unconditionally, another moves forward only when a condition says it should. Recognising that keeps the implementations from feeling like ten separate things to memorise.</p>
+
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-block-file">window_skeleton.cpp</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+<pre><code class="language-cpp">int left = 0;
+for (int right = 0; right &lt; n; ++right) {
+    add(a[right]);                 // the window grows
+
+    while (!valid()) {             // it shrinks only when it must
+        remove(a[left]);
+        ++left;
+    }
+
+    best = max(best, right - left + 1);
+}</code></pre>
+      </div>
+
+      <p class="muted">Every element enters once and leaves once, which is why the nested <code>while</code> doesn't make this quadratic.</p>
+
+      <div class="callout warn">
+        <span class="callout-label">Patterns are a starting point, not an answer</span>
+        <p>Matching a problem to a pattern tells you which loop to write; it doesn't tell you the edge cases. Empty input, a window of size one, all-equal values and integer overflow break pattern-matched solutions far more often than the main logic does.</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-label">How to actually learn these</span>
+        <p>Solve three or four problems per pattern in a row rather than one of each. Recognition comes from seeing the same technique in different clothing, and it doesn't develop when the problems are shuffled. After each one, write down the sentence in the problem that gave the pattern away — that list becomes worth more than the solutions.</p>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-label">Prerequisites</span>
+        <p>These pages assume the <a href="linear-structures.html">linear structures</a> and <a href="algorithms.html">algorithms</a> sections. Monotonic stack needs stacks, top-K needs heaps, and binary search on the answer needs binary search — the patterns are recombinations of what's already been covered.</p>
       </div>
 
       <div class="doc-footer-nav">
@@ -64,8 +212,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js", "code.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
