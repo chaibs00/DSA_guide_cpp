@@ -4,10 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Algorithms — DSA_guide</title>
-<meta name="description" content="Search and sorting algorithms, explained with complexity comparisons and C++ implementations." />
+<meta name="description" content="Searching, sorting, recursion, greedy, backtracking, dynamic programming and graph algorithms, with C++ implementations." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
-<link rel="stylesheet" href="../assets/css/style.css" />
-<script>const BASE = "../";</script>
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
 </head>
 <body>
 
@@ -20,22 +28,137 @@
   <div class="content-col">
     <article class="doc">
       <h1>Algorithms</h1>
-      <p class="doc-lede">Once you know how data is stored, the next question is what you can do with it efficiently. These two sections cover finding things and putting them in order.</p>
+      <p class="doc-lede">A data structure decides how values are stored; an <strong class="text-data">algorithm</strong> is the procedure you run over them to get an answer. The same problem usually has several correct procedures, and the interesting difference between them is cost — how the work grows as the input grows.</p>
 
-      <div class="card-grid">
+      <h2 class="text-data">How this section is organised</h2>
+      <p>The first two groups are concrete techniques you apply directly. Everything after them is a <span class="text-pointer">paradigm</span>: a way of shaping a solution that applies across many different problems. Recognising which paradigm a problem wants is most of the work in an interview.</p>
+
+      <h2 class="text-data">What we cover here</h2>
+      <p>Nine groups, ordered so each one leans on the previous. Searching and sorting come first because they're the setting in which every complexity idea gets introduced.</p>
+
+      <div class="card-grid rows">
         <a class="topic-card" href="searching.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <div><h3>Search algorithms</h3><p>Linear and binary search, and when each applies.</p><span class="soon-tag">soon</span></div>
+          <div><h3 class="text-pointer">Searching</h3><p>Linear and binary search, and what binary search demands of your data.</p><span class="soon-tag">soon</span></div>
         </a>
         <a class="topic-card" href="sorting.html">
           <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V14M10 20V8M16 20V4"/></svg>
-          <div><h3>Sorting</h3><p>Six core algorithms compared by complexity.</p></div>
+          <div><h3 class="text-pointer">Sorting</h3><p>Six core algorithms compared by complexity, stability and memory use.</p></div>
         </a>
+        <a class="topic-card" href="recursion.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h10a5 5 0 010 10H8"/><path d="M11 14l-3 3 3 3"/></svg>
+          <div><h3 class="text-pointer">Recursion &amp; divide and conquer</h3><p>Base cases, the call stack, and splitting a problem into smaller copies.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="greedy.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 18l5-6 4 3 7-9"/><path d="M20 6h-4m4 0v4"/></svg>
+          <div><h3 class="text-pointer">Greedy algorithms</h3><p>Take the best local choice — and prove it doesn't cost you the global one.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="backtracking.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v5m0 0L7 13m5-5l5 5M7 13v4m10-4v4"/><path d="M5 21h4m6 0h4"/></svg>
+          <div><h3 class="text-pointer">Backtracking</h3><p>Try a choice, recurse, undo it — permutations, N-queens, sudoku.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="dynamic-programming.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+          <div><h3 class="text-pointer">Dynamic programming</h3><p>Store answers to subproblems instead of recomputing them.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="graph-algorithms.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="8" r="2"/><circle cx="8" cy="18" r="2"/><path d="M7 7l10 1M6 8l1 8m2 0l9-7"/></svg>
+          <div><h3 class="text-pointer">Graph algorithms</h3><p>BFS, DFS, shortest paths, topological order and minimum spanning trees.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="string-algorithms.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h10M4 17h13"/><circle cx="19" cy="17" r="2"/></svg>
+          <div><h3 class="text-pointer">String algorithms</h3><p>Pattern matching with KMP and Rabin-Karp, and where naive search breaks.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="math-bit.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h6M7 3v6M14 6h6M4 17h6M14 15l6 6M20 15l-6 6"/></svg>
+          <div><h3 class="text-pointer">Maths &amp; bit manipulation</h3><p>GCD, primes and the sieve, modular arithmetic, and the bitwise tricks.</p><span class="soon-tag">soon</span></div>
+        </a>
+      </div>
+
+      <h2 class="text-data">Choosing an approach</h2>
+      <p>Problems rarely announce which paradigm they want, but the phrasing gives it away. This is the table to scan when you're stuck on where to start.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Approach</th>
+              <th>Core idea</th>
+              <th>Typical cost</th>
+              <th>The problem sounds like</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono text-data">Binary search</td>
+              <td>Halve the search space each step</td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td>"Find a value in sorted data" — or "find the smallest x that works".</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Sorting</td>
+              <td>Impose order, then exploit it</td>
+              <td><span class="badge mid">O(n log n)</span></td>
+              <td>"Rank", "group duplicates", "find the k-th largest".</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Divide and conquer</td>
+              <td>Split, solve the halves, combine</td>
+              <td><span class="badge mid">O(n log n)</span></td>
+              <td>"The answer for the whole is built from the answers for the parts."</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Greedy</td>
+              <td>Commit to the best immediate choice</td>
+              <td><span class="badge good">O(n log n)</span></td>
+              <td>"Maximum number of non-overlapping…", "minimum coins", scheduling.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Backtracking</td>
+              <td>Explore every choice, undo on failure</td>
+              <td><span class="badge bad">Exponential</span></td>
+              <td>"List all…", "every valid arrangement", puzzle-shaped constraints.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Dynamic programming</td>
+              <td>Reuse overlapping subproblem answers</td>
+              <td><span class="badge mid">O(n·m)</span></td>
+              <td>"Count the ways", "minimum cost to…", with choices repeating.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Graph traversal</td>
+              <td>Visit vertices, never twice</td>
+              <td><span class="badge mid">O(V + E)</span></td>
+              <td>"Reachable", "shortest path", "connected", "order of dependencies".</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-label">Greedy and DP answer the same question differently</span>
+        <p>Both build a solution from a sequence of choices. Greedy makes each choice once and never revisits it, which is fast but only correct when a local best is provably part of a global best. Dynamic programming keeps every choice open and compares the outcomes, which always works but costs memory. When a greedy solution fails a test case, DP is usually the fix.</p>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-label">Complexity is about growth, not speed</span>
+        <p>An <code>O(n²)</code> algorithm can beat an <code>O(n log n)</code> one on small inputs — insertion sort is genuinely faster than merge sort for a few dozen elements, which is why real library sorts switch to it near the bottom of the recursion. Big-O tells you what happens as <code>n</code> grows, not which is faster today.</p>
+      </div>
+
+      <h2 class="text-data">How to read this section</h2>
+      <div class="callout tip">
+        <span class="callout-label">Suggested order</span>
+        <p>Searching and sorting first — they're small enough to trace by hand, and every later page reuses their vocabulary. Recursion next, because divide and conquer, backtracking and DP are all recursion with something added: a split, an undo, or a cache. Then greedy and backtracking as the two opposite instincts, DP as the reconciliation, and graph algorithms last, where all of it comes together. Strings and maths stand on their own and can be read whenever you need them.</p>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-label">Not the same as patterns</span>
+        <p>The <a href="patterns.html">common patterns</a> section covers techniques like two pointers and sliding window. Those are ways of moving through data rather than full algorithms, so they live separately — but they show up constantly inside the algorithms here.</p>
       </div>
 
       <div class="doc-footer-nav">
         <a class="pn-link prev" href="graphs.html"><span class="pn-dir">← Previous</span><span class="pn-title">Graphs</span></a>
-        <a class="pn-link next" href="searching.html"><span class="pn-dir">Next →</span><span class="pn-title">Search algorithms</span></a>
+        <a class="pn-link next" href="searching.html"><span class="pn-dir">Next →</span><span class="pn-title">Searching</span></a>
       </div>
     </article>
   </div>
@@ -45,8 +168,13 @@
 
 <div id="footer-root"></div>
 
-<script src="../assets/js/layout-data.js"></script>
-<script src="../assets/js/layout.js"></script>
-<script src="../assets/js/search.js"></script>
+<script>
+["layout-data.js", "layout.js", "search.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
