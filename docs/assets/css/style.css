@@ -895,3 +895,33 @@ table.doc-table td.mono { font-family: var(--font-mono); font-size: 13px; }
   .path-step:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
   .path-step:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
 }
+
+/* one card per line, compact */
+.card-grid.rows { grid-template-columns: 1fr; gap: 8px; }
+.card-grid.rows .topic-card {
+  padding: 10px 14px;
+  align-items: center;
+  gap: 12px;
+}
+.card-grid.rows .topic-card .glyph { width: 22px; height: 22px; }
+.card-grid.rows .topic-card > div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.card-grid.rows .topic-card h3 { margin: 0; white-space: nowrap; }
+.card-grid.rows .topic-card p {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card-grid.rows .topic-card .soon-tag { align-self: center; }
+
+@media (max-width: 640px) {
+  .card-grid.rows .topic-card > div { flex-wrap: wrap; gap: 2px 10px; }
+  .card-grid.rows .topic-card p { white-space: normal; flex-basis: 100%; }
+}
