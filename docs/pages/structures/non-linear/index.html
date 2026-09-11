@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Non-linear data structures — DSA_guide</title>
+<meta name="description" content="Trees, heaps, hash tables, tries and graphs — structures where an element can connect to many others." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%2230%22 height=%2230%22 x=%225%22 y=%2235%22 fill=%22%231F8F86%22/><rect width=%2230%22 height=%2230%22 x=%2240%22 y=%2235%22 fill=%22%23B5701E%22/><rect width=%2230%22 height=%2230%22 x=%2275%22 y=%2235%22 fill=%22%231F8F86%22/></svg>" />
+<script>
+const BASE = (function () {
+  const dir = location.pathname.replace(/[^/]*$/, "");
+  const after = dir.split("/pages/")[1];
+  const depth = after === undefined ? 0 : after.split("/").filter(Boolean).length + 1;
+  return "../".repeat(depth);
+})();
+document.head.insertAdjacentHTML("beforeend",
+  '<link rel="stylesheet" href="' + BASE + 'assets/css/style.css">');
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar-root"></div>
+<div class="scrim"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar-root"></nav>
+
+  <div class="content-col">
+    <article class="doc">
+      <div class="doc-kicker"><a href="../../data-structures.html">Data structures</a></div>
+      <h1>Non-linear data structures</h1>
+      <p class="doc-lede">Elements form a <strong class="text-data">hierarchy</strong> or a <strong class="text-data">network</strong> rather than a sequence: one element can connect to many others, so there is no single path from first to last. You reach a value by choosing a route, not by counting positions.</p>
+
+      <h2 class="text-data">What changes</h2>
+      <p>Dropping the one-predecessor-one-successor rule has three consequences, and they shape every page in this section.</p>
+      <ul>
+        <li><strong>There is no single traversal order.</strong> You pick one — depth-first, breadth-first, in-order — and the choice changes the result.</li>
+        <li><strong>Position stops meaning anything.</strong> There is no "index 4"; you follow <span class="text-pointer">pointers</span> or compute where a value should live.</li>
+        <li><strong>Cycles become possible.</strong> A graph walk that doesn't record visited vertices runs forever.</li>
+      </ul>
+
+      <h2 class="text-data">What we cover here</h2>
+      <p>Nine structures, ordered from the one everything else borrows from to the ones you'll only reach for once problems get harder. Trees come first because heaps, tries and balanced trees are all trees with one extra rule attached.</p>
+
+      <div class="card-grid">
+        <a class="topic-card" href="tree.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="14" r="2"/><circle cx="18" cy="14" r="2"/><path d="M11 6l-4 6m6-6l4 6"/></svg>
+          <div><h3 class="text-pointer">Trees</h3><p>Root, children, height, and the four traversal orders.</p></div>
+        </a>
+        <a class="topic-card" href="bst.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v6m0 0l-5 5m5-5l5 5"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+          <div><h3 class="text-pointer">Binary search trees</h3><p>One ordering rule turns a tree into a lookup structure.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="heap.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 7H4l8-7z"/><path d="M6 14h12M8 19h8"/></svg>
+          <div><h3 class="text-pointer">Heaps</h3><p>Always know the smallest item — what <code>std::priority_queue</code> is built on.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="hash-table.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          <div><h3 class="text-pointer">Hash tables</h3><p>Compute where a value lives instead of searching for it.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="trie.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v4m0 0l-6 4m6-4l6 4M6 11v4m12-4v4M6 15l-2 5m2-5l2 5m10-5l-2 5m2-5l2 5"/></svg>
+          <div><h3 class="text-pointer">Tries</h3><p>Words sharing prefixes, so lookup depends on key length, not count.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="graphs.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="8" r="2"/><circle cx="8" cy="18" r="2"/><circle cx="18" cy="17" r="2"/><path d="M7 7l10 1M6 8l1 8m3 1l6-1m1-7l-8 8"/></svg>
+          <div><h3 class="text-pointer">Graphs</h3><p>Vertices and edges, adjacency lists, and how to walk them safely.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="disjoint-set.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/></svg>
+          <div><h3 class="text-pointer">Disjoint set</h3><p>Track which elements belong together, in near-constant time.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="balanced-trees.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 4v4M12 8l-6 4m6-4l6 4M6 12v4m12-4v4"/><path d="M3 21h18"/></svg>
+          <div><h3 class="text-pointer">Balanced trees</h3><p>AVL and red-black rotations, and why an unbalanced BST decays.</p><span class="soon-tag">soon</span></div>
+        </a>
+        <a class="topic-card" href="segment-trees.html">
+          <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="11" width="8" height="4" rx="1"/><rect x="13" y="11" width="8" height="4" rx="1"/><rect x="3" y="18" width="4" height="3" rx="1"/><rect x="9" y="18" width="4" height="3" rx="1"/></svg>
+          <div><h3 class="text-pointer">Segment &amp; Fenwick trees</h3><p>Range sums and minimums while the data keeps changing.</p><span class="soon-tag">soon</span></div>
+        </a>
+      </div>
+
+      <h2 class="text-data">How they differ</h2>
+      <p>Average-case costs for the operation each structure is actually chosen for. <code>n</code> is the element count, <code>L</code> a key's length, <code>V</code> and <code>E</code> the vertex and edge counts.</p>
+
+      <div class="table-wrap">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Structure</th>
+              <th>Shape</th>
+              <th>Search</th>
+              <th>Insert</th>
+              <th>Erase</th>
+              <th>Where it fits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono text-data">Binary search tree</td>
+              <td>Hierarchy</td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td>Lookup that also keeps things sorted.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Heap</td>
+              <td>Hierarchy</td>
+              <td><span class="badge bad">O(n)</span></td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td>Repeatedly taking the smallest or largest item.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Hash table</td>
+              <td>Buckets</td>
+              <td><span class="badge good">O(1)*</span></td>
+              <td><span class="badge good">O(1)*</span></td>
+              <td><span class="badge good">O(1)*</span></td>
+              <td>Key lookup when you don't need any ordering.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Trie</td>
+              <td>Hierarchy</td>
+              <td><span class="badge good">O(L)</span></td>
+              <td><span class="badge good">O(L)</span></td>
+              <td><span class="badge good">O(L)</span></td>
+              <td>Prefix matching and autocomplete.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Graph</td>
+              <td>Network</td>
+              <td><span class="badge mid">O(V + E)</span></td>
+              <td><span class="badge good">O(1)</span></td>
+              <td><span class="badge mid">O(E)</span></td>
+              <td>Arbitrary relationships: maps, dependencies, routes.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Disjoint set</td>
+              <td>Forest</td>
+              <td><span class="badge good">O(α(n))</span></td>
+              <td><span class="badge good">O(α(n))</span></td>
+              <td>—</td>
+              <td>Answering "are these two connected?" repeatedly.</td>
+            </tr>
+            <tr>
+              <td class="mono text-data">Segment tree</td>
+              <td>Hierarchy</td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td><span class="badge good">O(log n)</span></td>
+              <td>—</td>
+              <td>Range queries over data that keeps updating.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="muted">* Average case. With a poor hash function or a deliberately hostile input, all three degrade to O(n).</p>
+
+      <div class="callout warn">
+        <span class="callout-label">Averages hide the bad case</span>
+        <p>Insert already-sorted data into a plain BST and every node becomes an only child — the tree is a linked list wearing <span class="text-pointer">pointers</span>, and <code>O(log n)</code> becomes <code>O(n)</code>. That single failure is why balanced trees exist, and why <code>std::map</code> is a red-black tree rather than the naive version.</p>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-label">You have already used these</span>
+        <p><code>std::map</code> and <code>std::set</code> are balanced trees; <code>std::unordered_map</code> and <code>std::unordered_set</code> are hash tables; <code>std::priority_queue</code> is a heap. Knowing what sits underneath is what tells you which to reach for — and why iterating a <code>map</code> comes out sorted while an <code>unordered_map</code> does not.</p>
+      </div>
+
+      <h2 class="text-data">How to read this section</h2>
+      <div class="callout tip">
+        <span class="callout-label">Suggested order</span>
+        <p>Start with trees: the vocabulary and the traversals carry into everything after. Binary search trees add an ordering rule and heaps add a different one, so both read easily once trees are solid. Hash tables stand apart and can be read at any point. Graphs come next, reusing traversals you already know but now with cycles to guard against. Leave disjoint sets, balanced trees and segment trees until a problem asks for them.</p>
+      </div>
+
+      <div class="doc-footer-nav">
+        <a class="pn-link prev" href="../../data-structures.html"><span class="pn-dir">← Previous</span><span class="pn-title">Data structures</span></a>
+        <a class="pn-link next" href="tree.html"><span class="pn-dir">Next →</span><span class="pn-title">Trees</span></a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="toc" id="toc-root"></aside>
+</div>
+
+<div id="footer-root"></div>
+
+<script>
+["layout-data.js", "layout.js", "search.js"].forEach(function (f) {
+  const s = document.createElement("script");
+  s.src = BASE + "assets/js/" + f;
+  s.async = false;
+  document.body.appendChild(s);
+});
+</script>
+</body>
+</html>
